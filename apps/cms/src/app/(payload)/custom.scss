@@ -1,0 +1,17 @@
+:root {
+  --theme-bg: #02080c;
+  --theme-elevation-0: #02080c;
+  --theme-elevation-50: #07151b;
+  --theme-elevation-100: #10242c;
+  --theme-elevation-150: #15313b;
+  --theme-elevation-200: #1a3d49;
+  --theme-text: #f8fafc;
+  --theme-success-500: #8cffc7;
+  --theme-error-500: #ff6b6b;
+  --theme-warning-500: #f8d66d;
+  --theme-blue-500: #8de1e8;
+}
+
+.template-default {
+  background-color: var(--theme-bg);
+}
