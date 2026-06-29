@@ -31,12 +31,12 @@ type PagesResponse = {
 }
 
 const fallbackPage: PageContent = {
-  heroTitle: 'Impulsamos tu proyecto desde las alturas.',
+  heroTitle: 'Ideas que toman forma. Tecnología que despega.',
   heroSubtitle:
-    'Soluciones aéreas inteligentes con drones, precisión operativa y resultados reales para industrias que necesitan ver, medir y actuar mejor.',
+    'Zanders SV crea piezas, productos personalizados e impresiones profesionales. Zanders Aero Solutions diseña, vende y opera drones para video, racing, limpieza UAV y proyectos aéreos.',
   navbarLinks: [
-    { label: 'Servicios', href: '#servicios' },
-    { label: 'Ventajas', href: '#ventajas' },
+    { label: 'Impresiones', href: '#impresiones' },
+    { label: 'Drones', href: '#drones' },
     { label: 'Contacto', href: '#contacto' }
   ],
   videoBackground: null

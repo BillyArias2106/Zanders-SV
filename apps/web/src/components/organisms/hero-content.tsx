@@ -1,6 +1,6 @@
 'use client'
 
-import { ArrowUpRight, Plane, Sparkles } from 'lucide-react'
+import { Box, Plane, Sparkles } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
 import { Badge, Button } from '@zanders/ui'
@@ -14,6 +14,10 @@ type HeroContentProps = {
 
 export function HeroContent({ content }: HeroContentProps) {
   const rootRef = useRef<HTMLDivElement>(null)
+
+  const scrollToSection = (id: string) => {
+    document.querySelector(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   useEffect(() => {
     if (!rootRef.current) {
@@ -41,7 +45,7 @@ export function HeroContent({ content }: HeroContentProps) {
       <div className="max-w-3xl">
         <div data-hero-stagger className="flex flex-wrap items-center gap-3">
           <Badge icon={<Sparkles size={14} aria-hidden="true" />}>
-            Soluciones aéreas inteligentes
+            Fabricación, personalización y vuelo
           </Badge>
           <span className="hidden h-px w-24 bg-cyan-200/55 sm:block" />
         </div>
@@ -59,11 +63,18 @@ export function HeroContent({ content }: HeroContentProps) {
           {content.heroSubtitle}
         </p>
         <div data-hero-stagger className="mt-9 flex flex-col gap-3 sm:flex-row">
-          <Button icon={<ArrowUpRight size={18} aria-hidden="true" />}>
-            Ver servicios
+          <Button
+            icon={<Box size={18} aria-hidden="true" />}
+            onClick={() => scrollToSection('#impresiones')}
+          >
+            Impresiones
           </Button>
-          <Button variant="secondary" icon={<Plane size={18} aria-hidden="true" />}>
-            Aero Solutions
+          <Button
+            variant="secondary"
+            icon={<Plane size={18} aria-hidden="true" />}
+            onClick={() => scrollToSection('#drones')}
+          >
+            Drones
           </Button>
         </div>
         <div
@@ -71,9 +82,9 @@ export function HeroContent({ content }: HeroContentProps) {
           className="mt-8 grid max-w-xl grid-cols-3 border-y border-cyan-200/20 py-4 font-heading text-xs uppercase text-silver-300 sm:text-sm"
           aria-label="Pilares de servicio"
         >
-          <span>Tecnologia</span>
-          <span className="border-x border-cyan-200/20 text-center">Precisión</span>
-          <span className="text-right">Seguridad</span>
+          <span>Fabricación</span>
+          <span className="border-x border-cyan-200/20 text-center">Aero</span>
+          <span className="text-right">Innovación</span>
         </div>
       </div>
     </div>

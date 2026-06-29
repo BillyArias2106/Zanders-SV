@@ -17,7 +17,7 @@ export function HeroNavigation({ links }: HeroNavigationProps) {
           <span className="font-heading text-lg font-bold uppercase tracking-[0]">Zanders</span>
           <span className="hidden h-8 w-px bg-cyan-200/35 sm:block" />
           <span className="hidden font-heading text-sm font-semibold uppercase text-silver-200 sm:block">
-            Aero Solutions
+            SV / Aero Solutions
           </span>
         </a>
         <NavLinkList links={links} />

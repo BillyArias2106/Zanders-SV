@@ -1,17 +1,11 @@
 import {
-  Building2,
-  Cpu,
-  Droplets,
   Instagram,
-  Leaf,
   Phone,
-  ShieldCheck,
-  Sparkles,
-  Sprout,
-  Target
+  Sparkles
 } from 'lucide-react'
 
 import { AeroScene } from '@/components/organisms/aero-scene'
+import { BusinessUnitsShowcase } from '@/components/organisms/business-units-showcase'
 import { HeroContent } from '@/components/organisms/hero-content'
 import { HeroNavigation } from '@/components/organisms/hero-navigation'
 import type { PageContent } from '@/lib/cms'
@@ -23,50 +17,10 @@ type LandingExperienceProps = {
 const fallbackHeroImage = '/brand/aero-hero-operations.jpeg'
 
 const heroMetrics = [
-  ['Máxima eficiencia', 'Operaciones planificadas con precisión'],
-  ['Menor riesgo', 'Trabajo aéreo sin exposición innecesaria'],
-  ['Ahorro de tiempo', 'Inspección y ejecución más rápida'],
-  ['Resultados confiables', 'Evidencia visual y técnica']
-]
-
-const services = [
-  {
-    title: 'Limpieza con drone',
-    accent: 'Paneles fotovoltaicos',
-    description: 'Limpieza eficiente, segura y sin riesgos en altura para sistemas solares.',
-    icon: <Droplets aria-hidden="true" size={28} strokeWidth={1.7} />
-  },
-  {
-    title: 'Limpieza con drone',
-    accent: 'Fachadas',
-    description: 'Tecnología avanzada para limpiar fachadas y superficies verticales.',
-    icon: <Building2 aria-hidden="true" size={28} strokeWidth={1.7} />
-  },
-  {
-    title: 'Proyectos tecnológicos',
-    accent: 'Con agroquímicos',
-    description: 'Aplicación precisa y eficiente para una agricultura más productiva.',
-    icon: <Sprout aria-hidden="true" size={28} strokeWidth={1.7} />
-  }
-]
-
-const benefits = [
-  {
-    label: 'Seguridad operativa',
-    icon: <ShieldCheck aria-hidden="true" size={22} strokeWidth={1.7} />
-  },
-  {
-    label: 'Eficiencia y precisión',
-    icon: <Target aria-hidden="true" size={22} strokeWidth={1.7} />
-  },
-  {
-    label: 'Cuidamos el medio ambiente',
-    icon: <Leaf aria-hidden="true" size={22} strokeWidth={1.7} />
-  },
-  {
-    label: 'Tecnología de vanguardia',
-    icon: <Cpu aria-hidden="true" size={22} strokeWidth={1.7} />
-  }
+  ['Impresión 3D', 'Prototipos y piezas personalizadas'],
+  ['Resina y láser', 'Detalle fino, corte y marcaje profesional'],
+  ['Sublimación', 'Termos y productos de marca'],
+  ['Drones / UAV', 'Venta, creación, video y limpieza aérea']
 ]
 
 export function LandingExperience({ content }: LandingExperienceProps) {
@@ -113,13 +67,13 @@ export function LandingExperience({ content }: LandingExperienceProps) {
           aria-hidden="true"
         >
           <div className="flex items-center justify-between text-cyan-200">
-            <span>Z-AERO OPS</span>
+            <span>ZANDERS OS</span>
             <span>LIVE</span>
           </div>
           <div className="mt-3 grid grid-cols-3 gap-3 text-[11px]">
-            <span>ALT 320M</span>
-            <span>GPS ON</span>
-            <span>CAM 4K</span>
+            <span>FAB ON</span>
+            <span>UAV ON</span>
+            <span>MEDIA</span>
           </div>
         </div>
         <AeroScene />
@@ -141,100 +95,7 @@ export function LandingExperience({ content }: LandingExperienceProps) {
         </div>
       </section>
 
-      <section className="relative z-20 bg-deep-950 py-20" id="servicios">
-        <div className="absolute inset-y-0 right-0 hidden w-[38vw] bg-cyan-700/20 zanders-diagonal-reverse lg:block" />
-        <div className="relative mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.95fr_1.05fr]">
-          <div>
-            <p className="font-heading text-sm font-bold uppercase text-cyan-200">
-              Nuestros servicios
-            </p>
-            <h2 className="mt-4 font-heading text-4xl font-bold uppercase leading-none tracking-[0] text-silver-50 sm:text-6xl">
-              Soluciones aéreas inteligentes.
-            </h2>
-            <p className="mt-6 max-w-xl text-base leading-8 text-silver-300">
-              Integramos drones, operación técnica y experiencia visual para entregar innovación
-              que se ve y resultados que se notan.
-            </p>
-            <div className="mt-8 flex flex-wrap gap-3 font-heading text-sm uppercase text-silver-300">
-              <span>Tecnología</span>
-              <span className="text-cyan-200">•</span>
-              <span>Precisión</span>
-              <span className="text-cyan-200">•</span>
-              <span>Seguridad</span>
-            </div>
-          </div>
-          <div className="grid gap-5">
-            {services.map((service) => (
-              <article
-                key={`${service.title}-${service.accent}`}
-                className="group grid gap-5 border border-cyan-200/16 bg-white/[0.035] p-5 shadow-panel backdrop-blur-sm transition hover:border-cyan-200/50 sm:grid-cols-[4.5rem_1fr]"
-              >
-                <div className="grid h-16 w-16 place-items-center border border-cyan-200/45 bg-cyan-200/10 text-cyan-200 transition group-hover:bg-cyan-200 group-hover:text-deep-950">
-                  {service.icon}
-                </div>
-                <div>
-                  <h3 className="font-heading text-2xl font-bold uppercase text-silver-50">
-                    {service.title}
-                  </h3>
-                  <p className="font-heading text-xl font-bold uppercase text-cyan-200">
-                    {service.accent}
-                  </p>
-                  <p className="mt-2 text-sm leading-7 text-silver-300">{service.description}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="relative z-20 border-y border-cyan-200/15 bg-deep-900 py-20" id="ventajas">
-        <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[1.1fr_0.9fr]">
-          <figure className="relative min-h-[420px] overflow-hidden border border-cyan-200/18 bg-deep-950 shadow-panel">
-            <img
-              src="/brand/field-drone-warehouse.jpeg"
-              alt="Equipo Zanders operando un drone frente a una bodega"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,8,12,0.22)_0%,rgba(2,8,12,0.76)_100%)]" />
-            <figcaption className="absolute bottom-0 left-0 right-0 border-t border-cyan-200/25 bg-deep-950/72 p-5 backdrop-blur-md">
-              <p className="font-heading text-sm font-bold uppercase text-cyan-200">
-                Zanders Aero Solution
-              </p>
-              <p className="mt-2 max-w-xl text-sm leading-7 text-silver-200">
-                Operación local con ambición regional, respaldada por procesos visuales y técnicos.
-              </p>
-            </figcaption>
-          </figure>
-          <div className="flex flex-col justify-center">
-            <p className="font-heading text-sm font-bold uppercase text-cyan-200">
-              Valor operativo
-            </p>
-            <h2 className="mt-4 font-heading text-4xl font-bold uppercase leading-none text-silver-50 sm:text-5xl">
-              Menos riesgo, más precisión, mejores decisiones.
-            </h2>
-            <p className="mt-6 text-base leading-8 text-silver-300">
-              La marca nace desde innovación y producción avanzada. En la web lo convertimos en una
-              experiencia técnica: datos claros, visuales potentes y una narrativa enfocada en
-              confianza.
-            </p>
-            <div className="mt-8 grid gap-4 sm:grid-cols-2">
-              {benefits.map((benefit) => (
-                <div
-                  key={benefit.label}
-                  className="flex min-h-20 items-center gap-4 border border-cyan-200/14 bg-white/[0.035] p-4"
-                >
-                  <span className="grid h-11 w-11 shrink-0 place-items-center border border-cyan-200/40 text-cyan-200">
-                    {benefit.icon}
-                  </span>
-                  <span className="font-heading text-sm font-bold uppercase text-silver-100">
-                    {benefit.label}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
+      <BusinessUnitsShowcase />
 
       <section className="relative z-20 bg-deep-950 py-20" id="aero-solutions">
         <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[0.82fr_1.18fr]">
@@ -246,6 +107,10 @@ export function LandingExperience({ content }: LandingExperienceProps) {
               <h2 className="mt-4 font-heading text-4xl font-bold uppercase leading-none text-silver-50 sm:text-5xl">
                 Negro profundo, plata y cian técnico.
               </h2>
+              <p className="mt-5 max-w-lg text-sm leading-7 text-silver-300">
+                La identidad une manufactura, personalización, drones y producción visual bajo una
+                misma estética tecnológica.
+              </p>
             </div>
             <div className="grid grid-cols-3 gap-3">
               {['#d8d9dd', '#1a6b80', '#298ea5', '#45acbf', '#76c2d0', '#8de1e8'].map(
@@ -275,7 +140,7 @@ export function LandingExperience({ content }: LandingExperienceProps) {
               </p>
               <p className="mt-5 text-sm leading-7 text-silver-300">
                 Adaptamos el lenguaje del brandbook a una interfaz moderna, administrable y lista
-                para crecer con nuevos medios desde el CMS.
+                para crecer con nuevos servicios desde el CMS.
               </p>
             </div>
           </div>
