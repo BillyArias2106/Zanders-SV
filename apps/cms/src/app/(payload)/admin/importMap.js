@@ -24,6 +24,7 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { ColorPickerField as ColorPickerField_37fac220471b04d5e6dda304975d2c1e } from '@/components/ColorPickerField'
 import { SnapLayoutPreview as SnapLayoutPreview_a939532416b24b59119bc0838c154024 } from '@/components/admin/SnapLayoutPreview'
 import { AdminTopNavigation as AdminTopNavigation_0663c21bdca3007e21ef6c1038e8c868 } from '@/components/admin/AdminTopNavigation'
+import { AdminLoginActions as AdminLoginActions_c74301c135ccf1620b1ad06224aaacb6 } from '@/components/admin/AdminLoginActions'
 import { AdminDashboard as AdminDashboard_805d8044a9399a3bb874e2f235b204e8 } from '@/components/admin/AdminDashboard'
 import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
@@ -55,6 +56,7 @@ export const importMap = {
   "@/components/ColorPickerField#ColorPickerField": ColorPickerField_37fac220471b04d5e6dda304975d2c1e,
   "@/components/admin/SnapLayoutPreview#SnapLayoutPreview": SnapLayoutPreview_a939532416b24b59119bc0838c154024,
   "@/components/admin/AdminTopNavigation#AdminTopNavigation": AdminTopNavigation_0663c21bdca3007e21ef6c1038e8c868,
+  "@/components/admin/AdminLoginActions#AdminLoginActions": AdminLoginActions_c74301c135ccf1620b1ad06224aaacb6,
   "@/components/admin/AdminDashboard#AdminDashboard": AdminDashboard_805d8044a9399a3bb874e2f235b204e8,
   "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
 }

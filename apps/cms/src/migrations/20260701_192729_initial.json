@@ -3266,7 +3266,7 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true,
-          "default": "'Zanders SV'"
+          "default": "'New Site'"
         },
         "legal_name": {
           "name": "legal_name",
@@ -3278,15 +3278,13 @@
           "name": "slogan",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'Ideas que toman forma. Tecnología que despega.'"
+          "notNull": false
         },
         "short_description": {
           "name": "short_description",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'Fabricación, personalización, impresión profesional y soluciones aéreas con drones.'"
+          "notNull": false
         },
         "long_description": {
           "name": "long_description",
@@ -3304,15 +3302,13 @@
           "name": "main_phone",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'+503 7934 7603'"
+          "notNull": false
         },
         "whatsapp": {
           "name": "whatsapp",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'+503 7934 7603'"
+          "notNull": false
         },
         "address": {
           "name": "address",
@@ -3324,8 +3320,7 @@
           "name": "country_city",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'El Salvador'"
+          "notNull": false
         },
         "business_hours": {
           "name": "business_hours",
@@ -3452,8 +3447,7 @@
           "name": "contact_headline",
           "type": "varchar",
           "primaryKey": false,
-          "notNull": false,
-          "default": "'¡Trabajemos en una nueva visión de tu negocio!'"
+          "notNull": false
         },
         "contact_intro": {
           "name": "contact_intro",
@@ -3466,14 +3460,14 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": true,
-          "default": "'Zanders SV | Aero Solutions'"
+          "default": "'New Site'"
         },
         "default_meta_description": {
           "name": "default_meta_description",
           "type": "varchar",
           "primaryKey": false,
           "notNull": true,
-          "default": "'Plataforma digital para Zanders SV y Zanders Aero Solutions: fabricación, personalización y soluciones aéreas con drones.'"
+          "default": "'Sitio web listo para configurar desde el panel de administración.'"
         },
         "global_keywords": {
           "name": "global_keywords",
@@ -3493,7 +3487,7 @@
           "type": "varchar",
           "primaryKey": false,
           "notNull": false,
-          "default": "'© Zanders SV. Todos los derechos reservados.'"
+          "default": "'© New Site. Todos los derechos reservados.'"
         },
         "privacy_policy": {
           "name": "privacy_policy",

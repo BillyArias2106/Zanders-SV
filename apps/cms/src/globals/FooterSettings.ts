@@ -1,5 +1,7 @@
 import type { Field, GlobalConfig } from 'payload'
 
+import { adminLabel } from '../lib/admin-i18n'
+
 type FooterColumnSiblingData = {
   contentType?:
     | 'contact'
@@ -20,7 +22,8 @@ const manualLinkFields: Field[] = [
   {
     name: 'label',
     type: 'text',
-    label: 'Label',
+    label: 'Texto visible',
+    localized: true,
     required: true
   },
   {
@@ -56,15 +59,18 @@ const showForColumnType = (
 
 export const FooterSettings: GlobalConfig = {
   slug: 'footer-settings',
-  label: 'Footer del Sitio',
+  label: adminLabel('Pie de página del sitio', 'Site Footer'),
   access: {
     read: () => true,
     update: ({ req }) => Boolean(req.user)
   },
   admin: {
-    group: 'Navegación',
-    description:
-      'Footer dinámico del sitio público: columnas, navegación inferior, contacto y legal.'
+    group: false,
+    hidden: true,
+    description: adminLabel(
+      'Compatibilidad con la configuración anterior del pie de página. Ahora se administra desde Configuración General.',
+      'Compatibility with the previous footer settings. Footer is now managed from General Settings.'
+    )
   },
   typescript: {
     interface: 'FooterSettings'
@@ -79,7 +85,7 @@ export const FooterSettings: GlobalConfig = {
             {
               name: 'isEnabled',
               type: 'checkbox',
-              label: 'Mostrar footer',
+              label: 'Mostrar pie de página',
               defaultValue: true
             },
             {
@@ -91,7 +97,7 @@ export const FooterSettings: GlobalConfig = {
             {
               name: 'logo',
               type: 'upload',
-              label: 'Logo del footer',
+              label: 'Logo del pie de página',
               relationTo: 'media',
               displayPreview: true,
               filterOptions: imageFilter
@@ -105,12 +111,14 @@ export const FooterSettings: GlobalConfig = {
             {
               name: 'companyNameOverride',
               type: 'text',
-              label: 'Nombre de empresa alternativo'
+              label: 'Nombre de empresa alternativo',
+              localized: true
             },
             {
               name: 'shortDescription',
               type: 'textarea',
               label: 'Descripción corta',
+              localized: true,
               admin: {
                 rows: 3
               }
@@ -119,6 +127,7 @@ export const FooterSettings: GlobalConfig = {
               name: 'additionalText',
               type: 'textarea',
               label: 'Texto adicional',
+              localized: true,
               admin: {
                 rows: 4
               }
@@ -131,7 +140,7 @@ export const FooterSettings: GlobalConfig = {
             {
               name: 'columns',
               type: 'array',
-              label: 'Columnas del footer',
+              label: 'Columnas del pie de página',
               labels: {
                 singular: 'Columna',
                 plural: 'Columnas'
@@ -141,6 +150,7 @@ export const FooterSettings: GlobalConfig = {
                   name: 'title',
                   type: 'text',
                   label: 'Título',
+                  localized: true,
                   required: true
                 },
                 {
@@ -155,7 +165,7 @@ export const FooterSettings: GlobalConfig = {
                       value: 'publishedPages'
                     },
                     { label: 'Menú principal', value: 'mainNavigation' },
-                    { label: 'Links manuales', value: 'manualLinks' },
+                    { label: 'Enlaces manuales', value: 'manualLinks' },
                     { label: 'Redes sociales', value: 'socialLinks' },
                     { label: 'Contacto', value: 'contact' },
                     { label: 'Texto personalizado', value: 'customText' }
@@ -165,6 +175,7 @@ export const FooterSettings: GlobalConfig = {
                   name: 'customText',
                   type: 'textarea',
                   label: 'Texto personalizado',
+                  localized: true,
                   admin: {
                     condition: showForColumnType('customText'),
                     rows: 5
@@ -173,10 +184,10 @@ export const FooterSettings: GlobalConfig = {
                 {
                   name: 'links',
                   type: 'array',
-                  label: 'Links manuales',
+                  label: 'Enlaces manuales',
                   labels: {
-                    singular: 'Link',
-                    plural: 'Links'
+                    singular: 'Enlace',
+                    plural: 'Enlaces'
                   },
                   admin: {
                     condition: showForColumnType('manualLinks')
@@ -205,7 +216,7 @@ export const FooterSettings: GlobalConfig = {
             {
               name: 'socialLinks',
               type: 'array',
-              label: 'Redes sociales visibles en footer',
+              label: 'Redes sociales visibles en pie de página',
               admin: {
                 description:
                   'Opcional. Si no agregas redes aquí, el sitio usa las redes principales de Configuración General.'
@@ -219,6 +230,7 @@ export const FooterSettings: GlobalConfig = {
                   name: 'name',
                   type: 'text',
                   label: 'Nombre',
+                  localized: true,
                   required: true
                 },
                 {
@@ -253,7 +265,7 @@ export const FooterSettings: GlobalConfig = {
                 {
                   name: 'showInFooter',
                   type: 'checkbox',
-                  label: 'Mostrar en footer',
+                  label: 'Mostrar en pie de página',
                   defaultValue: true
                 },
                 {
@@ -342,7 +354,8 @@ export const FooterSettings: GlobalConfig = {
             {
               name: 'copyrightText',
               type: 'text',
-              label: 'Copyright'
+              label: 'Copyright',
+              localized: true
             },
             {
               name: 'privacyPage',
@@ -360,6 +373,7 @@ export const FooterSettings: GlobalConfig = {
               name: 'legalText',
               type: 'textarea',
               label: 'Texto legal personalizado',
+              localized: true,
               admin: {
                 rows: 4
               }

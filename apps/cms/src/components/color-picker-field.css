@@ -1,16 +1,16 @@
-.zanders-color-picker-field {
+.app-color-picker-field {
   display: grid;
   gap: 0.55rem;
 }
 
-.zanders-color-picker-field__control {
+.app-color-picker-field__control {
   align-items: center;
   display: grid;
   gap: 0.65rem;
   grid-template-columns: 56px minmax(0, 1fr) 44px;
 }
 
-.zanders-color-picker-field__native {
+.app-color-picker-field__native {
   background: transparent;
   border: 1px solid var(--theme-elevation-150);
   border-radius: 4px;
@@ -20,7 +20,7 @@
   width: 56px;
 }
 
-.zanders-color-picker-field__hex {
+.app-color-picker-field__hex {
   background: var(--theme-elevation-50);
   border: 1px solid var(--theme-elevation-150);
   border-radius: 4px;
@@ -31,13 +31,13 @@
   text-transform: uppercase;
 }
 
-.zanders-color-picker-field__hex:focus,
-.zanders-color-picker-field__native:focus {
+.app-color-picker-field__hex:focus,
+.app-color-picker-field__native:focus {
   border-color: var(--theme-success-500);
   outline: none;
 }
 
-.zanders-color-picker-field__preview {
+.app-color-picker-field__preview {
   border: 1px solid var(--theme-elevation-150);
   border-radius: 4px;
   display: block;
@@ -45,13 +45,13 @@
   width: 44px;
 }
 
-.zanders-color-picker-field__swatches {
+.app-color-picker-field__swatches {
   display: flex;
   flex-wrap: wrap;
   gap: 0.45rem;
 }
 
-.zanders-color-picker-field__swatch {
+.app-color-picker-field__swatch {
   border: 1px solid var(--theme-elevation-150);
   border-radius: 999px;
   cursor: pointer;
@@ -60,7 +60,7 @@
   width: 28px;
 }
 
-.zanders-color-picker-field__swatch:focus {
+.app-color-picker-field__swatch:focus {
   outline: 2px solid var(--theme-success-500);
   outline-offset: 2px;
 }

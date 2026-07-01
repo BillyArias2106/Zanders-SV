@@ -1,3 +1,10 @@
+import {
+  defaultLocale,
+  getUIText,
+  normalizeLocale,
+  type Locale
+} from '@/lib/i18n'
+
 export type MediaAsset = {
   id?: number | string
   alt?: string | null
@@ -379,6 +386,7 @@ export type CompanySettingsContent = {
     intro?: string | null
     recipients: string[]
   }
+  defaultLanguage: Locale
   colors: CompanyColors
   social: SocialLinks
   seo: SeoDefaults
@@ -414,10 +422,32 @@ type PayloadCompanySettings = {
   youtubeUrl?: string | null
   twitterUrl?: string | null
   whatsappUrl?: string | null
+  footerAdditionalText?: string | null
+  footerAddress?: string | null
+  footerBusinessHours?: string | null
+  footerCity?: string | null
+  footerColumns?: PayloadFooterColumn[] | null
+  footerCompanyNameOverride?: string | null
+  footerCopyrightText?: string | null
+  footerCountry?: string | null
+  footerEmail?: string | null
+  footerIsEnabled?: boolean | null
+  footerLegalTextOverride?: string | null
+  footerLogo?: PayloadMediaValue
+  footerPhone?: string | null
+  footerPrivacyPage?: PayloadRelationshipValue<PayloadPageSummary>
+  footerShortDescription?: string | null
+  footerShowCompanyName?: boolean | null
+  footerShowLogo?: boolean | null
+  footerSocialLinks?: PayloadFooterSocialLink[] | null
+  footerTermsPage?: PayloadRelationshipValue<PayloadPageSummary>
+  footerUseCompanySettings?: boolean | null
+  footerWhatsapp?: string | null
   contactEyebrow?: string | null
   contactHeadline?: string | null
   contactIntro?: string | null
   contactRecipients?: { email?: string | null }[] | null
+  defaultLanguage?: string | null
   defaultMetaTitle?: string | null
   defaultMetaDescription?: string | null
   globalKeywords?: string | string[] | null
@@ -564,35 +594,43 @@ type PayloadFooterSettings = {
   whatsapp?: string | null
 }
 
-const homeContactNavigationItem: NavigationItem = {
+const getHomeContactNavigationItem = (locale: Locale): NavigationItem => ({
   href: '/#contacto',
-  label: 'Contacto'
-}
+  label: locale === 'en' ? 'Contact' : 'Contacto'
+})
 
-const fallbackNavigationItems: NavigationItem[] = [homeContactNavigationItem]
+const getFallbackNavigationItems = (locale: Locale): NavigationItem[] => [
+  getHomeContactNavigationItem(locale)
+]
 
-const fallbackCompanySettings: CompanySettingsContent = {
-  commercialName: 'Zanders SV',
+const getFallbackCompanySettings = (
+  locale: Locale = defaultLocale
+): CompanySettingsContent => ({
+  commercialName: 'New Site',
   legalName: null,
   slogan: '',
   shortDescription: '',
   longDescription: null,
   mainEmail: null,
-  mainPhone: '+503 7934 7603',
-  whatsapp: '+503 7934 7603',
+  mainPhone: null,
+  whatsapp: null,
   address: null,
-  countryCity: 'El Salvador',
+  countryCity: null,
   businessHours: null,
   logoPrimary: null,
   logoSecondary: null,
   favicon: null,
   ogImage: null,
   contact: {
-    eyebrow: 'Pongámonos en contacto',
-    headline: '¡Trabajemos en una nueva visión de tu negocio!',
+    eyebrow: locale === 'en' ? 'Let’s get in touch' : 'Pongámonos en contacto',
+    headline:
+      locale === 'en'
+        ? 'Tell us what you need'
+        : 'Cuéntanos qué necesitas',
     intro: null,
     recipients: []
   },
+  defaultLanguage: defaultLocale,
   colors: {
     primary: '#8DE1E8',
     secondary: '#1A6B80',
@@ -611,71 +649,86 @@ const fallbackCompanySettings: CompanySettingsContent = {
     whatsapp: null
   },
   seo: {
-    title: 'Zanders SV',
-    description: 'Sitio oficial de Zanders SV.',
+    title: 'New Site',
+    description:
+      locale === 'en'
+        ? 'Website ready to configure from the admin panel.'
+        : 'Sitio web listo para configurar desde el panel de administración.',
     keywords: [],
     canonicalBaseUrl: 'http://localhost:3000'
   },
   legal: {
-    copyrightText: '© Zanders SV. Todos los derechos reservados.',
+    copyrightText:
+      locale === 'en'
+        ? '© New Site. All rights reserved.'
+        : '© New Site. Todos los derechos reservados.',
     privacyPolicy: null,
     termsAndConditions: null,
     footerLegalText: null
   }
+})
+
+const getFallbackFooterSettings = (
+  locale: Locale = defaultLocale
+): FooterSettingsContent => {
+  const text = getUIText(locale)
+
+  return {
+    additionalText: null,
+    columns: [
+      {
+        contentType: 'publishedPages',
+        id: 'fallback-pages',
+        isActive: true,
+        links: [],
+        order: 0,
+        title: text.footer.pages
+      },
+      {
+        contentType: 'contact',
+        id: 'fallback-contact',
+        isActive: true,
+        links: [],
+        order: 1,
+        title: getHomeContactNavigationItem(locale).label
+      },
+      {
+        contentType: 'socialLinks',
+        id: 'fallback-social',
+        isActive: true,
+        links: [],
+        order: 2,
+        title: text.footer.social
+      }
+    ],
+    companyNameOverride: null,
+    contact: {
+      address: null,
+      businessHours: null,
+      city: null,
+      country: null,
+      email: null,
+      phone: null,
+      useCompanySettings: true,
+      whatsapp: null
+    },
+    isEnabled: true,
+    legal: {
+      copyrightText: null,
+      legalText: null,
+      privacyPage: null,
+      termsPage: null
+    },
+    logo: null,
+    shortDescription: null,
+    showCompanyName: true,
+    showLogo: true,
+    socialLinks: []
+  }
 }
 
-const fallbackFooterSettings: FooterSettingsContent = {
-  additionalText: null,
-  columns: [
-    {
-      contentType: 'publishedPages',
-      id: 'fallback-pages',
-      isActive: true,
-      links: [],
-      order: 0,
-      title: 'Páginas'
-    },
-    {
-      contentType: 'contact',
-      id: 'fallback-contact',
-      isActive: true,
-      links: [],
-      order: 1,
-      title: 'Contacto'
-    },
-    {
-      contentType: 'socialLinks',
-      id: 'fallback-social',
-      isActive: true,
-      links: [],
-      order: 2,
-      title: 'Redes'
-    }
-  ],
-  companyNameOverride: null,
-  contact: {
-    address: null,
-    businessHours: null,
-    city: null,
-    country: null,
-    email: null,
-    phone: null,
-    useCompanySettings: true,
-    whatsapp: null
-  },
-  isEnabled: true,
-  legal: {
-    copyrightText: null,
-    legalText: null,
-    privacyPage: null,
-    termsPage: null
-  },
-  logo: null,
-  shortDescription: null,
-  showCompanyName: true,
-  showLogo: true,
-  socialLinks: []
-}
+const fallbackCompanySettings = getFallbackCompanySettings()
+const fallbackFooterSettings = getFallbackFooterSettings()
 
 const getCmsBaseUrl = () =>
   process.env.CMS_INTERNAL_URL ??
@@ -684,6 +737,13 @@ const getCmsBaseUrl = () =>
 
 const getPublicCmsUrl = () =>
   process.env.NEXT_PUBLIC_CMS_URL ?? 'http://localhost:3001'
+
+const withLocaleParams = (query: URLSearchParams, locale: Locale) => {
+  query.set('locale', locale)
+  query.set('fallback-locale', defaultLocale)
+
+  return query
+}
 
 const resolveText = (value: unknown, fallback: string) => {
   const trimmedValue = typeof value === 'string' ? value.trim() : ''
@@ -949,17 +1009,25 @@ const buildPageNavigation = (
   return sortByOrder(rootEntries).map(normalizePageNavigationTree)
 }
 
-const isContactNavigationItem = (item: NavigationItem) =>
-  item.label.trim().toLowerCase() === 'contacto' ||
-  item.href === '#contacto' ||
-  item.href === '/#contacto'
+const isContactNavigationItem = (item: NavigationItem) => {
+  const normalizedLabel = item.label.trim().toLowerCase()
+
+  return (
+    normalizedLabel === 'contacto' ||
+    normalizedLabel === 'contact' ||
+    item.href === '#contacto' ||
+    item.href === '/#contacto'
+  )
+}
 
 const normalizeHomeContactNavigation = (
-  items: NavigationItem[]
+  items: NavigationItem[],
+  locale: Locale
 ): NavigationItem[] => {
+  const homeContactNavigationItem = getHomeContactNavigationItem(locale)
   const normalizedItems = items.map((item) => {
     const children = item.children
-      ? normalizeHomeContactNavigation(item.children)
+      ? normalizeHomeContactNavigation(item.children, locale)
       : undefined
 
     if (isContactNavigationItem(item)) {
@@ -1527,7 +1595,8 @@ const normalizeFooterSocialLink = (
 }
 
 const normalizeFooterSettings = (
-  settings: PayloadFooterSettings
+  settings: PayloadFooterSettings,
+  locale: Locale
 ): FooterSettingsContent => ({
   additionalText: resolveOptionalText(settings.additionalText),
   columns: sortByOrder(settings.columns ?? [])
@@ -1548,8 +1617,11 @@ const normalizeFooterSettings = (
   legal: {
     copyrightText: resolveOptionalText(settings.copyrightText),
     legalText: resolveOptionalText(settings.legalText),
-    privacyPage: resolvePageLink(settings.privacyPage, 'Privacidad'),
-    termsPage: resolvePageLink(settings.termsPage, 'Términos')
+    privacyPage: resolvePageLink(
+      settings.privacyPage,
+      getUIText(locale).footer.privacy
+    ),
+    termsPage: resolvePageLink(settings.termsPage, getUIText(locale).footer.terms)
   },
   logo: resolveMediaUrl(settings.logo),
   shortDescription: resolveOptionalText(settings.shortDescription),
@@ -1560,23 +1632,65 @@ const normalizeFooterSettings = (
     .filter((link): link is FooterSocialLink => Boolean(link))
 })
 
-export async function getMainNavigation(): Promise<NavigationItem[]> {
-  const pageNavigation = await getPageBasedMainNavigation()
+const normalizeCompanyFooterSettings = (
+  settings: PayloadCompanySettings,
+  locale: Locale
+): FooterSettingsContent =>
+  normalizeFooterSettings(
+    {
+      additionalText: settings.footerAdditionalText,
+      address: settings.footerAddress,
+      businessHours: settings.footerBusinessHours,
+      city: settings.footerCity,
+      columns: settings.footerColumns,
+      companyNameOverride: settings.footerCompanyNameOverride,
+      copyrightText: settings.footerCopyrightText,
+      country: settings.footerCountry,
+      email: settings.footerEmail,
+      isEnabled: settings.footerIsEnabled,
+      legalText: settings.footerLegalTextOverride,
+      logo: settings.footerLogo,
+      phone: settings.footerPhone,
+      privacyPage: settings.footerPrivacyPage,
+      shortDescription: settings.footerShortDescription,
+      showCompanyName: settings.footerShowCompanyName,
+      showLogo: settings.footerShowLogo,
+      socialLinks: settings.footerSocialLinks,
+      termsPage: settings.footerTermsPage,
+      useCompanySettings: settings.footerUseCompanySettings,
+      whatsapp: settings.footerWhatsapp
+    },
+    locale
+  )
+
+export async function getMainNavigation(
+  locale: Locale = defaultLocale
+): Promise<NavigationItem[]> {
+  const pageNavigation = await getPageBasedMainNavigation(locale)
 
   if (pageNavigation.length > 0) {
-    return normalizeHomeContactNavigation(pageNavigation)
+    return normalizeHomeContactNavigation(pageNavigation, locale)
   }
 
   try {
+    const query = withLocaleParams(
+      new URLSearchParams({
+        depth: '2'
+      }),
+      locale
+    )
     const response = await fetch(
-      `${getCmsBaseUrl()}/api/globals/main-navigation?depth=2`,
+      `${getCmsBaseUrl()}/api/globals/main-navigation?${query}`,
       {
         cache: 'no-store'
       }
     )
 
     if (!response.ok) {
-      return normalizeHomeContactNavigation(fallbackNavigationItems)
+      return normalizeHomeContactNavigation(
+        getFallbackNavigationItems(locale),
+        locale
+      )
     }
 
     const navigation = (await response.json()) as PayloadMainNavigation
@@ -1585,21 +1699,30 @@ export async function getMainNavigation(): Promise<NavigationItem[]> {
       .filter((item): item is NavigationItem => Boolean(item))
 
     return normalizeHomeContactNavigation(
-      items.length > 0 ? items : fallbackNavigationItems
+      items.length > 0 ? items : getFallbackNavigationItems(locale),
+      locale
     )
   } catch {
-    return normalizeHomeContactNavigation(fallbackNavigationItems)
+    return normalizeHomeContactNavigation(
+      getFallbackNavigationItems(locale),
+      locale
+    )
   }
 }
 
-async function getPageBasedMainNavigation(): Promise<NavigationItem[]> {
-  const query = new URLSearchParams({
-    depth: '1',
-    limit: '100',
-    sort: 'navigationOrder',
-    'where[status][equals]': 'published',
-    'where[showInMainNavigation][equals]': 'true'
-  })
+async function getPageBasedMainNavigation(
+  locale: Locale
+): Promise<NavigationItem[]> {
+  const query = withLocaleParams(
+    new URLSearchParams({
+      depth: '1',
+      limit: '100',
+      sort: 'navigationOrder',
+      'where[status][equals]': 'published',
+      'where[showInMainNavigation][equals]': 'true'
+    }),
+    locale
+  )
 
   try {
     const response = await fetch(`${getCmsBaseUrl()}/api/pages?${query}`, {
@@ -1618,10 +1741,20 @@ async function getPageBasedMainNavigation(): Promise<NavigationItem[]> {
   }
 }
 
-export async function getFooterSettings(): Promise<FooterSettingsContent> {
+export async function getFooterSettings(
+  locale: Locale = defaultLocale
+): Promise<FooterSettingsContent> {
+  const fallbackFooterSettings = getFallbackFooterSettings(locale)
+
   try {
+    const query = withLocaleParams(
+      new URLSearchParams({
+        depth: '2'
+      }),
+      locale
+    )
     const response = await fetch(
-      `${getCmsBaseUrl()}/api/globals/footer-settings?depth=2`,
+      `${getCmsBaseUrl()}/api/globals/company-settings?${query}`,
       {
         cache: 'no-store'
       }
@@ -1631,8 +1764,9 @@ export async function getFooterSettings(): Promise<FooterSettingsContent> {
       return fallbackFooterSettings
     }
 
-    const footer = normalizeFooterSettings(
-      (await response.json()) as PayloadFooterSettings
+    const footer = normalizeCompanyFooterSettings(
+      (await response.json()) as PayloadCompanySettings,
+      locale
     )
 
     return {
@@ -1656,13 +1790,18 @@ export async function getFooterSettings(): Promise<FooterSettingsContent> {
   }
 }
 
-export async function getPublishedPageLinks(): Promise<LinkTarget[]> {
-  const query = new URLSearchParams({
-    depth: '0',
-    limit: '100',
-    sort: 'title',
-    'where[status][equals]': 'published'
-  })
+export async function getPublishedPageLinks(
+  locale: Locale = defaultLocale
+): Promise<LinkTarget[]> {
+  const query = withLocaleParams(
+    new URLSearchParams({
+      depth: '0',
+      limit: '100',
+      sort: 'title',
+      'where[status][equals]': 'published'
+    }),
+    locale
+  )
 
   try {
     const response = await fetch(`${getCmsBaseUrl()}/api/pages?${query}`, {
@@ -1693,15 +1832,19 @@ export async function getPublishedPageLinks(): Promise<LinkTarget[]> {
 }
 
 export async function getPageBySlug(
-  slug: string
+  slug: string,
+  locale: Locale = defaultLocale
 ): Promise<PageBuilderPage | null> {
   const normalizedSlug = slug.replace(/^\/+|\/+$/g, '')
-  const query = new URLSearchParams({
-    depth: '1',
-    limit: '1',
-    'where[slug][equals]': normalizedSlug,
-    'where[status][equals]': 'published'
-  })
+  const query = withLocaleParams(
+    new URLSearchParams({
+      depth: '1',
+      limit: '1',
+      'where[slug][equals]': normalizedSlug,
+      'where[status][equals]': 'published'
+    }),
+    locale
+  )
 
   try {
     const response = await fetch(`${getCmsBaseUrl()}/api/pages?${query}`, {
@@ -1721,10 +1864,47 @@ export async function getPageBySlug(
   }
 }
 
-export async function getCompanySettings(): Promise<CompanySettingsContent> {
+export async function getDefaultLanguage(): Promise<Locale> {
   try {
+    const query = withLocaleParams(
+      new URLSearchParams({
+        depth: '0'
+      }),
+      defaultLocale
+    )
     const response = await fetch(
-      `${getCmsBaseUrl()}/api/globals/company-settings?depth=1`,
+      `${getCmsBaseUrl()}/api/globals/company-settings?${query}`,
+      {
+        cache: 'no-store'
+      }
+    )
+
+    if (!response.ok) {
+      return defaultLocale
+    }
+
+    const settings = (await response.json()) as PayloadCompanySettings
+
+    return normalizeLocale(settings.defaultLanguage) ?? defaultLocale
+  } catch {
+    return defaultLocale
+  }
+}
+
+export async function getCompanySettings(
+  locale: Locale = defaultLocale
+): Promise<CompanySettingsContent> {
+  const fallbackCompanySettings = getFallbackCompanySettings(locale)
+
+  try {
+    const query = withLocaleParams(
+      new URLSearchParams({
+        depth: '1'
+      }),
+      locale
+    )
+    const response = await fetch(
+      `${getCmsBaseUrl()}/api/globals/company-settings?${query}`,
       {
         cache: 'no-store'
       }
@@ -1778,6 +1958,9 @@ export async function getCompanySettings(): Promise<CompanySettingsContent> {
           .map((recipient) => resolveOptionalText(recipient.email))
           .filter((email): email is string => Boolean(email))
       },
+      defaultLanguage:
+        normalizeLocale(settings.defaultLanguage) ??
+        fallbackCompanySettings.defaultLanguage,
       colors: {
         primary: resolveColor(
           settings.colorPrimary,
@@ -1844,23 +2027,23 @@ export function getCompanyThemeVariables(
   settings: CompanySettingsContent
 ): Record<string, string> {
   return {
-    '--zanders-bg': settings.colors.background,
-    '--zanders-fg': settings.colors.textPrimary,
-    '--zanders-cyan': settings.colors.primary,
-    '--zanders-aqua': settings.colors.accent,
-    '--zanders-teal': settings.colors.secondary,
-    '--zanders-bg-rgb': hexToRgbChannels(settings.colors.background),
-    '--zanders-fg-rgb': hexToRgbChannels(settings.colors.textPrimary),
-    '--zanders-cyan-rgb': hexToRgbChannels(settings.colors.primary),
-    '--zanders-aqua-rgb': hexToRgbChannels(settings.colors.accent),
-    '--zanders-teal-rgb': hexToRgbChannels(settings.colors.secondary),
-    '--zanders-muted-rgb': hexToRgbChannels(settings.colors.textSecondary),
-    '--zanders-company-primary': settings.colors.primary,
-    '--zanders-company-secondary': settings.colors.secondary,
-    '--zanders-company-accent': settings.colors.accent,
-    '--zanders-company-bg': settings.colors.background,
-    '--zanders-company-text': settings.colors.textPrimary,
-    '--zanders-company-muted': settings.colors.textSecondary
+    '--app-bg': settings.colors.background,
+    '--app-fg': settings.colors.textPrimary,
+    '--app-cyan': settings.colors.primary,
+    '--app-aqua': settings.colors.accent,
+    '--app-teal': settings.colors.secondary,
+    '--app-bg-rgb': hexToRgbChannels(settings.colors.background),
+    '--app-fg-rgb': hexToRgbChannels(settings.colors.textPrimary),
+    '--app-cyan-rgb': hexToRgbChannels(settings.colors.primary),
+    '--app-aqua-rgb': hexToRgbChannels(settings.colors.accent),
+    '--app-teal-rgb': hexToRgbChannels(settings.colors.secondary),
+    '--app-muted-rgb': hexToRgbChannels(settings.colors.textSecondary),
+    '--app-company-primary': settings.colors.primary,
+    '--app-company-secondary': settings.colors.secondary,
+    '--app-company-accent': settings.colors.accent,
+    '--app-company-bg': settings.colors.background,
+    '--app-company-text': settings.colors.textPrimary,
+    '--app-company-muted': settings.colors.textSecondary
   }
 }
 

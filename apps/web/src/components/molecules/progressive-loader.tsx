@@ -41,9 +41,9 @@ export function ProgressiveLoader() {
           exit={{ opacity: 0 }}
           transition={{ duration: 0.55, ease: 'easeOut' }}
         >
-          <div className="zanders-hud-frame min-w-72 max-w-sm px-6 py-5">
+          <div className="app-hud-frame min-w-72 max-w-sm px-6 py-5">
             <div className="mb-4 flex items-center justify-between font-heading text-xs uppercase text-silver-300">
-              <span>ZANDERS AERO</span>
+              <span>LOADING</span>
               <span>{progress}%</span>
             </div>
             <div className="h-px overflow-hidden bg-silver-500/20">

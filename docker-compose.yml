@@ -1,7 +1,7 @@
 services:
   deps:
     image: node:22-bookworm-slim
-    container_name: zanders-deps
+    container_name: app-deps
     working_dir: /workspace
     environment:
       CI: 'true'
@@ -20,33 +20,33 @@ services:
 
   postgres:
     image: postgres:16-alpine
-    container_name: zanders-postgres
+    container_name: app-postgres
     restart: unless-stopped
     environment:
-      POSTGRES_DB: zanders
-      POSTGRES_USER: zanders
-      POSTGRES_PASSWORD: zanders_dev_password
+      POSTGRES_DB: app
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app_dev_password
     ports:
       - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U zanders -d zanders']
+      test: ['CMD-SHELL', 'pg_isready -U app -d app']
       interval: 5s
       timeout: 5s
       retries: 12
 
   cms:
     image: node:22-bookworm-slim
-    container_name: zanders-cms
+    container_name: app-cms
     working_dir: /workspace
     command: >
       sh -lc "corepack enable &&
       corepack prepare pnpm@10.18.2 --activate &&
-      pnpm --filter @zanders/cms dev"
+      pnpm --filter @starter/cms dev"
     environment:
       CI: 'true'
-      DATABASE_URL: postgresql://zanders:zanders_dev_password@postgres:5432/zanders
+      DATABASE_URL: postgresql://app:app_dev_password@postgres:5432/app
       PAYLOAD_SECRET: ${PAYLOAD_SECRET:-dev-only-change-me}
       PAYLOAD_PUBLIC_SERVER_URL: http://localhost:3001
       WEB_PUBLIC_URL: http://localhost:3000
@@ -56,7 +56,7 @@ services:
       SMTP_USER: ${SMTP_USER:-}
       SMTP_PASS: ${SMTP_PASS:-}
       SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
-      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-Zanders SV}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-New Site}
       NEXT_TELEMETRY_DISABLED: '1'
     ports:
       - '3001:3001'
@@ -74,12 +74,12 @@ services:
 
   web:
     image: node:22-bookworm-slim
-    container_name: zanders-web
+    container_name: app-web
     working_dir: /workspace
     command: >
       sh -lc "corepack enable &&
       corepack prepare pnpm@10.18.2 --activate &&
-      pnpm --filter @zanders/web dev"
+      pnpm --filter @starter/web dev"
     environment:
       CMS_INTERNAL_URL: http://cms:3001
       NEXT_PUBLIC_CMS_URL: http://localhost:3001

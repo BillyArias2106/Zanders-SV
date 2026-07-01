@@ -1,4 +1,11 @@
-import type { Field, GlobalConfig, TextFieldSingleValidation } from 'payload'
+import type {
+  Field,
+  GlobalConfig,
+  StaticLabel,
+  TextFieldSingleValidation
+} from 'payload'
+
+import { adminLabel, adminLabels } from '../lib/admin-i18n'
 
 const hexColorPattern = /^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/
 
@@ -15,7 +22,7 @@ const validateHexColor: TextFieldSingleValidation = (value) => {
 
 const colorField = (
   name: string,
-  label: string,
+  label: StaticLabel,
   defaultValue: string
 ): Field => ({
   name,
@@ -30,7 +37,7 @@ const colorField = (
         exportName: 'ColorPickerField'
       }
     },
-    description: 'Formato HEX. Ejemplo: #0F172A.',
+    description: adminLabel('Formato HEX. Ejemplo: #0F172A.', 'HEX format. Example: #0F172A.'),
     placeholder: defaultValue
   },
   validate: validateHexColor
@@ -38,7 +45,7 @@ const colorField = (
 
 const imageUploadField = (
   name: string,
-  label: string,
+  label: StaticLabel,
   required = false
 ): Field => ({
   name,
@@ -54,17 +61,344 @@ const imageUploadField = (
   }
 })
 
+type FooterColumnSiblingData = {
+  contentType?:
+    | 'contact'
+    | 'customText'
+    | 'mainNavigation'
+    | 'manualLinks'
+    | 'publishedPages'
+    | 'socialLinks'
+}
+
+const showForFooterColumnType =
+  (contentType: FooterColumnSiblingData['contentType']) =>
+  (_: unknown, siblingData: unknown) =>
+    (siblingData as FooterColumnSiblingData).contentType === contentType
+
+const footerManualLinkFields: Field[] = [
+  {
+    name: 'label',
+    type: 'text',
+    label: adminLabel('Texto visible', 'Visible text'),
+    localized: true,
+    required: true
+  },
+  {
+    name: 'url',
+    type: 'text',
+    label: 'URL',
+    required: true
+  },
+  {
+    name: 'openInNewTab',
+    type: 'checkbox',
+    label: adminLabel('Abrir en nueva pestaña', 'Open in new tab'),
+    defaultValue: false
+  },
+  {
+    name: 'isActive',
+    type: 'checkbox',
+    label: adminLabel('Activo', 'Active'),
+    defaultValue: true
+  },
+  {
+    name: 'order',
+    type: 'number',
+    label: adminLabel('Orden', 'Order'),
+    defaultValue: 0
+  }
+]
+
+const footerFields: Field[] = [
+  {
+    name: 'footerIsEnabled',
+    type: 'checkbox',
+    label: adminLabel('Mostrar pie de página', 'Show footer'),
+    defaultValue: true
+  },
+  {
+    name: 'footerShowLogo',
+    type: 'checkbox',
+    label: adminLabel('Mostrar logo', 'Show logo'),
+    defaultValue: true
+  },
+  imageUploadField(
+    'footerLogo',
+    adminLabel('Logo del pie de página', 'Footer logo')
+  ),
+  {
+    name: 'footerShowCompanyName',
+    type: 'checkbox',
+    label: adminLabel('Mostrar nombre de empresa', 'Show company name'),
+    defaultValue: true
+  },
+  {
+    name: 'footerCompanyNameOverride',
+    type: 'text',
+    label: adminLabel('Nombre de empresa alternativo', 'Alternative company name'),
+    localized: true
+  },
+  {
+    name: 'footerShortDescription',
+    type: 'textarea',
+    label: adminLabel('Descripción corta', 'Short description'),
+    localized: true,
+    admin: {
+      rows: 3
+    }
+  },
+  {
+    name: 'footerAdditionalText',
+    type: 'textarea',
+    label: adminLabel('Texto adicional', 'Additional text'),
+    localized: true,
+    admin: {
+      rows: 4
+    }
+  },
+  {
+    name: 'footerColumns',
+    type: 'array',
+    label: adminLabel('Columnas del pie de página', 'Footer columns'),
+    labels: adminLabels('Columna', 'Columnas', 'Column', 'Columns'),
+    fields: [
+      {
+        name: 'title',
+        type: 'text',
+        label: adminLabel('Título', 'Title'),
+        localized: true,
+        required: true
+      },
+      {
+        name: 'contentType',
+        type: 'select',
+        label: adminLabel('Tipo de contenido', 'Content type'),
+        required: true,
+        defaultValue: 'manualLinks',
+        options: [
+          {
+            label: adminLabel(
+              'Páginas publicadas automáticamente',
+              'Published pages automatically'
+            ),
+            value: 'publishedPages'
+          },
+          { label: adminLabel('Menú principal', 'Main menu'), value: 'mainNavigation' },
+          { label: adminLabel('Enlaces manuales', 'Manual links'), value: 'manualLinks' },
+          { label: adminLabel('Redes sociales', 'Social links'), value: 'socialLinks' },
+          { label: adminLabel('Contacto', 'Contact'), value: 'contact' },
+          { label: adminLabel('Texto personalizado', 'Custom text'), value: 'customText' }
+        ]
+      },
+      {
+        name: 'customText',
+        type: 'textarea',
+        label: adminLabel('Texto personalizado', 'Custom text'),
+        localized: true,
+        admin: {
+          condition: showForFooterColumnType('customText'),
+          rows: 5
+        }
+      },
+      {
+        name: 'links',
+        type: 'array',
+        label: adminLabel('Enlaces manuales', 'Manual links'),
+        labels: adminLabels('Enlace', 'Enlaces', 'Link', 'Links'),
+        admin: {
+          condition: showForFooterColumnType('manualLinks')
+        },
+        fields: footerManualLinkFields
+      },
+      {
+        name: 'order',
+        type: 'number',
+        label: adminLabel('Orden', 'Order'),
+        defaultValue: 0
+      },
+      {
+        name: 'isActive',
+        type: 'checkbox',
+        label: adminLabel('Activo', 'Active'),
+        defaultValue: true
+      }
+    ]
+  },
+  {
+    name: 'footerSocialLinks',
+    type: 'array',
+    label: adminLabel(
+      'Redes sociales visibles en el pie de página',
+      'Social links visible in the footer'
+    ),
+    admin: {
+      description: adminLabel(
+        'Opcional. Si no agregas redes aquí, el sitio usa las redes principales de Configuración General.',
+        'Optional. If you do not add links here, the site uses the main social links from General Settings.'
+      )
+    },
+    labels: adminLabels('Red social', 'Redes sociales', 'Social link', 'Social links'),
+    fields: [
+      {
+        name: 'name',
+        type: 'text',
+        label: adminLabel('Nombre', 'Name'),
+        localized: true,
+        required: true
+      },
+      {
+        name: 'type',
+        type: 'select',
+        label: adminLabel('Tipo', 'Type'),
+        required: true,
+        defaultValue: 'other',
+        options: [
+          { label: 'Facebook', value: 'facebook' },
+          { label: 'Instagram', value: 'instagram' },
+          { label: 'TikTok', value: 'tiktok' },
+          { label: 'LinkedIn', value: 'linkedin' },
+          { label: 'YouTube', value: 'youtube' },
+          { label: 'X / Twitter', value: 'twitter' },
+          { label: 'WhatsApp', value: 'whatsapp' },
+          { label: adminLabel('Sitio web', 'Website'), value: 'website' },
+          { label: adminLabel('Otro', 'Other'), value: 'other' }
+        ]
+      },
+      {
+        name: 'url',
+        type: 'text',
+        label: 'URL',
+        required: true
+      },
+      {
+        name: 'iconName',
+        type: 'text',
+        label: adminLabel('Ícono o nombre de ícono', 'Icon or icon name')
+      },
+      {
+        name: 'showInFooter',
+        type: 'checkbox',
+        label: adminLabel('Mostrar en pie de página', 'Show in footer'),
+        defaultValue: true
+      },
+      {
+        name: 'showInHeader',
+        type: 'checkbox',
+        label: adminLabel('Mostrar en encabezado', 'Show in header'),
+        defaultValue: false
+      },
+      {
+        name: 'openInNewTab',
+        type: 'checkbox',
+        label: adminLabel('Abrir en nueva pestaña', 'Open in new tab'),
+        defaultValue: true
+      },
+      {
+        name: 'isActive',
+        type: 'checkbox',
+        label: adminLabel('Activo', 'Active'),
+        defaultValue: true
+      },
+      {
+        name: 'order',
+        type: 'number',
+        label: adminLabel('Orden', 'Order'),
+        defaultValue: 0
+      }
+    ]
+  },
+  {
+    name: 'footerUseCompanySettings',
+    type: 'checkbox',
+    label: adminLabel('Usar datos de contacto generales', 'Use general contact details'),
+    defaultValue: true
+  },
+  {
+    name: 'footerEmail',
+    type: 'email',
+    label: adminLabel('Correo', 'Email')
+  },
+  {
+    name: 'footerPhone',
+    type: 'text',
+    label: adminLabel('Teléfono', 'Phone')
+  },
+  {
+    name: 'footerWhatsapp',
+    type: 'text',
+    label: 'WhatsApp'
+  },
+  {
+    name: 'footerAddress',
+    type: 'textarea',
+    label: adminLabel('Dirección', 'Address'),
+    localized: true,
+    admin: {
+      rows: 3
+    }
+  },
+  {
+    name: 'footerBusinessHours',
+    type: 'textarea',
+    label: adminLabel('Horarios', 'Business hours'),
+    localized: true,
+    admin: {
+      rows: 3
+    }
+  },
+  {
+    name: 'footerCountry',
+    type: 'text',
+    label: adminLabel('País', 'Country')
+  },
+  {
+    name: 'footerCity',
+    type: 'text',
+    label: adminLabel('Ciudad', 'City')
+  },
+  {
+    name: 'footerCopyrightText',
+    type: 'text',
+    label: 'Copyright',
+    localized: true
+  },
+  {
+    name: 'footerPrivacyPage',
+    type: 'relationship',
+    label: adminLabel('Página de políticas de privacidad', 'Privacy policy page'),
+    relationTo: 'pages'
+  },
+  {
+    name: 'footerTermsPage',
+    type: 'relationship',
+    label: adminLabel('Página de términos y condiciones', 'Terms and conditions page'),
+    relationTo: 'pages'
+  },
+  {
+    name: 'footerLegalTextOverride',
+    type: 'textarea',
+    label: adminLabel('Texto legal personalizado', 'Custom legal text'),
+    localized: true,
+    admin: {
+      rows: 4
+    }
+  }
+]
+
 export const CompanySettings: GlobalConfig = {
   slug: 'company-settings',
-  label: 'Configuración General',
+  label: adminLabel('Configuración General', 'General Settings'),
   access: {
     read: () => true,
     update: ({ req }) => Boolean(req.user)
   },
   admin: {
-    group: 'Empresa',
-    description:
-      'Información global de la empresa, branding, redes sociales, SEO y textos legales.'
+    group: adminLabel('Empresa', 'Company'),
+    description: adminLabel(
+      'Información global de la empresa, marca, pie de página, redes sociales, SEO y textos legales.',
+      'Global company information, brand, footer, social links, SEO and legal text.'
+    )
   },
   typescript: {
     interface: 'CompanySettings'
@@ -74,40 +408,57 @@ export const CompanySettings: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'Información General',
+          label: adminLabel('Información General', 'General Information'),
           fields: [
+            {
+              name: 'defaultLanguage',
+              type: 'select',
+              label: adminLabel('Idioma predeterminado del sitio', 'Default site language'),
+              required: true,
+              defaultValue: 'es',
+              options: [
+                { label: adminLabel('Español', 'Spanish'), value: 'es' },
+                { label: adminLabel('Inglés', 'English'), value: 'en' }
+              ],
+              admin: {
+                description: adminLabel(
+                  'Si una persona no ha elegido idioma, el sitio público cargará este idioma.',
+                  'If a visitor has not chosen a language, the public site loads this language.'
+                )
+              }
+            },
             {
               name: 'commercialName',
               type: 'text',
-              label: 'Nombre comercial',
+              label: adminLabel('Nombre comercial', 'Commercial name'),
               required: true,
-              defaultValue: 'Zanders SV'
+              defaultValue: 'New Site'
             },
             {
               name: 'legalName',
               type: 'text',
-              label: 'Razón social'
+              label: adminLabel('Razón social', 'Legal name')
             },
             {
               name: 'slogan',
               type: 'text',
-              label: 'Eslogan',
-              defaultValue: 'Ideas que toman forma. Tecnología que despega.'
+              label: adminLabel('Eslogan', 'Slogan'),
+              localized: true
             },
             {
               name: 'shortDescription',
               type: 'textarea',
-              label: 'Descripción corta',
+              label: adminLabel('Descripción corta', 'Short description'),
+              localized: true,
               admin: {
                 rows: 3
-              },
-              defaultValue:
-                'Fabricación, personalización, impresión profesional y soluciones aéreas con drones.'
+              }
             },
             {
               name: 'longDescription',
               type: 'textarea',
-              label: 'Descripción larga',
+              label: adminLabel('Descripción larga', 'Long description'),
+              localized: true,
               admin: {
                 rows: 7
               }
@@ -115,24 +466,23 @@ export const CompanySettings: GlobalConfig = {
             {
               name: 'mainEmail',
               type: 'email',
-              label: 'Correo principal'
+              label: adminLabel('Correo principal', 'Main email')
             },
             {
               name: 'mainPhone',
               type: 'text',
-              label: 'Teléfono principal',
-              defaultValue: '+503 7934 7603'
+              label: adminLabel('Teléfono principal', 'Main phone')
             },
             {
               name: 'whatsapp',
               type: 'text',
-              label: 'WhatsApp',
-              defaultValue: '+503 7934 7603'
+              label: 'WhatsApp'
             },
             {
               name: 'address',
               type: 'textarea',
-              label: 'Dirección',
+              label: adminLabel('Dirección', 'Address'),
+              localized: true,
               admin: {
                 rows: 3
               }
@@ -140,13 +490,14 @@ export const CompanySettings: GlobalConfig = {
             {
               name: 'countryCity',
               type: 'text',
-              label: 'País / ciudad',
-              defaultValue: 'El Salvador'
+              label: adminLabel('País / ciudad', 'Country / city'),
+              localized: true
             },
             {
               name: 'businessHours',
               type: 'textarea',
-              label: 'Horarios de atención',
+              label: adminLabel('Horarios de atención', 'Business hours'),
+              localized: true,
               admin: {
                 rows: 3
               }
@@ -154,30 +505,33 @@ export const CompanySettings: GlobalConfig = {
           ]
         },
         {
-          label: 'Branding',
+          label: adminLabel('Marca', 'Brand'),
           fields: [
-            imageUploadField('logoPrimary', 'Logo principal'),
-            imageUploadField('logoSecondary', 'Logo secundario o alternativo'),
-            imageUploadField('favicon', 'Favicon'),
-            imageUploadField('ogImage', 'Imagen OG para redes sociales'),
-            colorField('colorPrimary', 'Color primario', '#8DE1E8'),
-            colorField('colorSecondary', 'Color secundario', '#1A6B80'),
-            colorField('colorAccent', 'Color de acento', '#45ACBF'),
-            colorField('colorBackground', 'Color de fondo', '#02080C'),
+            imageUploadField('logoPrimary', adminLabel('Logo principal', 'Primary logo')),
+            imageUploadField(
+              'logoSecondary',
+              adminLabel('Logo secundario o alternativo', 'Secondary or alternative logo')
+            ),
+            imageUploadField('favicon', adminLabel('Ícono del sitio', 'Site icon')),
+            imageUploadField('ogImage', adminLabel('Imagen para compartir en redes', 'Social sharing image')),
+            colorField('colorPrimary', adminLabel('Color primario', 'Primary color'), '#8DE1E8'),
+            colorField('colorSecondary', adminLabel('Color secundario', 'Secondary color'), '#1A6B80'),
+            colorField('colorAccent', adminLabel('Color de acento', 'Accent color'), '#45ACBF'),
+            colorField('colorBackground', adminLabel('Color de fondo', 'Background color'), '#02080C'),
             colorField(
               'colorTextPrimary',
-              'Color de texto principal',
+              adminLabel('Color de texto principal', 'Primary text color'),
               '#F8FAFC'
             ),
             colorField(
               'colorTextSecondary',
-              'Color de texto secundario',
+              adminLabel('Color de texto secundario', 'Secondary text color'),
               '#C7D1D6'
             )
           ]
         },
         {
-          label: 'Redes Sociales',
+          label: adminLabel('Redes Sociales', 'Social Links'),
           fields: [
             {
               name: 'facebookUrl',
@@ -212,24 +566,26 @@ export const CompanySettings: GlobalConfig = {
             {
               name: 'whatsappUrl',
               type: 'text',
-              label: 'WhatsApp link'
+              label: adminLabel('Enlace de WhatsApp', 'WhatsApp link')
             }
           ]
         },
         {
-          label: 'Contacto',
+          label: adminLabel('Contacto', 'Contact'),
           fields: [
             {
               name: 'contactEyebrow',
               type: 'text',
-              label: 'Texto pequeño',
+              label: adminLabel('Texto pequeño', 'Small text'),
+              localized: true,
               defaultValue: 'Pongámonos en contacto'
             },
             {
               name: 'contactHeadline',
               type: 'textarea',
-              label: 'Título del contacto',
-              defaultValue: '¡Trabajemos en una nueva visión de tu negocio!',
+              label: adminLabel('Título del contacto', 'Contact headline'),
+              localized: true,
+              defaultValue: 'Cuéntanos qué necesitas',
               admin: {
                 rows: 3
               }
@@ -237,7 +593,8 @@ export const CompanySettings: GlobalConfig = {
             {
               name: 'contactIntro',
               type: 'textarea',
-              label: 'Texto de apoyo',
+              label: adminLabel('Texto de apoyo', 'Supporting text'),
+              localized: true,
               admin: {
                 rows: 3
               }
@@ -245,20 +602,24 @@ export const CompanySettings: GlobalConfig = {
             {
               name: 'contactRecipients',
               type: 'array',
-              label: 'Correos que reciben formularios',
-              labels: {
-                singular: 'Correo destinatario',
-                plural: 'Correos destinatarios'
-              },
+              label: adminLabel('Correos que reciben formularios', 'Form recipient emails'),
+              labels: adminLabels(
+                'Correo destinatario',
+                'Correos destinatarios',
+                'Recipient email',
+                'Recipient emails'
+              ),
               admin: {
-                description:
-                  'Puedes agregar varios correos. Cada mensaje del formulario se guardará en el admin y se enviará a estos correos.'
+                description: adminLabel(
+                  'Puedes agregar varios correos. Cada mensaje del formulario se guardará en el admin y se enviará a estos correos.',
+                  'You can add multiple emails. Each form message is saved in the admin and sent to these addresses.'
+                )
               },
               fields: [
                 {
                   name: 'email',
                   type: 'email',
-                  label: 'Correo',
+                  label: adminLabel('Correo', 'Email'),
                   required: true
                 }
               ]
@@ -266,39 +627,45 @@ export const CompanySettings: GlobalConfig = {
           ]
         },
         {
+          label: adminLabel('Pie de página', 'Footer'),
+          fields: footerFields
+        },
+        {
           label: 'SEO',
           fields: [
             {
               name: 'defaultMetaTitle',
               type: 'text',
-              label: 'Meta title por defecto',
+              label: adminLabel('Título SEO por defecto', 'Default SEO title'),
               required: true,
-              defaultValue: 'Zanders SV | Aero Solutions'
+              localized: true,
+              defaultValue: 'New Site'
             },
             {
               name: 'defaultMetaDescription',
               type: 'textarea',
-              label: 'Meta description por defecto',
+              label: adminLabel('Descripción SEO por defecto', 'Default SEO description'),
               required: true,
+              localized: true,
               admin: {
                 rows: 3
               },
-              defaultValue:
-                'Plataforma digital para Zanders SV y Zanders Aero Solutions: fabricación, personalización y soluciones aéreas con drones.'
+              defaultValue: 'Sitio web listo para configurar desde el panel de administración.'
             },
             {
               name: 'globalKeywords',
               type: 'textarea',
-              label: 'Keywords globales',
+              label: adminLabel('Palabras clave globales', 'Global keywords'),
+              localized: true,
               admin: {
                 rows: 3,
-                description: 'Separar palabras clave con comas.'
+                description: adminLabel('Separar palabras clave con comas.', 'Separate keywords with commas.')
               }
             },
             {
               name: 'canonicalBaseUrl',
               type: 'text',
-              label: 'URL canónica base',
+              label: adminLabel('URL canónica base', 'Base canonical URL'),
               defaultValue: 'http://localhost:3000'
             }
           ]
@@ -309,13 +676,15 @@ export const CompanySettings: GlobalConfig = {
             {
               name: 'copyrightText',
               type: 'text',
-              label: 'Texto de copyright',
-              defaultValue: '© Zanders SV. Todos los derechos reservados.'
+              label: adminLabel('Texto de copyright', 'Copyright text'),
+              localized: true,
+              defaultValue: '© New Site. Todos los derechos reservados.'
             },
             {
               name: 'privacyPolicy',
               type: 'textarea',
-              label: 'Políticas de privacidad',
+              label: adminLabel('Políticas de privacidad', 'Privacy policy'),
+              localized: true,
               admin: {
                 rows: 8
               }
@@ -323,7 +692,8 @@ export const CompanySettings: GlobalConfig = {
             {
               name: 'termsAndConditions',
               type: 'textarea',
-              label: 'Términos y condiciones',
+              label: adminLabel('Términos y condiciones', 'Terms and conditions'),
+              localized: true,
               admin: {
                 rows: 8
               }
@@ -331,7 +701,8 @@ export const CompanySettings: GlobalConfig = {
             {
               name: 'footerLegalText',
               type: 'textarea',
-              label: 'Texto legal del footer',
+              label: adminLabel('Texto legal del pie de página', 'Footer legal text'),
+              localized: true,
               admin: {
                 rows: 4
               }

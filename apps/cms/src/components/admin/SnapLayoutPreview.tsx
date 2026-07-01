@@ -1,6 +1,6 @@
 'use client'
 
-import { useFormFields } from '@payloadcms/ui'
+import { useFormFields, useTranslation } from '@payloadcms/ui'
 
 import './snap-layout-preview.css'
 
@@ -31,22 +31,22 @@ const snapLayouts = [
 type SnapLayout = (typeof snapLayouts)[number]
 
 const layoutLabels = {
-  bentoGrid: 'Bento Grid',
-  contact: 'Contacto',
-  featureLeft: 'Grande izquierda + dos derecha',
-  featureRight: 'Dos izquierda + grande derecha',
-  fourColumns: 'Cuatro columnas',
-  mediaText: 'Media izquierda + texto derecha',
-  mosaicGallery: 'Galería en mosaico',
-  oneColumn: 'Una columna completa',
-  serviceCards: 'Cards de servicios',
-  splitHero: 'Hero dividido',
-  textMedia: 'Texto izquierda + media derecha',
-  threeColumns: 'Tres columnas',
-  twoColumns: 'Dos columnas 50/50',
-  twoColumnsWideLeft: 'Dos columnas 70/30',
-  twoColumnsWideRight: 'Dos columnas 30/70'
-} satisfies Record<SnapLayout, string>
+  bentoGrid: { en: 'Bento grid', es: 'Cuadrícula tipo bento' },
+  contact: { en: 'Contact', es: 'Contacto' },
+  featureLeft: { en: 'Large left + two right', es: 'Grande izquierda + dos derecha' },
+  featureRight: { en: 'Two left + large right', es: 'Dos izquierda + grande derecha' },
+  fourColumns: { en: 'Four columns', es: 'Cuatro columnas' },
+  mediaText: { en: 'Media left + text right', es: 'Medio izquierda + texto derecha' },
+  mosaicGallery: { en: 'Mosaic gallery', es: 'Galería en mosaico' },
+  oneColumn: { en: 'One full column', es: 'Una columna completa' },
+  serviceCards: { en: 'Service cards', es: 'Tarjetas de servicios' },
+  splitHero: { en: 'Split hero', es: 'Portada dividida' },
+  textMedia: { en: 'Text left + media right', es: 'Texto izquierda + medio derecha' },
+  threeColumns: { en: 'Three columns', es: 'Tres columnas' },
+  twoColumns: { en: 'Two columns 50/50', es: 'Dos columnas 50/50' },
+  twoColumnsWideLeft: { en: 'Two columns 70/30', es: 'Dos columnas 70/30' },
+  twoColumnsWideRight: { en: 'Two columns 30/70', es: 'Dos columnas 30/70' }
+} satisfies Record<SnapLayout, { en: string; es: string }>
 
 const cellCounts = {
   bentoGrid: 6,
@@ -81,6 +81,8 @@ const getSiblingLayoutPath = (path: string | undefined) => {
 }
 
 export function SnapLayoutPreview({ path }: { path?: string }) {
+  const { i18n } = useTranslation()
+  const language = i18n.language === 'en' ? 'en' : 'es'
   const layoutPath = getSiblingLayoutPath(path)
   const selectedLayout = useFormFields(([fields]) => {
     const formFields = fields as FormFieldsState
@@ -92,19 +94,21 @@ export function SnapLayoutPreview({ path }: { path?: string }) {
   const layout = isSnapLayout(selectedLayout) ? selectedLayout : 'oneColumn'
 
   return (
-    <div className="zanders-snap-preview">
-      <div className="zanders-snap-preview__header">
-        <span className="zanders-snap-preview__eyebrow">Vista previa</span>
-        <span className="zanders-snap-preview__title">
-          {layoutLabels[layout]}
+    <div className="app-snap-preview">
+      <div className="app-snap-preview__header">
+        <span className="app-snap-preview__eyebrow">
+          {language === 'en' ? 'Preview' : 'Vista previa'}
+        </span>
+        <span className="app-snap-preview__title">
+          {layoutLabels[layout][language]}
         </span>
       </div>
-      <div className="zanders-snap-preview__canvas">
-        <div className="zanders-snap-preview__grid" data-layout={layout}>
+      <div className="app-snap-preview__canvas">
+        <div className="app-snap-preview__grid" data-layout={layout}>
           {Array.from({ length: cellCounts[layout] }).map((_, index) => (
             <span
               aria-hidden="true"
-              className="zanders-snap-preview__cell"
+              className="app-snap-preview__cell"
               key={`${layout}-${index}`}
             >
               {index + 1}

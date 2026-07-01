@@ -1,9 +1,11 @@
 import { ChevronDown, Menu } from 'lucide-react'
 
 import type { NavigationItem } from '@/lib/cms'
+import type { UITranslations } from '@/lib/i18n'
 
 type NavLinkListProps = {
   items: NavigationItem[]
+  labels: UITranslations['navigation']
 }
 
 function NavItemLink({
@@ -88,10 +90,10 @@ function MobileNavItem({ item }: { item: NavigationItem }) {
   )
 }
 
-export function NavLinkList({ items }: NavLinkListProps) {
+export function NavLinkList({ items, labels }: NavLinkListProps) {
   return (
     <>
-      <nav aria-label="Principal" className="hidden items-center gap-2 md:flex">
+      <nav aria-label={labels.main} className="hidden items-center gap-2 md:flex">
         {items.map((item) => (
           <DesktopNavItem item={item} key={`${item.label}-${item.href}`} />
         ))}
@@ -100,10 +102,10 @@ export function NavLinkList({ items }: NavLinkListProps) {
       <details className="relative md:hidden">
         <summary className="grid h-11 w-11 cursor-pointer list-none place-items-center border border-cyan-200/40 bg-cyan-200/10 text-cyan-200 [&::-webkit-details-marker]:hidden">
           <Menu aria-hidden="true" size={21} strokeWidth={1.7} />
-          <span className="sr-only">Abrir menú</span>
+          <span className="sr-only">{labels.openMenu}</span>
         </summary>
         <nav
-          aria-label="Principal móvil"
+          aria-label={labels.mobile}
           className="absolute right-0 top-[calc(100%+0.75rem)] w-72 border border-cyan-200/16 bg-deep-950/95 shadow-panel backdrop-blur-xl"
         >
           {items.map((item) => (

@@ -15,8 +15,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "@zanders/ui": ["packages/ui/src/index.ts"],
-      "@zanders/ui/*": ["packages/ui/src/*"]
+      "@starter/ui": ["packages/ui/src/index.ts"],
+      "@starter/ui/*": ["packages/ui/src/*"]
     }
   }
 }

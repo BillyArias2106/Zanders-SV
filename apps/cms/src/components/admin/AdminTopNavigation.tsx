@@ -1,16 +1,18 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
+import { useTranslation } from '@payloadcms/ui'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
+import { AdminOnboardingGate } from './AdminOnboardingGate'
 import './admin-navigation.css'
 
 const navItems = [
-  { href: '/admin/collections/pages', label: 'Páginas / Menú' },
-  { href: '/admin/collections/media', label: 'Medios' },
-  { href: '/admin/globals/footer-settings', label: 'Footer' },
-  { href: '/admin/globals/company-settings', label: 'Empresa' },
-  { href: '/admin/collections/contact-submissions', label: 'CRM' },
-  { href: '/admin/collections/users', label: 'Sistema' }
+  { href: '/admin/collections/pages', label: { en: 'Pages / Menu', es: 'Páginas / Menú' } },
+  { href: '/admin/collections/media', label: { en: 'Media', es: 'Medios' } },
+  { href: '/admin/globals/company-settings', label: { en: 'Company', es: 'Empresa' } },
+  { href: '/admin/collections/contact-submissions', label: { en: 'Messages', es: 'Mensajes' } },
+  { href: '/admin/collections/users', label: { en: 'Users', es: 'Usuarios' } }
 ]
 
 const hiddenPathSegments = [
@@ -22,36 +24,55 @@ const hiddenPathSegments = [
 
 export function AdminTopNavigation() {
   const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const { i18n, switchLanguage } = useTranslation()
+  const locale = searchParams.get('locale')
+  const language = locale === 'en' || locale === 'es' ? locale : i18n.language
+  const labelLanguage = language === 'en' ? 'en' : 'es'
+
+  useEffect(() => {
+    if ((locale === 'en' || locale === 'es') && locale !== i18n.language) {
+      void switchLanguage?.(locale)
+    }
+  }, [i18n.language, locale, switchLanguage])
 
   if (hiddenPathSegments.some((segment) => pathname.includes(segment))) {
-    return null
+    return <AdminOnboardingGate />
   }
 
   return (
-    <nav aria-label="Secciones principales" className="zanders-admin-top-nav">
-      <a className="zanders-admin-top-nav__brand" href="/admin">
-        Zanders CMS
-      </a>
-      <div className="zanders-admin-top-nav__links">
-        {navItems.map((item) =>
-          item.href ? (
-            <a
-              className="zanders-admin-top-nav__link"
-              href={item.href}
-              key={item.label}
-            >
-              {item.label}
-            </a>
-          ) : (
-            <span
-              className="zanders-admin-top-nav__link zanders-admin-top-nav__link--muted"
-              key={item.label}
-            >
-              {item.label}
-            </span>
-          )
-        )}
-      </div>
-    </nav>
+    <>
+      <AdminOnboardingGate />
+      <nav
+        aria-label={
+          labelLanguage === 'en' ? 'Main sections' : 'Secciones principales'
+        }
+        className="app-admin-top-nav"
+      >
+        <a className="app-admin-top-nav__brand" href="/admin">
+          CMS
+        </a>
+        <div className="app-admin-top-nav__links">
+          {navItems.map((item) =>
+            item.href ? (
+              <a
+                className="app-admin-top-nav__link"
+                href={item.href}
+                key={item.href}
+              >
+                {item.label[labelLanguage]}
+              </a>
+            ) : (
+              <span
+                className="app-admin-top-nav__link app-admin-top-nav__link--muted"
+                key={item.href}
+              >
+                {item.label[labelLanguage]}
+              </span>
+            )
+          )}
+        </div>
+      </nav>
+    </>
   )
 }

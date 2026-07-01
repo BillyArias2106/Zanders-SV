@@ -14,9 +14,11 @@ import type { LucideIcon } from 'lucide-react'
 import { ContactForm } from '@/components/molecules/contact-form'
 import { HeroNavigation } from '@/components/organisms/hero-navigation'
 import type { CompanySettingsContent, NavigationItem } from '@/lib/cms'
+import { getUIText, type Locale } from '@/lib/i18n'
 
 type LandingExperienceProps = {
   companySettings: CompanySettingsContent
+  locale: Locale
   navigationItems: NavigationItem[]
 }
 
@@ -40,8 +42,10 @@ const getPhoneHref = (phone: string) => phone.replace(/[^\d+]/g, '')
 
 export function LandingExperience({
   companySettings,
+  locale,
   navigationItems
 }: LandingExperienceProps) {
+  const text = getUIText(locale)
   const socialLinks: SocialLink[] = socialEntries
     .map(([key, label, icon]): SocialLink | null => {
       const href = companySettings.social[key]
@@ -63,6 +67,7 @@ export function LandingExperience({
     <main className="min-h-screen bg-[#eef3ff] text-[#07164b]">
       <HeroNavigation
         companySettings={companySettings}
+        locale={locale}
         navigationItems={navigationItems}
       />
 
@@ -87,7 +92,7 @@ export function LandingExperience({
 
           <div className="mt-10">
             <p className="font-heading text-sm font-bold uppercase tracking-[0.18em]">
-              Llámanos o escríbenos
+              {text.contact.callOrWrite}
             </p>
             {phone ? (
               <a
@@ -131,7 +136,7 @@ export function LandingExperience({
         </div>
 
         <div>
-          <ContactForm />
+          <ContactForm locale={locale} />
         </div>
       </section>
     </main>

@@ -1,6 +1,6 @@
-# Zanders Platform
+# Starter Platform
 
-Base monorepo para la plataforma digital de Zanders SV y Zanders Aero Solutions.
+Base monorepo para la plataforma digital de un sitio nuevo.
 
 ## Stack
 
@@ -18,6 +18,6 @@ URLs locales:
 
 - Web: `http://localhost:3000`
 - CMS: `http://localhost:3001/admin`
-- PostgreSQL: `postgresql://zanders:zanders_dev_password@localhost:5432/zanders`
+- PostgreSQL: `postgresql://app:app_dev_password@localhost:5432/app`
 
 Antes de usar en produccion, define un `PAYLOAD_SECRET` fuerte en `.env`.

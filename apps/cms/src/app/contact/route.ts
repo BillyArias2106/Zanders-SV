@@ -7,6 +7,7 @@ type ContactPayload = {
   email?: unknown
   firstName?: unknown
   lastName?: unknown
+  locale?: unknown
   message?: unknown
   phone?: unknown
   subject?: unknown
@@ -18,6 +19,40 @@ type CompanySettingsWithContact = {
 }
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+const contactMessages = {
+  en: {
+    email: 'Enter a valid email address.',
+    firstName: 'Enter your first name.',
+    message: 'Enter your message.',
+    noRecipients:
+      'Message saved, but no recipient emails are configured.',
+    noRecipientsAdmin:
+      'No recipients are configured in General Settings > Contact.',
+    phone: 'Enter your contact number.',
+    source: 'Website form',
+    subject: 'Enter the subject.',
+    unableToSend:
+      'Message saved in the admin panel, but the email could not be sent.'
+  },
+  es: {
+    email: 'Escribe un correo válido.',
+    firstName: 'Escribe tu nombre.',
+    message: 'Escribe tu mensaje.',
+    noRecipients:
+      'Mensaje guardado, pero no hay correos destinatarios configurados.',
+    noRecipientsAdmin:
+      'No hay destinatarios configurados en Configuración General > Contacto.',
+    phone: 'Escribe tu número de contacto.',
+    source: 'Formulario web',
+    subject: 'Escribe el asunto.',
+    unableToSend:
+      'Mensaje guardado en el admin, pero no se pudo enviar el correo.'
+  }
+}
+
+const resolveLocale = (value: unknown): keyof typeof contactMessages =>
+  value === 'en' ? 'en' : 'es'
 
 const jsonResponse = (body: unknown, status = 200) =>
   Response.json(body, {
@@ -97,26 +132,27 @@ export async function POST(request: Request) {
   const email = normalizeText(body.email)
   const subject = normalizeText(body.subject)
   const message = normalizeText(body.message)
+  const text = contactMessages[resolveLocale(body.locale)]
   const errors: Record<string, string> = {}
 
   if (!firstName) {
-    errors.firstName = 'Escribe tu nombre.'
+    errors.firstName = text.firstName
   }
 
   if (!phone) {
-    errors.phone = 'Escribe tu número de contacto.'
+    errors.phone = text.phone
   }
 
   if (!emailPattern.test(email)) {
-    errors.email = 'Escribe un correo válido.'
+    errors.email = text.email
   }
 
   if (!subject) {
-    errors.subject = 'Escribe el asunto.'
+    errors.subject = text.subject
   }
 
   if (!message) {
-    errors.message = 'Escribe tu mensaje.'
+    errors.message = text.message
   }
 
   if (Object.keys(errors).length > 0) {
@@ -145,7 +181,7 @@ export async function POST(request: Request) {
       lastName,
       message,
       phone,
-      source: 'Formulario web',
+      source: text.source,
       status: 'new',
       subject,
       userAgent: request.headers.get('user-agent') ?? ''
@@ -157,22 +193,20 @@ export async function POST(request: Request) {
       id: submission.id,
       collection: 'contact-submissions',
       data: {
-        emailError:
-          'No hay destinatarios configurados en Configuración General > Contacto.'
+        emailError: text.noRecipientsAdmin
       }
     })
 
     return jsonResponse({
       ok: true,
-      warning:
-        'Mensaje guardado, pero no hay correos destinatarios configurados.'
+      warning: text.noRecipients
     })
   }
 
   try {
     const transporter = getMailTransport()
     const fromEmail = process.env.SMTP_FROM_EMAIL ?? process.env.SMTP_USER
-    const fromName = process.env.SMTP_FROM_NAME ?? 'Zanders SV'
+    const fromName = process.env.SMTP_FROM_NAME ?? 'New Site'
     const safeSubject = escapeHtml(subject)
     const safeMessage = escapeHtml(message).replace(/\n/g, '<br />')
     const fullName = [firstName, lastName].filter(Boolean).join(' ')
@@ -227,8 +261,7 @@ export async function POST(request: Request) {
 
     return jsonResponse({
       ok: true,
-      warning:
-        'Mensaje guardado en el admin, pero no se pudo enviar el correo.'
+      warning: text.unableToSend
     })
   }
 }

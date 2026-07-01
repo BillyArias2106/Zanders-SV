@@ -1,0 +1,22 @@
+.app-admin-auth-actions {
+  border: 1px solid color-mix(in srgb, var(--theme-blue-500) 24%, transparent);
+  margin-bottom: 1rem;
+  padding: 0.9rem;
+}
+
+.app-admin-auth-actions p {
+  color: color-mix(in srgb, var(--theme-text) 74%, transparent);
+  font-size: 0.875rem;
+  margin: 0 0 0.65rem;
+}
+
+.app-admin-auth-actions a {
+  color: var(--theme-blue-500);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.app-admin-auth-actions a:hover {
+  text-decoration: underline;
+}

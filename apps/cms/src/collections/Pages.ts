@@ -1,6 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
 import { pageBuilderBlocks } from '../blocks/PageBuilderBlocks'
+import { adminLabel, adminLabels } from '../lib/admin-i18n'
 
 type PageSlugData = {
   slug?: string | null
@@ -43,13 +44,10 @@ export const Pages: CollectionConfig = {
       'navigationOrder',
       'updatedAt'
     ],
-    group: 'Contenido',
+    group: adminLabel('Contenido', 'Content'),
     useAsTitle: 'title'
   },
-  labels: {
-    singular: 'Página',
-    plural: 'Páginas'
-  },
+  labels: adminLabels('Página', 'Páginas', 'Page', 'Pages'),
   hooks: {
     beforeValidate: [
       ({ data }) => {
@@ -80,18 +78,20 @@ export const Pages: CollectionConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'Contenido',
+          label: adminLabel('Contenido', 'Content'),
           fields: [
             {
               name: 'title',
               type: 'text',
-              label: 'Título interno',
+              label: adminLabel('Título interno', 'Internal title'),
+              localized: true,
               required: true
             },
             {
               name: 'excerpt',
               type: 'textarea',
-              label: 'Resumen corto',
+              label: adminLabel('Resumen corto', 'Short summary'),
+              localized: true,
               admin: {
                 rows: 3
               }
@@ -103,26 +103,28 @@ export const Pages: CollectionConfig = {
               required: true,
               unique: true,
               admin: {
-                description:
-                  'Sin slash inicial. Ejemplos: impresiones, drones, servicios/diseno-web.',
+                description: adminLabel(
+                  'Sin slash inicial. Ejemplos: servicios, proyectos, servicios/diseno-web.',
+                  'Without initial slash. Examples: services, projects, services/web-design.'
+                ),
                 placeholder: 'servicios/diseno-web'
               }
             },
             {
               name: 'status',
               type: 'select',
-              label: 'Estado de publicación',
+              label: adminLabel('Estado de publicación', 'Publishing status'),
               required: true,
               defaultValue: 'draft',
               options: [
-                { label: 'Borrador', value: 'draft' },
-                { label: 'Publicado', value: 'published' }
+                { label: adminLabel('Borrador', 'Draft'), value: 'draft' },
+                { label: adminLabel('Publicado', 'Published'), value: 'published' }
               ]
             },
             {
               name: 'featuredImage',
               type: 'upload',
-              label: 'Imagen principal',
+              label: adminLabel('Imagen principal', 'Featured image'),
               relationTo: 'media',
               filterOptions: {
                 mimeType: {
@@ -133,20 +135,20 @@ export const Pages: CollectionConfig = {
           ]
         },
         {
-          label: 'Diseño / Layouts',
+          label: adminLabel('Diseño / Secciones', 'Design / Sections'),
           fields: [
             {
               name: 'content',
               type: 'blocks',
-              label: 'Constructor de página',
+              label: adminLabel('Constructor de página', 'Page builder'),
+              localized: true,
               blocks: pageBuilderBlocks,
-              labels: {
-                singular: 'Bloque',
-                plural: 'Bloques'
-              },
+              labels: adminLabels('Bloque', 'Bloques', 'Block', 'Blocks'),
               admin: {
-                description:
-                  'Aquí se agregan los bloques visuales. SnapLayout aparece como "Layout Personalizado" dentro de Agregar bloque; no pertenece al Menú Principal.'
+                description: adminLabel(
+                  'Aquí se agregan los bloques visuales. "Diseño personalizado" aparece dentro de Agregar bloque; no pertenece al Menú Principal.',
+                  'Add visual blocks here. "Custom layout" appears inside Add block; it is not part of the Main Menu.'
+                )
               }
             }
           ]
@@ -162,12 +164,14 @@ export const Pages: CollectionConfig = {
                 {
                   name: 'metaTitle',
                   type: 'text',
-                  label: 'Meta title'
+                  label: adminLabel('Título SEO', 'SEO title'),
+                  localized: true
                 },
                 {
                   name: 'metaDescription',
                   type: 'textarea',
-                  label: 'Meta description',
+                  label: adminLabel('Descripción SEO', 'SEO description'),
+                  localized: true,
                   admin: {
                     rows: 3
                   }
@@ -175,16 +179,17 @@ export const Pages: CollectionConfig = {
                 {
                   name: 'keywords',
                   type: 'textarea',
-                  label: 'Keywords',
+                  label: adminLabel('Palabras clave', 'Keywords'),
+                  localized: true,
                   admin: {
-                    description: 'Separar palabras clave con comas.',
+                    description: adminLabel('Separar palabras clave con comas.', 'Separate keywords with commas.'),
                     rows: 3
                   }
                 },
                 {
                   name: 'ogImage',
                   type: 'upload',
-                  label: 'Imagen OG',
+                  label: adminLabel('Imagen OG', 'OG image'),
                   relationTo: 'media',
                   filterOptions: {
                     mimeType: {
@@ -197,33 +202,41 @@ export const Pages: CollectionConfig = {
           ]
         },
         {
-          label: 'Menú',
+          label: adminLabel('Menú', 'Menu'),
           fields: [
             {
               name: 'showInMainNavigation',
               type: 'checkbox',
-              label: 'Mostrar en menú principal',
+              label: adminLabel('Mostrar en menú principal', 'Show in main menu'),
               defaultValue: false,
               admin: {
-                description:
-                  'Actívalo para que esta página aparezca en el header del sitio público.'
+                description: adminLabel(
+                  'Actívalo para que esta página aparezca en el encabezado del sitio público.',
+                  'Enable it so this page appears in the public site header.'
+                )
               }
             },
             {
               name: 'navigationLabel',
               type: 'text',
-              label: 'Texto visible en el menú',
+              label: adminLabel('Texto visible en el menú', 'Visible menu text'),
+              localized: true,
               admin: {
                 condition: (_, siblingData) =>
                   Boolean(siblingData.showInMainNavigation),
-                description:
-                  'Opcional. Si queda vacío, se usará el título interno de la página.'
+                description: adminLabel(
+                  'Opcional. Si queda vacío, se usará el título interno de la página.',
+                  'Optional. If empty, the internal page title will be used.'
+                )
               }
             },
             {
               name: 'parentPage',
               type: 'relationship',
-              label: 'Página padre / submenú de',
+              label: adminLabel(
+                'Página padre / submenú de',
+                'Parent page / submenu of'
+              ),
               relationTo: 'pages',
               filterOptions: {
                 showInMainNavigation: {
@@ -236,28 +249,37 @@ export const Pages: CollectionConfig = {
               admin: {
                 condition: (_, siblingData) =>
                   Boolean(siblingData.showInMainNavigation),
-                description:
-                  'Déjalo vacío para un elemento principal. Selecciona una página padre para convertir esta página en submenú.'
+                description: adminLabel(
+                  'Déjalo vacío para un elemento principal. Selecciona una página padre para convertir esta página en submenú.',
+                  'Leave empty for a top-level item. Select a parent page to turn this page into a submenu.'
+                )
               }
             },
             {
               name: 'showInFooter',
               type: 'checkbox',
-              label: 'Mostrar en footer automático',
+              label: adminLabel(
+                'Mostrar en pie de página automático',
+                'Show in automatic footer'
+              ),
               defaultValue: true,
               admin: {
-                description:
-                  'Si el footer usa "páginas publicadas automáticamente", esta página aparecerá cuando esté publicada.'
+                description: adminLabel(
+                  'Si el pie de página usa "páginas publicadas automáticamente", esta página aparecerá cuando esté publicada.',
+                  'If the footer uses "published pages automatically", this page will appear when published.'
+                )
               }
             },
             {
               name: 'navigationOrder',
               type: 'number',
-              label: 'Orden en menú y footer',
+              label: adminLabel('Orden en menú y pie de página', 'Menu and footer order'),
               defaultValue: 0,
               admin: {
-                description:
-                  'Número menor aparece primero. Aplica para menú principal, submenús y footer automático.'
+                description: adminLabel(
+                  'Número menor aparece primero. Aplica para menú principal, submenús y pie de página automático.',
+                  'Lower numbers appear first. Applies to main menu, submenus and automatic footer.'
+                )
               }
             }
           ]
@@ -267,7 +289,7 @@ export const Pages: CollectionConfig = {
     {
       name: 'heroTitle',
       type: 'text',
-      label: 'Legacy hero title',
+      label: adminLabel('Título anterior de la portada', 'Previous hero title'),
       admin: {
         hidden: true
       }
@@ -275,7 +297,7 @@ export const Pages: CollectionConfig = {
     {
       name: 'heroSubtitle',
       type: 'textarea',
-      label: 'Legacy hero subtitle',
+      label: adminLabel('Subtítulo anterior de la portada', 'Previous hero subtitle'),
       admin: {
         hidden: true
       }
@@ -283,7 +305,7 @@ export const Pages: CollectionConfig = {
     {
       name: 'videoBackground',
       type: 'upload',
-      label: 'Legacy video background',
+      label: adminLabel('Video de fondo anterior', 'Previous background video'),
       relationTo: 'media',
       admin: {
         hidden: true
@@ -292,7 +314,7 @@ export const Pages: CollectionConfig = {
     {
       name: 'navbarLinks',
       type: 'array',
-      label: 'Legacy navbar links',
+      label: adminLabel('Enlaces anteriores del menú', 'Previous menu links'),
       admin: {
         hidden: true
       },

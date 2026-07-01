@@ -1,20 +1,25 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminLabel, adminLabels } from '../lib/admin-i18n'
+
 export const Users: CollectionConfig = {
   slug: 'users',
-  auth: true,
+  auth: {
+    lockTime: 10 * 60 * 1000,
+    maxLoginAttempts: 5,
+    tokenExpiration: 60 * 60,
+    useSessions: true
+  },
   admin: {
     useAsTitle: 'email',
-    group: 'Sistema'
+    group: adminLabel('Sistema', 'System')
   },
-  labels: {
-    singular: 'Usuario',
-    plural: 'Usuarios'
-  },
+  labels: adminLabels('Usuario', 'Usuarios', 'User', 'Users'),
   fields: [
     {
       name: 'name',
-      type: 'text'
+      type: 'text',
+      label: adminLabel('Nombre', 'Name')
     }
   ]
 }

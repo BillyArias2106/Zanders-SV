@@ -5,6 +5,8 @@ import type {
   TextFieldSingleValidation
 } from 'payload'
 
+import { adminLabel, adminLabels } from '../lib/admin-i18n'
+
 type NavigationSiblingData = {
   linkType?: 'anchor' | 'container' | 'external' | 'page'
 }
@@ -53,14 +55,14 @@ const validatePageRelationship: RelationshipFieldSingleValidation = (
 const linkTypeField: Field = {
   name: 'linkType',
   type: 'select',
-  label: 'Tipo de enlace',
+  label: adminLabel('Tipo de enlace', 'Link type'),
   required: true,
   defaultValue: 'page',
   options: [
-    { label: 'Página interna', value: 'page' },
-    { label: 'URL externa', value: 'external' },
-    { label: 'Ancla dentro de página', value: 'anchor' },
-    { label: 'Solo contenedor', value: 'container' }
+    { label: adminLabel('Página interna', 'Internal page'), value: 'page' },
+    { label: adminLabel('URL externa', 'External URL'), value: 'external' },
+    { label: adminLabel('Ancla dentro de página', 'Page anchor'), value: 'anchor' },
+    { label: adminLabel('Solo contenedor', 'Container only'), value: 'container' }
   ]
 }
 
@@ -68,14 +70,15 @@ const baseNavigationItemFields: Field[] = [
   {
     name: 'label',
     type: 'text',
-    label: 'Label visible',
+    label: adminLabel('Texto visible', 'Visible text'),
+    localized: true,
     required: true
   },
   linkTypeField,
   {
     name: 'page',
     type: 'relationship',
-    label: 'Página interna',
+    label: adminLabel('Página interna', 'Internal page'),
     relationTo: 'pages',
     filterOptions: {
       status: {
@@ -85,14 +88,17 @@ const baseNavigationItemFields: Field[] = [
     admin: {
       condition: (_, siblingData) =>
         (siblingData as NavigationSiblingData).linkType === 'page',
-      description: 'Solo se pueden seleccionar páginas publicadas.'
+      description: adminLabel(
+        'Solo se pueden seleccionar páginas publicadas.',
+        'Only published pages can be selected.'
+      )
     },
     validate: validatePageRelationship
   },
   {
     name: 'manualUrl',
     type: 'text',
-    label: 'URL manual / ancla',
+    label: adminLabel('URL manual / ancla', 'Manual URL / anchor'),
     admin: {
       condition: (_, siblingData) => {
         const { linkType } = siblingData as NavigationSiblingData
@@ -106,30 +112,32 @@ const baseNavigationItemFields: Field[] = [
   {
     name: 'openInNewTab',
     type: 'checkbox',
-    label: 'Abrir en nueva pestaña',
+    label: adminLabel('Abrir en nueva pestaña', 'Open in new tab'),
     defaultValue: false
   },
   {
     name: 'isActive',
     type: 'checkbox',
-    label: 'Activo',
+    label: adminLabel('Activo', 'Active'),
     defaultValue: true
   },
   {
     name: 'order',
     type: 'number',
-    label: 'Orden',
+    label: adminLabel('Orden', 'Order'),
     defaultValue: 0,
     admin: {
-      description:
-        'También puedes reordenar arrastrando. Este número ayuda a ordenar de forma explícita.'
+      description: adminLabel(
+        'También puedes reordenar arrastrando. Este número ayuda a ordenar de forma explícita.',
+        'You can also reorder by dragging. This number helps set an explicit order.'
+      )
     }
   }
 ]
 
 export const MainNavigation: GlobalConfig = {
   slug: 'main-navigation',
-  label: 'Menú Principal',
+  label: adminLabel('Menú Principal', 'Main Menu'),
   access: {
     read: () => true,
     update: ({ req }) => Boolean(req.user)
@@ -137,8 +145,10 @@ export const MainNavigation: GlobalConfig = {
   admin: {
     group: false,
     hidden: true,
-    description:
-      'Compatibilidad para menús manuales anteriores. El menú principal ahora se administra desde Páginas.'
+    description: adminLabel(
+      'Compatibilidad para menús manuales anteriores. El menú principal ahora se administra desde Páginas.',
+      'Compatibility with previous manual menus. The main menu is now managed from Pages.'
+    )
   },
   typescript: {
     interface: 'MainNavigation'
@@ -147,21 +157,15 @@ export const MainNavigation: GlobalConfig = {
     {
       name: 'items',
       type: 'array',
-      label: 'Elementos del menú',
-      labels: {
-        singular: 'Elemento',
-        plural: 'Elementos'
-      },
+      label: adminLabel('Elementos del menú', 'Menu items'),
+      labels: adminLabels('Elemento', 'Elementos', 'Item', 'Items'),
       fields: [
         ...baseNavigationItemFields,
         {
           name: 'children',
           type: 'array',
-          label: 'Submenú',
-          labels: {
-            singular: 'Submenú',
-            plural: 'Submenús'
-          },
+          label: adminLabel('Submenú', 'Submenu'),
+          labels: adminLabels('Submenú', 'Submenús', 'Submenu', 'Submenus'),
           fields: baseNavigationItemFields
         }
       ]

@@ -1,9 +1,9 @@
 {
-  "name": "zanders-platform",
+  "name": "starter-platform",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Monorepo para Zanders SV y Zanders Aero Solutions.",
+  "description": "Monorepo para un sitio nuevo.",
   "packageManager": "pnpm@10.18.2",
   "engines": {
     "node": ">=20.9.0",
@@ -11,12 +11,12 @@
   },
   "scripts": {
     "dev": "turbo run dev --parallel",
-    "dev:web": "pnpm --filter @zanders/web dev",
-    "dev:cms": "pnpm --filter @zanders/cms dev",
+    "dev:web": "pnpm --filter @starter/web dev",
+    "dev:cms": "pnpm --filter @starter/cms dev",
     "build": "turbo run build",
     "typecheck": "turbo run typecheck",
-    "cms:types": "pnpm --filter @zanders/cms generate:types",
-    "cms:importmap": "pnpm --filter @zanders/cms generate:importmap"
+    "cms:types": "pnpm --filter @starter/cms generate:types",
+    "cms:importmap": "pnpm --filter @starter/cms generate:importmap"
   },
   "devDependencies": {
     "@types/node": "^22.15.0",
