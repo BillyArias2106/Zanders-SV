@@ -67,9 +67,10 @@ export interface Config {
   };
   blocks: {};
   collections: {
-    users: User;
-    media: Media;
     pages: Page;
+    media: Media;
+    'contact-submissions': ContactSubmission;
+    users: User;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -77,9 +78,10 @@ export interface Config {
   };
   collectionsJoins: {};
   collectionsSelect: {
-    users: UsersSelect<false> | UsersSelect<true>;
-    media: MediaSelect<false> | MediaSelect<true>;
     pages: PagesSelect<false> | PagesSelect<true>;
+    media: MediaSelect<false> | MediaSelect<true>;
+    'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
+    users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
@@ -89,8 +91,16 @@ export interface Config {
     defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    'main-navigation': MainNavigation;
+    'footer-settings': FooterSettings;
+    'company-settings': CompanySettings;
+  };
+  globalsSelect: {
+    'main-navigation': MainNavigationSelect<false> | MainNavigationSelect<true>;
+    'footer-settings': FooterSettingsSelect<false> | FooterSettingsSelect<true>;
+    'company-settings': CompanySettingsSelect<false> | CompanySettingsSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -121,6 +131,377 @@ export interface UserAuthOperations {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: number;
+  title: string;
+  excerpt?: string | null;
+  /**
+   * Sin slash inicial. Ejemplos: impresiones, drones, servicios/diseno-web.
+   */
+  slug: string;
+  status: 'draft' | 'published';
+  featuredImage?: (number | null) | Media;
+  /**
+   * Aquí se agregan los bloques visuales. SnapLayout aparece como "Layout Personalizado" dentro de Agregar bloque; no pertenece al Menú Principal.
+   */
+  content?:
+    | (
+        | {
+            eyebrow?: string | null;
+            title: string;
+            subtitle?: string | null;
+            description?: string | null;
+            backgroundMedia?: (number | null) | Media;
+            primaryButtonLabel?: string | null;
+            primaryButtonUrl?: string | null;
+            secondaryButtonLabel?: string | null;
+            secondaryButtonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'hero';
+          }
+        | {
+            content: {
+              root: {
+                type: string;
+                children: {
+                  type: any;
+                  version: number;
+                  [k: string]: unknown;
+                }[];
+                direction: ('ltr' | 'rtl') | null;
+                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                indent: number;
+                version: number;
+              };
+              [k: string]: unknown;
+            };
+            alignment?: ('left' | 'center' | 'right') | null;
+            width?: ('normal' | 'wide' | 'narrow') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'richText';
+          }
+        | {
+            image?: (number | null) | Media;
+            title: string;
+            description?: string | null;
+            imagePosition?: ('left' | 'right') | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'imageText';
+          }
+        | {
+            sectionTitle?: string | null;
+            sectionDescription?: string | null;
+            cards?:
+              | {
+                  title: string;
+                  description?: string | null;
+                  media?: (number | null) | Media;
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'cards';
+          }
+        | {
+            title?: string | null;
+            description?: string | null;
+            images?:
+              | {
+                  image: number | Media;
+                  caption?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'gallery';
+          }
+        | {
+            media: number | Media;
+            mediaKind: 'image' | 'video';
+            title?: string | null;
+            description?: string | null;
+            altText?: string | null;
+            width: 'full' | 'normal' | 'small' | 'custom';
+            customWidth?: string | null;
+            height: 'auto' | 'fixed' | 'viewport';
+            fixedHeight?: string | null;
+            alignment: 'left' | 'center' | 'right';
+            borderRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
+            shadow?: ('none' | 'soft' | 'strong') | null;
+            showBorder?: boolean | null;
+            objectFit?: ('cover' | 'contain') | null;
+            autoplay?: boolean | null;
+            muted?: boolean | null;
+            loop?: boolean | null;
+            controls?: boolean | null;
+            poster?: (number | null) | Media;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'mediaBlock';
+          }
+        | {
+            videoSource: 'internal' | 'external';
+            internalVideo?: (number | null) | Media;
+            externalUrl?: string | null;
+            externalProvider?: ('auto' | 'youtube' | 'vimeo' | 'direct') | null;
+            title?: string | null;
+            description?: string | null;
+            poster?: (number | null) | Media;
+            autoplay?: boolean | null;
+            muted?: boolean | null;
+            loop?: boolean | null;
+            controls?: boolean | null;
+            aspectRatio: '16:9' | '4:3' | '1:1' | 'vertical';
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'videoBlock';
+          }
+        | {
+            isActive?: boolean | null;
+            sectionId?: string | null;
+            sectionTitle?: string | null;
+            sectionSubtitle?: string | null;
+            sectionDescription?: string | null;
+            /**
+             * Formato HEX. Ejemplo: #0F172A.
+             */
+            backgroundColor?: string | null;
+            backgroundImage?: (number | null) | Media;
+            backgroundVideo?: (number | null) | Media;
+            /**
+             * Formato HEX. Ejemplo: #0F172A.
+             */
+            textColor?: string | null;
+            maxWidth: 'narrow' | 'normal' | 'wide' | 'full';
+            paddingTop?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
+            paddingBottom?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
+            gap?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
+            alignment?: ('left' | 'center' | 'right') | null;
+            layout:
+              | 'oneColumn'
+              | 'twoColumns'
+              | 'twoColumnsWideLeft'
+              | 'twoColumnsWideRight'
+              | 'threeColumns'
+              | 'fourColumns'
+              | 'featureLeft'
+              | 'featureRight'
+              | 'bentoGrid'
+              | 'serviceCards'
+              | 'textMedia'
+              | 'mediaText'
+              | 'contact'
+              | 'mosaicGallery'
+              | 'splitHero';
+            /**
+             * Opcional. Usa solo clases conocidas y simples; no acepta CSS libre.
+             */
+            className?: string | null;
+            items?:
+              | {
+                  contentType:
+                    | 'text'
+                    | 'richText'
+                    | 'image'
+                    | 'video'
+                    | 'card'
+                    | 'iconText'
+                    | 'mediaText'
+                    | 'button'
+                    | 'list'
+                    | 'cta';
+                  title?: string | null;
+                  subtitle?: string | null;
+                  description?: string | null;
+                  richText?: {
+                    root: {
+                      type: string;
+                      children: {
+                        type: any;
+                        version: number;
+                        [k: string]: unknown;
+                      }[];
+                      direction: ('ltr' | 'rtl') | null;
+                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+                      indent: number;
+                      version: number;
+                    };
+                    [k: string]: unknown;
+                  } | null;
+                  image?: (number | null) | Media;
+                  video?: (number | null) | Media;
+                  /**
+                   * Nombre sugerido: sparkles, plane, printer, camera, phone, mail, map, wrench.
+                   */
+                  iconName?: string | null;
+                  linkLabel?: string | null;
+                  linkUrl?: string | null;
+                  linkOpenInNewTab?: boolean | null;
+                  buttonLabel?: string | null;
+                  buttonUrl?: string | null;
+                  buttonOpenInNewTab?: boolean | null;
+                  listItems?:
+                    | {
+                        text?: string | null;
+                        id?: string | null;
+                      }[]
+                    | null;
+                  /**
+                   * Formato HEX. Ejemplo: #0F172A.
+                   */
+                  backgroundColor?: string | null;
+                  /**
+                   * Formato HEX. Ejemplo: #0F172A.
+                   */
+                  textColor?: string | null;
+                  borderRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
+                  shadow?: ('none' | 'soft' | 'strong') | null;
+                  showBorder?: boolean | null;
+                  padding?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
+                  alignment?: ('left' | 'center' | 'right') | null;
+                  /**
+                   * Número opcional para ordenar esta caja en pantallas pequeñas.
+                   */
+                  responsiveOrder?: number | null;
+                  isActive?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'snapLayoutBlock';
+          }
+        | {
+            title: string;
+            description?: string | null;
+            buttonLabel?: string | null;
+            buttonUrl?: string | null;
+            variant?: ('solid' | 'outline' | 'minimal') | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'cta';
+          }
+        | {
+            title?: string | null;
+            items?:
+              | {
+                  question: string;
+                  answer: string;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'faq';
+          }
+      )[]
+    | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    /**
+     * Separar palabras clave con comas.
+     */
+    keywords?: string | null;
+    ogImage?: (number | null) | Media;
+  };
+  /**
+   * Actívalo para que esta página aparezca en el header del sitio público.
+   */
+  showInMainNavigation?: boolean | null;
+  /**
+   * Opcional. Si queda vacío, se usará el título interno de la página.
+   */
+  navigationLabel?: string | null;
+  /**
+   * Déjalo vacío para un elemento principal. Selecciona una página padre para convertir esta página en submenú.
+   */
+  parentPage?: (number | null) | Page;
+  /**
+   * Si el footer usa "páginas publicadas automáticamente", esta página aparecerá cuando esté publicada.
+   */
+  showInFooter?: boolean | null;
+  /**
+   * Número menor aparece primero. Aplica para menú principal, submenús y footer automático.
+   */
+  navigationOrder?: number | null;
+  heroTitle?: string | null;
+  heroSubtitle?: string | null;
+  videoBackground?: (number | null) | Media;
+  navbarLinks?:
+    | {
+        label?: string | null;
+        href?: string | null;
+        openInNewTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media".
+ */
+export interface Media {
+  id: number;
+  alt: string;
+  caption?: string | null;
+  mediaType: 'image' | 'video' | 'other';
+  poster?: (number | null) | Media;
+  description?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  url?: string | null;
+  thumbnailURL?: string | null;
+  filename?: string | null;
+  mimeType?: string | null;
+  filesize?: number | null;
+  width?: number | null;
+  height?: number | null;
+  focalX?: number | null;
+  focalY?: number | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-submissions".
+ */
+export interface ContactSubmission {
+  id: number;
+  firstName: string;
+  lastName?: string | null;
+  fullName?: string | null;
+  phone: string;
+  email: string;
+  subject: string;
+  message: string;
+  status: 'new' | 'inProgress' | 'replied' | 'archived';
+  emailSent?: boolean | null;
+  emailRecipients?:
+    | {
+        email?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  emailError?: string | null;
+  source?: string | null;
+  userAgent?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
@@ -147,46 +528,6 @@ export interface User {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media".
- */
-export interface Media {
-  id: number;
-  alt: string;
-  updatedAt: string;
-  createdAt: string;
-  url?: string | null;
-  thumbnailURL?: string | null;
-  filename?: string | null;
-  mimeType?: string | null;
-  filesize?: number | null;
-  width?: number | null;
-  height?: number | null;
-  focalX?: number | null;
-  focalY?: number | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages".
- */
-export interface Page {
-  id: number;
-  heroTitle: string;
-  heroSubtitle: string;
-  videoBackground?: (number | null) | Media;
-  navbarLinks?:
-    | {
-        label: string;
-        href: string;
-        openInNewTab?: boolean | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
@@ -210,16 +551,20 @@ export interface PayloadLockedDocument {
   id: number;
   document?:
     | ({
-        relationTo: 'users';
-        value: number | User;
+        relationTo: 'pages';
+        value: number | Page;
       } | null)
     | ({
         relationTo: 'media';
         value: number | Media;
       } | null)
     | ({
-        relationTo: 'pages';
-        value: number | Page;
+        relationTo: 'contact-submissions';
+        value: number | ContactSubmission;
+      } | null)
+    | ({
+        relationTo: 'users';
+        value: number | User;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -265,6 +610,288 @@ export interface PayloadMigration {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages_select".
+ */
+export interface PagesSelect<T extends boolean = true> {
+  title?: T;
+  excerpt?: T;
+  slug?: T;
+  status?: T;
+  featuredImage?: T;
+  content?:
+    | T
+    | {
+        hero?:
+          | T
+          | {
+              eyebrow?: T;
+              title?: T;
+              subtitle?: T;
+              description?: T;
+              backgroundMedia?: T;
+              primaryButtonLabel?: T;
+              primaryButtonUrl?: T;
+              secondaryButtonLabel?: T;
+              secondaryButtonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        richText?:
+          | T
+          | {
+              content?: T;
+              alignment?: T;
+              width?: T;
+              id?: T;
+              blockName?: T;
+            };
+        imageText?:
+          | T
+          | {
+              image?: T;
+              title?: T;
+              description?: T;
+              imagePosition?: T;
+              buttonLabel?: T;
+              buttonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        cards?:
+          | T
+          | {
+              sectionTitle?: T;
+              sectionDescription?: T;
+              cards?:
+                | T
+                | {
+                    title?: T;
+                    description?: T;
+                    media?: T;
+                    url?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        gallery?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              images?:
+                | T
+                | {
+                    image?: T;
+                    caption?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        mediaBlock?:
+          | T
+          | {
+              media?: T;
+              mediaKind?: T;
+              title?: T;
+              description?: T;
+              altText?: T;
+              width?: T;
+              customWidth?: T;
+              height?: T;
+              fixedHeight?: T;
+              alignment?: T;
+              borderRadius?: T;
+              shadow?: T;
+              showBorder?: T;
+              objectFit?: T;
+              autoplay?: T;
+              muted?: T;
+              loop?: T;
+              controls?: T;
+              poster?: T;
+              id?: T;
+              blockName?: T;
+            };
+        videoBlock?:
+          | T
+          | {
+              videoSource?: T;
+              internalVideo?: T;
+              externalUrl?: T;
+              externalProvider?: T;
+              title?: T;
+              description?: T;
+              poster?: T;
+              autoplay?: T;
+              muted?: T;
+              loop?: T;
+              controls?: T;
+              aspectRatio?: T;
+              id?: T;
+              blockName?: T;
+            };
+        snapLayoutBlock?:
+          | T
+          | {
+              isActive?: T;
+              sectionId?: T;
+              sectionTitle?: T;
+              sectionSubtitle?: T;
+              sectionDescription?: T;
+              backgroundColor?: T;
+              backgroundImage?: T;
+              backgroundVideo?: T;
+              textColor?: T;
+              maxWidth?: T;
+              paddingTop?: T;
+              paddingBottom?: T;
+              gap?: T;
+              alignment?: T;
+              layout?: T;
+              className?: T;
+              items?:
+                | T
+                | {
+                    contentType?: T;
+                    title?: T;
+                    subtitle?: T;
+                    description?: T;
+                    richText?: T;
+                    image?: T;
+                    video?: T;
+                    iconName?: T;
+                    linkLabel?: T;
+                    linkUrl?: T;
+                    linkOpenInNewTab?: T;
+                    buttonLabel?: T;
+                    buttonUrl?: T;
+                    buttonOpenInNewTab?: T;
+                    listItems?:
+                      | T
+                      | {
+                          text?: T;
+                          id?: T;
+                        };
+                    backgroundColor?: T;
+                    textColor?: T;
+                    borderRadius?: T;
+                    shadow?: T;
+                    showBorder?: T;
+                    padding?: T;
+                    alignment?: T;
+                    responsiveOrder?: T;
+                    isActive?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        cta?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              buttonLabel?: T;
+              buttonUrl?: T;
+              variant?: T;
+              id?: T;
+              blockName?: T;
+            };
+        faq?:
+          | T
+          | {
+              title?: T;
+              items?:
+                | T
+                | {
+                    question?: T;
+                    answer?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        keywords?: T;
+        ogImage?: T;
+      };
+  showInMainNavigation?: T;
+  navigationLabel?: T;
+  parentPage?: T;
+  showInFooter?: T;
+  navigationOrder?: T;
+  heroTitle?: T;
+  heroSubtitle?: T;
+  videoBackground?: T;
+  navbarLinks?:
+    | T
+    | {
+        label?: T;
+        href?: T;
+        openInNewTab?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "media_select".
+ */
+export interface MediaSelect<T extends boolean = true> {
+  alt?: T;
+  caption?: T;
+  mediaType?: T;
+  poster?: T;
+  description?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  url?: T;
+  thumbnailURL?: T;
+  filename?: T;
+  mimeType?: T;
+  filesize?: T;
+  width?: T;
+  height?: T;
+  focalX?: T;
+  focalY?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contact-submissions_select".
+ */
+export interface ContactSubmissionsSelect<T extends boolean = true> {
+  firstName?: T;
+  lastName?: T;
+  fullName?: T;
+  phone?: T;
+  email?: T;
+  subject?: T;
+  message?: T;
+  status?: T;
+  emailSent?: T;
+  emailRecipients?:
+    | T
+    | {
+        email?: T;
+        id?: T;
+      };
+  emailError?: T;
+  source?: T;
+  userAgent?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users_select".
  */
 export interface UsersSelect<T extends boolean = true> {
@@ -285,44 +912,6 @@ export interface UsersSelect<T extends boolean = true> {
         createdAt?: T;
         expiresAt?: T;
       };
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "media_select".
- */
-export interface MediaSelect<T extends boolean = true> {
-  alt?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  url?: T;
-  thumbnailURL?: T;
-  filename?: T;
-  mimeType?: T;
-  filesize?: T;
-  width?: T;
-  height?: T;
-  focalX?: T;
-  focalY?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "pages_select".
- */
-export interface PagesSelect<T extends boolean = true> {
-  heroTitle?: T;
-  heroSubtitle?: T;
-  videoBackground?: T;
-  navbarLinks?:
-    | T
-    | {
-        label?: T;
-        href?: T;
-        openInNewTab?: T;
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -363,6 +952,358 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Compatibilidad para menús manuales anteriores. El menú principal ahora se administra desde Páginas.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "main-navigation".
+ */
+export interface MainNavigation {
+  id: number;
+  items?:
+    | {
+        label: string;
+        linkType: 'page' | 'external' | 'anchor' | 'container';
+        /**
+         * Solo se pueden seleccionar páginas publicadas.
+         */
+        page?: (number | null) | Page;
+        manualUrl?: string | null;
+        openInNewTab?: boolean | null;
+        isActive?: boolean | null;
+        /**
+         * También puedes reordenar arrastrando. Este número ayuda a ordenar de forma explícita.
+         */
+        order?: number | null;
+        children?:
+          | {
+              label: string;
+              linkType: 'page' | 'external' | 'anchor' | 'container';
+              /**
+               * Solo se pueden seleccionar páginas publicadas.
+               */
+              page?: (number | null) | Page;
+              manualUrl?: string | null;
+              openInNewTab?: boolean | null;
+              isActive?: boolean | null;
+              /**
+               * También puedes reordenar arrastrando. Este número ayuda a ordenar de forma explícita.
+               */
+              order?: number | null;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Footer dinámico del sitio público: columnas, navegación inferior, contacto y legal.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer-settings".
+ */
+export interface FooterSettings {
+  id: number;
+  isEnabled?: boolean | null;
+  showLogo?: boolean | null;
+  logo?: (number | null) | Media;
+  showCompanyName?: boolean | null;
+  companyNameOverride?: string | null;
+  shortDescription?: string | null;
+  additionalText?: string | null;
+  columns?:
+    | {
+        title: string;
+        contentType: 'publishedPages' | 'mainNavigation' | 'manualLinks' | 'socialLinks' | 'contact' | 'customText';
+        customText?: string | null;
+        links?:
+          | {
+              label: string;
+              url: string;
+              openInNewTab?: boolean | null;
+              isActive?: boolean | null;
+              order?: number | null;
+              id?: string | null;
+            }[]
+          | null;
+        order?: number | null;
+        isActive?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Opcional. Si no agregas redes aquí, el sitio usa las redes principales de Configuración General.
+   */
+  socialLinks?:
+    | {
+        name: string;
+        type:
+          | 'facebook'
+          | 'instagram'
+          | 'tiktok'
+          | 'linkedin'
+          | 'youtube'
+          | 'twitter'
+          | 'whatsapp'
+          | 'website'
+          | 'other';
+        url: string;
+        iconName?: string | null;
+        showInFooter?: boolean | null;
+        showInHeader?: boolean | null;
+        openInNewTab?: boolean | null;
+        isActive?: boolean | null;
+        order?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  useCompanySettings?: boolean | null;
+  email?: string | null;
+  phone?: string | null;
+  whatsapp?: string | null;
+  address?: string | null;
+  businessHours?: string | null;
+  country?: string | null;
+  city?: string | null;
+  copyrightText?: string | null;
+  privacyPage?: (number | null) | Page;
+  termsPage?: (number | null) | Page;
+  legalText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Información global de la empresa, branding, redes sociales, SEO y textos legales.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "company-settings".
+ */
+export interface CompanySettings {
+  id: number;
+  commercialName: string;
+  legalName?: string | null;
+  slogan?: string | null;
+  shortDescription?: string | null;
+  longDescription?: string | null;
+  mainEmail?: string | null;
+  mainPhone?: string | null;
+  whatsapp?: string | null;
+  address?: string | null;
+  countryCity?: string | null;
+  businessHours?: string | null;
+  logoPrimary?: (number | null) | Media;
+  logoSecondary?: (number | null) | Media;
+  favicon?: (number | null) | Media;
+  ogImage?: (number | null) | Media;
+  /**
+   * Formato HEX. Ejemplo: #0F172A.
+   */
+  colorPrimary: string;
+  /**
+   * Formato HEX. Ejemplo: #0F172A.
+   */
+  colorSecondary: string;
+  /**
+   * Formato HEX. Ejemplo: #0F172A.
+   */
+  colorAccent: string;
+  /**
+   * Formato HEX. Ejemplo: #0F172A.
+   */
+  colorBackground: string;
+  /**
+   * Formato HEX. Ejemplo: #0F172A.
+   */
+  colorTextPrimary: string;
+  /**
+   * Formato HEX. Ejemplo: #0F172A.
+   */
+  colorTextSecondary: string;
+  facebookUrl?: string | null;
+  instagramUrl?: string | null;
+  tiktokUrl?: string | null;
+  linkedinUrl?: string | null;
+  youtubeUrl?: string | null;
+  twitterUrl?: string | null;
+  whatsappUrl?: string | null;
+  contactEyebrow?: string | null;
+  contactHeadline?: string | null;
+  contactIntro?: string | null;
+  /**
+   * Puedes agregar varios correos. Cada mensaje del formulario se guardará en el admin y se enviará a estos correos.
+   */
+  contactRecipients?:
+    | {
+        email: string;
+        id?: string | null;
+      }[]
+    | null;
+  defaultMetaTitle: string;
+  defaultMetaDescription: string;
+  /**
+   * Separar palabras clave con comas.
+   */
+  globalKeywords?: string | null;
+  canonicalBaseUrl?: string | null;
+  copyrightText?: string | null;
+  privacyPolicy?: string | null;
+  termsAndConditions?: string | null;
+  footerLegalText?: string | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "main-navigation_select".
+ */
+export interface MainNavigationSelect<T extends boolean = true> {
+  items?:
+    | T
+    | {
+        label?: T;
+        linkType?: T;
+        page?: T;
+        manualUrl?: T;
+        openInNewTab?: T;
+        isActive?: T;
+        order?: T;
+        children?:
+          | T
+          | {
+              label?: T;
+              linkType?: T;
+              page?: T;
+              manualUrl?: T;
+              openInNewTab?: T;
+              isActive?: T;
+              order?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer-settings_select".
+ */
+export interface FooterSettingsSelect<T extends boolean = true> {
+  isEnabled?: T;
+  showLogo?: T;
+  logo?: T;
+  showCompanyName?: T;
+  companyNameOverride?: T;
+  shortDescription?: T;
+  additionalText?: T;
+  columns?:
+    | T
+    | {
+        title?: T;
+        contentType?: T;
+        customText?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              openInNewTab?: T;
+              isActive?: T;
+              order?: T;
+              id?: T;
+            };
+        order?: T;
+        isActive?: T;
+        id?: T;
+      };
+  socialLinks?:
+    | T
+    | {
+        name?: T;
+        type?: T;
+        url?: T;
+        iconName?: T;
+        showInFooter?: T;
+        showInHeader?: T;
+        openInNewTab?: T;
+        isActive?: T;
+        order?: T;
+        id?: T;
+      };
+  useCompanySettings?: T;
+  email?: T;
+  phone?: T;
+  whatsapp?: T;
+  address?: T;
+  businessHours?: T;
+  country?: T;
+  city?: T;
+  copyrightText?: T;
+  privacyPage?: T;
+  termsPage?: T;
+  legalText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "company-settings_select".
+ */
+export interface CompanySettingsSelect<T extends boolean = true> {
+  commercialName?: T;
+  legalName?: T;
+  slogan?: T;
+  shortDescription?: T;
+  longDescription?: T;
+  mainEmail?: T;
+  mainPhone?: T;
+  whatsapp?: T;
+  address?: T;
+  countryCity?: T;
+  businessHours?: T;
+  logoPrimary?: T;
+  logoSecondary?: T;
+  favicon?: T;
+  ogImage?: T;
+  colorPrimary?: T;
+  colorSecondary?: T;
+  colorAccent?: T;
+  colorBackground?: T;
+  colorTextPrimary?: T;
+  colorTextSecondary?: T;
+  facebookUrl?: T;
+  instagramUrl?: T;
+  tiktokUrl?: T;
+  linkedinUrl?: T;
+  youtubeUrl?: T;
+  twitterUrl?: T;
+  whatsappUrl?: T;
+  contactEyebrow?: T;
+  contactHeadline?: T;
+  contactIntro?: T;
+  contactRecipients?:
+    | T
+    | {
+        email?: T;
+        id?: T;
+      };
+  defaultMetaTitle?: T;
+  defaultMetaDescription?: T;
+  globalKeywords?: T;
+  canonicalBaseUrl?: T;
+  copyrightText?: T;
+  privacyPolicy?: T;
+  termsAndConditions?: T;
+  footerLegalText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

@@ -1,8 +1,16 @@
 import { LandingExperience } from '@/components/templates/landing-experience'
-import { getHomePage } from '@/lib/cms'
+import { getCompanySettings, getMainNavigation } from '@/lib/cms'
 
 export default async function HomePage() {
-  const page = await getHomePage()
+  const [companySettings, navigationItems] = await Promise.all([
+    getCompanySettings(),
+    getMainNavigation()
+  ])
 
-  return <LandingExperience content={page} />
+  return (
+    <LandingExperience
+      companySettings={companySettings}
+      navigationItems={navigationItems}
+    />
+  )
 }

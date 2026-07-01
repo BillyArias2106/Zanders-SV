@@ -15,13 +15,16 @@
     "@payloadcms/db-postgres": "^3.85.1",
     "@payloadcms/next": "^3.85.1",
     "@payloadcms/richtext-lexical": "^3.85.1",
+    "@payloadcms/ui": "^3.85.1",
     "next": "^16.2.6",
+    "nodemailer": "^9.0.3",
     "payload": "^3.85.1",
     "react": "^19.2.1",
     "react-dom": "^19.2.1",
     "sharp": "^0.34.0"
   },
   "devDependencies": {
+    "@types/nodemailer": "^8.0.1",
     "@types/react": "^19.0.0",
     "@types/react-dom": "^19.0.0",
     "typescript": "^5.8.3"

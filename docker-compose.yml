@@ -3,6 +3,8 @@ services:
     image: node:22-bookworm-slim
     container_name: zanders-deps
     working_dir: /workspace
+    environment:
+      CI: 'true'
     command: >
       sh -lc "corepack enable &&
       corepack prepare pnpm@10.18.2 --activate &&
@@ -25,11 +27,11 @@ services:
       POSTGRES_USER: zanders
       POSTGRES_PASSWORD: zanders_dev_password
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U zanders -d zanders"]
+      test: ['CMD-SHELL', 'pg_isready -U zanders -d zanders']
       interval: 5s
       timeout: 5s
       retries: 12
@@ -43,13 +45,21 @@ services:
       corepack prepare pnpm@10.18.2 --activate &&
       pnpm --filter @zanders/cms dev"
     environment:
+      CI: 'true'
       DATABASE_URL: postgresql://zanders:zanders_dev_password@postgres:5432/zanders
       PAYLOAD_SECRET: ${PAYLOAD_SECRET:-dev-only-change-me}
       PAYLOAD_PUBLIC_SERVER_URL: http://localhost:3001
       WEB_PUBLIC_URL: http://localhost:3000
-      NEXT_TELEMETRY_DISABLED: "1"
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-587}
+      SMTP_SECURE: ${SMTP_SECURE:-false}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      SMTP_FROM_EMAIL: ${SMTP_FROM_EMAIL:-}
+      SMTP_FROM_NAME: ${SMTP_FROM_NAME:-Zanders SV}
+      NEXT_TELEMETRY_DISABLED: '1'
     ports:
-      - "3001:3001"
+      - '3001:3001'
     volumes:
       - .:/workspace
       - pnpm_store:/pnpm/store
@@ -73,9 +83,9 @@ services:
     environment:
       CMS_INTERNAL_URL: http://cms:3001
       NEXT_PUBLIC_CMS_URL: http://localhost:3001
-      NEXT_TELEMETRY_DISABLED: "1"
+      NEXT_TELEMETRY_DISABLED: '1'
     ports:
-      - "3000:3000"
+      - '3000:3000'
     volumes:
       - .:/workspace
       - pnpm_store:/pnpm/store
