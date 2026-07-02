@@ -5,6 +5,8 @@ import { getPayload } from 'payload'
 import { RegisterForm } from './RegisterForm'
 import './register.css'
 
+export const dynamic = 'force-dynamic'
+
 export default async function RegisterPage() {
   const payload = await getPayload({ config })
   const users = await payload.count({
