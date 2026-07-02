@@ -11,6 +11,7 @@ import {
   getMainNavigation,
   getPublishedPageLinks
 } from '@/lib/cms'
+import { getServerLocale } from '@/lib/server-locale'
 import '@/styles/globals.css'
 
 const createMetadataBase = (url: string) => {
@@ -22,7 +23,8 @@ const createMetadataBase = (url: string) => {
 }
 
 export async function generateMetadata(): Promise<Metadata> {
-  const companySettings = await getCompanySettings()
+  const locale = await getServerLocale()
+  const companySettings = await getCompanySettings(locale)
   const ogImageUrl = companySettings.ogImage?.url ?? undefined
 
   return {
@@ -70,21 +72,22 @@ type RootLayoutProps = {
 }
 
 export default async function RootLayout({ children }: RootLayoutProps) {
+  const locale = await getServerLocale()
   const [
     companySettings,
     footerSettings,
     navigationItems,
     publishedPageLinks
   ] = await Promise.all([
-    getCompanySettings(),
-    getFooterSettings(),
-    getMainNavigation(),
-    getPublishedPageLinks()
+    getCompanySettings(locale),
+    getFooterSettings(locale),
+    getMainNavigation(locale),
+    getPublishedPageLinks(locale)
   ])
   const themeCSS = getCompanyThemeCSS(companySettings)
 
   return (
-    <html lang="es" className="dark" suppressHydrationWarning>
+    <html lang={locale} className="dark" suppressHydrationWarning>
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
@@ -97,7 +100,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           rel="stylesheet"
         />
         <style
-          id="zanders-company-theme"
+          id="app-company-theme"
           dangerouslySetInnerHTML={{ __html: themeCSS }}
         />
       </head>
@@ -111,6 +114,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           <SiteFooter
             companySettings={companySettings}
             footerSettings={footerSettings}
+            locale={locale}
             navigationItems={navigationItems}
             publishedPageLinks={publishedPageLinks}
           />

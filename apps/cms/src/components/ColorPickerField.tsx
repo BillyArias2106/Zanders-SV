@@ -49,12 +49,12 @@ export const ColorPickerField: TextFieldClientComponent = (props) => {
   }
 
   return (
-    <div className="zanders-color-picker-field">
+    <div className="app-color-picker-field">
       <FieldLabel label={label} path={path} required={required} />
-      <div className="zanders-color-picker-field__control">
+      <div className="app-color-picker-field__control">
         <input
           aria-label={`${label} selector`}
-          className="zanders-color-picker-field__native"
+          className="app-color-picker-field__native"
           disabled={readOnly}
           onChange={(event) => updateColor(event.target.value)}
           type="color"
@@ -62,7 +62,7 @@ export const ColorPickerField: TextFieldClientComponent = (props) => {
         />
         <input
           aria-invalid={showError}
-          className="zanders-color-picker-field__hex"
+          className="app-color-picker-field__hex"
           disabled={readOnly}
           onChange={(event) => updateColor(event.target.value)}
           placeholder="#8DE1E8"
@@ -71,18 +71,18 @@ export const ColorPickerField: TextFieldClientComponent = (props) => {
         />
         <span
           aria-hidden="true"
-          className="zanders-color-picker-field__preview"
+          className="app-color-picker-field__preview"
           style={{ backgroundColor: colorInputValue }}
         />
       </div>
       <div
         aria-label={`${label} paleta de marca`}
-        className="zanders-color-picker-field__swatches"
+        className="app-color-picker-field__swatches"
       >
         {brandColors.map((color) => (
           <button
             aria-label={`${color.label} ${color.value}`}
-            className="zanders-color-picker-field__swatch"
+            className="app-color-picker-field__swatch"
             disabled={readOnly}
             key={color.value}
             onClick={() => updateColor(color.value)}

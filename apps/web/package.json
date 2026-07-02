@@ -1,5 +1,5 @@
 {
-  "name": "@zanders/web",
+  "name": "@starter/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@react-three/drei": "^10.0.0",
     "@react-three/fiber": "^9.0.0",
-    "@zanders/ui": "workspace:*",
+    "@starter/ui": "workspace:*",
     "clsx": "^2.1.1",
     "framer-motion": "^12.23.0",
     "gsap": "^3.13.0",

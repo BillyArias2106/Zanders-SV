@@ -1,16 +1,21 @@
+import { LanguageSwitcher } from '@/components/molecules/language-switcher'
 import { NavLinkList } from '@/components/molecules/nav-link-list'
 import type { CompanySettingsContent, NavigationItem } from '@/lib/cms'
+import { getUIText, type Locale } from '@/lib/i18n'
 
 type HeroNavigationProps = {
   companySettings: CompanySettingsContent
+  locale: Locale
   navigationItems: NavigationItem[]
 }
 
 export function HeroNavigation({
   companySettings,
+  locale,
   navigationItems
 }: HeroNavigationProps) {
   const logo = companySettings.logoPrimary ?? companySettings.logoSecondary
+  const text = getUIText(locale)
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 border-b border-cyan-200/15 bg-deep-950/78 backdrop-blur-xl">
@@ -40,7 +45,10 @@ export function HeroNavigation({
             {companySettings.shortDescription}
           </span>
         </a>
-        <NavLinkList items={navigationItems} />
+        <div className="flex items-center gap-3">
+          <NavLinkList items={navigationItems} labels={text.navigation} />
+          <LanguageSwitcher labels={text.language} locale={locale} />
+        </div>
       </div>
     </header>
   )

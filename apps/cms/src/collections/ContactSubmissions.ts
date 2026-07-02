@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminLabel, adminLabels } from '../lib/admin-i18n'
+
 export const ContactSubmissions: CollectionConfig = {
   slug: 'contact-submissions',
   access: {
@@ -10,29 +12,31 @@ export const ContactSubmissions: CollectionConfig = {
   },
   admin: {
     defaultColumns: ['fullName', 'email', 'phone', 'subject', 'status', 'createdAt'],
-    group: 'CRM',
+    group: adminLabel('Mensajes', 'Messages'),
     useAsTitle: 'fullName'
   },
-  labels: {
-    singular: 'Mensaje de Contacto',
-    plural: 'Mensajes de Contacto'
-  },
+  labels: adminLabels(
+    'Mensaje de Contacto',
+    'Mensajes de Contacto',
+    'Contact Message',
+    'Contact Messages'
+  ),
   fields: [
     {
       name: 'firstName',
       type: 'text',
-      label: 'Nombre',
+      label: adminLabel('Nombre', 'First name'),
       required: true
     },
     {
       name: 'lastName',
       type: 'text',
-      label: 'Apellido'
+      label: adminLabel('Apellido', 'Last name')
     },
     {
       name: 'fullName',
       type: 'text',
-      label: 'Nombre completo',
+      label: adminLabel('Nombre completo', 'Full name'),
       admin: {
         readOnly: true
       },
@@ -49,25 +53,25 @@ export const ContactSubmissions: CollectionConfig = {
     {
       name: 'phone',
       type: 'text',
-      label: 'Teléfono',
+      label: adminLabel('Teléfono', 'Phone'),
       required: true
     },
     {
       name: 'email',
       type: 'email',
-      label: 'Correo',
+      label: adminLabel('Correo', 'Email'),
       required: true
     },
     {
       name: 'subject',
       type: 'text',
-      label: 'Asunto',
+      label: adminLabel('Asunto', 'Subject'),
       required: true
     },
     {
       name: 'message',
       type: 'textarea',
-      label: 'Mensaje',
+      label: adminLabel('Mensaje', 'Message'),
       required: true,
       admin: {
         rows: 8
@@ -76,20 +80,20 @@ export const ContactSubmissions: CollectionConfig = {
     {
       name: 'status',
       type: 'select',
-      label: 'Estado',
+      label: adminLabel('Estado', 'Status'),
       defaultValue: 'new',
       required: true,
       options: [
-        { label: 'Nuevo', value: 'new' },
-        { label: 'En proceso', value: 'inProgress' },
-        { label: 'Respondido', value: 'replied' },
-        { label: 'Archivado', value: 'archived' }
+        { label: adminLabel('Nuevo', 'New'), value: 'new' },
+        { label: adminLabel('En proceso', 'In progress'), value: 'inProgress' },
+        { label: adminLabel('Respondido', 'Replied'), value: 'replied' },
+        { label: adminLabel('Archivado', 'Archived'), value: 'archived' }
       ]
     },
     {
       name: 'emailSent',
       type: 'checkbox',
-      label: 'Correo enviado',
+      label: adminLabel('Correo enviado', 'Email sent'),
       defaultValue: false,
       admin: {
         readOnly: true
@@ -98,7 +102,7 @@ export const ContactSubmissions: CollectionConfig = {
     {
       name: 'emailRecipients',
       type: 'array',
-      label: 'Destinatarios notificados',
+      label: adminLabel('Destinatarios notificados', 'Notified recipients'),
       admin: {
         readOnly: true
       },
@@ -106,14 +110,14 @@ export const ContactSubmissions: CollectionConfig = {
         {
           name: 'email',
           type: 'email',
-          label: 'Correo'
+          label: adminLabel('Correo', 'Email')
         }
       ]
     },
     {
       name: 'emailError',
       type: 'textarea',
-      label: 'Error de envío',
+      label: adminLabel('Error de envío', 'Send error'),
       admin: {
         readOnly: true,
         rows: 4
@@ -122,7 +126,7 @@ export const ContactSubmissions: CollectionConfig = {
     {
       name: 'source',
       type: 'text',
-      label: 'Origen',
+      label: adminLabel('Origen', 'Source'),
       admin: {
         readOnly: true
       }
@@ -130,7 +134,7 @@ export const ContactSubmissions: CollectionConfig = {
     {
       name: 'userAgent',
       type: 'textarea',
-      label: 'Navegador',
+      label: adminLabel('Navegador', 'Browser'),
       admin: {
         readOnly: true,
         rows: 3

@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation'
 
 import { PageRenderer } from '@/components/page-builder/page-renderer'
 import { getCompanySettings, getMainNavigation, getPageBySlug } from '@/lib/cms'
+import { getServerLocale } from '@/lib/server-locale'
 
 type DynamicPageProps = {
   params: Promise<{
@@ -19,11 +20,14 @@ const getSlugFromParams = async (params: DynamicPageProps['params']) => {
 export async function generateMetadata({
   params
 }: DynamicPageProps): Promise<Metadata> {
-  const [slug, companySettings] = await Promise.all([
+  const [slug, locale] = await Promise.all([
     getSlugFromParams(params),
-    getCompanySettings()
+    getServerLocale()
   ])
-  const page = await getPageBySlug(slug)
+  const [companySettings, page] = await Promise.all([
+    getCompanySettings(locale),
+    getPageBySlug(slug, locale)
+  ])
 
   if (!page) {
     return {
@@ -68,11 +72,12 @@ export async function generateMetadata({
 }
 
 export default async function DynamicPage({ params }: DynamicPageProps) {
+  const locale = await getServerLocale()
   const slug = await getSlugFromParams(params)
   const [page, companySettings, navigationItems] = await Promise.all([
-    getPageBySlug(slug),
-    getCompanySettings(),
-    getMainNavigation()
+    getPageBySlug(slug, locale),
+    getCompanySettings(locale),
+    getMainNavigation(locale)
   ])
 
   if (!page) {
@@ -82,6 +87,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
   return (
     <PageRenderer
       companySettings={companySettings}
+      locale={locale}
       navigationItems={navigationItems}
       page={page}
     />

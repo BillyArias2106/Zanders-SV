@@ -1,0 +1,108 @@
+:root {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+}
+
+.app-register-page {
+  align-items: center;
+  background: #02080c;
+  color: #f8fafc;
+  display: flex;
+  font-family:
+    Montserrat,
+    ui-sans-serif,
+    system-ui,
+    sans-serif;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.app-register-panel {
+  width: min(100%, 30rem);
+}
+
+.app-register-panel__eyebrow {
+  color: #8de1e8;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+}
+
+.app-register-panel h1 {
+  font-size: clamp(2rem, 7vw, 3.5rem);
+  line-height: 1;
+  margin: 0;
+}
+
+.app-register-panel p {
+  color: rgba(248, 250, 252, 0.72);
+  line-height: 1.6;
+}
+
+.app-register-form {
+  display: grid;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.app-register-form label {
+  color: #f8fafc;
+  display: grid;
+  font-size: 0.875rem;
+  gap: 0.45rem;
+}
+
+.app-register-form input {
+  background: #07151b;
+  border: 1px solid rgba(141, 225, 232, 0.24);
+  color: #f8fafc;
+  font: inherit;
+  min-height: 2.75rem;
+  padding: 0.65rem 0.75rem;
+}
+
+.app-register-form input:focus {
+  border-color: #8de1e8;
+  outline: none;
+}
+
+.app-register-form button {
+  background: #f8fafc;
+  border: 0;
+  color: #02080c;
+  cursor: pointer;
+  font: inherit;
+  font-weight: 700;
+  min-height: 2.75rem;
+  padding: 0.75rem;
+}
+
+.app-register-form button:disabled {
+  cursor: wait;
+  opacity: 0.62;
+}
+
+.app-register-form__error {
+  color: #ff8a8a;
+  font-size: 0.875rem;
+  margin: 0;
+}
+
+.app-register-panel__login {
+  color: #8de1e8;
+  display: inline-flex;
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  text-decoration: none;
+}
+
+.app-register-panel__login:hover {
+  text-decoration: underline;
+}

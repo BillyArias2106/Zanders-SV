@@ -1,5 +1,7 @@
 import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
+import { en } from '@payloadcms/translations/languages/en'
+import { es } from '@payloadcms/translations/languages/es'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { buildConfig } from 'payload'
@@ -26,6 +28,12 @@ export default buildConfig({
           exportName: 'AdminTopNavigation'
         }
       ],
+      beforeLogin: [
+        {
+          path: '@/components/admin/AdminLoginActions',
+          exportName: 'AdminLoginActions'
+        }
+      ],
       views: {
         dashboard: {
           Component: {
@@ -37,18 +45,47 @@ export default buildConfig({
     },
     theme: 'dark',
     meta: {
-      titleSuffix: ' - Zanders CMS'
+      titleSuffix: ' - CMS'
     }
   },
   collections: [Pages, Media, ContactSubmissions, Users],
   globals: [MainNavigation, FooterSettings, CompanySettings],
+  i18n: {
+    fallbackLanguage: 'es',
+    supportedLanguages: {
+      en,
+      es
+    }
+  },
+  localization: {
+    defaultLocale: 'es',
+    fallback: true,
+    locales: [
+      {
+        code: 'es',
+        label: {
+          en: 'Spanish',
+          es: 'Español'
+        }
+      },
+      {
+        code: 'en',
+        fallbackLocale: 'es',
+        label: {
+          en: 'English',
+          es: 'Inglés'
+        }
+      }
+    ]
+  },
   cors: [process.env.WEB_PUBLIC_URL ?? 'http://localhost:3000'],
   csrf: [process.env.WEB_PUBLIC_URL ?? 'http://localhost:3000'],
   db: postgresAdapter({
     blocksAsJSON: true,
     pool: {
       connectionString: process.env.DATABASE_URL ?? ''
-    }
+    },
+    push: process.env.PAYLOAD_DB_PUSH === 'true'
   }),
   editor: lexicalEditor(),
   graphQL: {

@@ -20,10 +20,12 @@ import type {
   LinkTarget,
   NavigationItem
 } from '@/lib/cms'
+import type { Locale } from '@/lib/i18n'
 
 type SiteFooterProps = {
   companySettings: CompanySettingsContent
   footerSettings: FooterSettingsContent
+  locale: Locale
   navigationItems: NavigationItem[]
   publishedPageLinks: LinkTarget[]
 }
@@ -249,6 +251,7 @@ function ContactColumn({
 export function SiteFooter({
   companySettings,
   footerSettings,
+  locale: _locale,
   navigationItems,
   publishedPageLinks
 }: SiteFooterProps) {

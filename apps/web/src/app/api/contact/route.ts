@@ -1,10 +1,23 @@
+import { defaultLocale, getUIText, normalizeLocale } from '@/lib/i18n'
+
 const getCmsBaseUrl = () =>
   process.env.CMS_INTERNAL_URL ??
   process.env.NEXT_PUBLIC_CMS_URL ??
   'http://localhost:3001'
 
+const resolveLocaleFromBody = (body: string) => {
+  try {
+    const parsedBody = JSON.parse(body) as { locale?: unknown }
+
+    return normalizeLocale(parsedBody.locale) ?? defaultLocale
+  } catch {
+    return defaultLocale
+  }
+}
+
 export async function POST(request: Request) {
   const body = await request.text()
+  const text = getUIText(resolveLocaleFromBody(body))
 
   try {
     const response = await fetch(`${getCmsBaseUrl()}/contact`, {
@@ -17,7 +30,7 @@ export async function POST(request: Request) {
     })
     const data = await response.json().catch(() => ({
       ok: false,
-      message: 'Respuesta inválida del servidor.'
+      message: text.contact.invalidServerResponse
     }))
 
     return Response.json(data, {
@@ -26,7 +39,7 @@ export async function POST(request: Request) {
   } catch {
     return Response.json(
       {
-        message: 'No se pudo conectar con el servidor de contacto.',
+        message: text.contact.unableToConnect,
         ok: false
       },
       {

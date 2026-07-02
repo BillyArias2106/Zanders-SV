@@ -4,17 +4,17 @@
 
 :root {
   color-scheme: dark;
-  --zanders-bg: #02080c;
-  --zanders-fg: #f8fafc;
-  --zanders-cyan: #8de1e8;
-  --zanders-aqua: #76c2d0;
-  --zanders-teal: #1a6b80;
-  --zanders-bg-rgb: 2 8 12;
-  --zanders-fg-rgb: 248 250 252;
-  --zanders-cyan-rgb: 141 225 232;
-  --zanders-aqua-rgb: 69 172 191;
-  --zanders-teal-rgb: 26 107 128;
-  --zanders-muted-rgb: 199 209 214;
+  --app-bg: #02080c;
+  --app-fg: #f8fafc;
+  --app-cyan: #8de1e8;
+  --app-aqua: #76c2d0;
+  --app-teal: #1a6b80;
+  --app-bg-rgb: 2 8 12;
+  --app-fg-rgb: 248 250 252;
+  --app-cyan-rgb: 141 225 232;
+  --app-aqua-rgb: 69 172 191;
+  --app-teal-rgb: 26 107 128;
+  --app-muted-rgb: 199 209 214;
 }
 
 * {
@@ -22,7 +22,7 @@
 }
 
 html {
-  background: var(--zanders-bg);
+  background: var(--app-bg);
   scroll-behavior: auto;
 }
 
@@ -32,18 +32,18 @@ body {
   background:
     radial-gradient(
       circle at 78% 12%,
-      rgb(var(--zanders-aqua-rgb) / 0.14),
+      rgb(var(--app-aqua-rgb) / 0.14),
       transparent 30%
     ),
-    linear-gradient(rgb(var(--zanders-cyan-rgb) / 0.06) 1px, transparent 1px),
+    linear-gradient(rgb(var(--app-cyan-rgb) / 0.06) 1px, transparent 1px),
     linear-gradient(
       90deg,
-      rgb(var(--zanders-aqua-rgb) / 0.05) 1px,
+      rgb(var(--app-aqua-rgb) / 0.05) 1px,
       transparent 1px
     ),
-    var(--zanders-bg);
+    var(--app-bg);
   background-size: 72px 72px;
-  color: var(--zanders-fg);
+  color: var(--app-fg);
   font-family:
     Montserrat,
     ui-sans-serif,
@@ -55,8 +55,8 @@ body {
 }
 
 ::selection {
-  background: rgb(var(--zanders-cyan-rgb) / 0.32);
-  color: var(--zanders-fg);
+  background: rgb(var(--app-cyan-rgb) / 0.32);
+  color: var(--app-fg);
 }
 
 button,
@@ -65,41 +65,41 @@ a {
 }
 
 @layer utilities {
-  .zanders-diagonal {
+  .app-diagonal {
     clip-path: polygon(0 0, 100% 0, 88% 100%, 0% 100%);
   }
 
-  .zanders-diagonal-reverse {
+  .app-diagonal-reverse {
     clip-path: polygon(12% 0, 100% 0, 100% 100%, 0 100%);
   }
 
-  .zanders-hud-frame {
+  .app-hud-frame {
     background:
-      linear-gradient(90deg, var(--zanders-cyan) 1px, transparent 1px) left
+      linear-gradient(90deg, var(--app-cyan) 1px, transparent 1px) left
         top / 72px 1px no-repeat,
-      linear-gradient(var(--zanders-cyan) 1px, transparent 1px) left top / 1px
+      linear-gradient(var(--app-cyan) 1px, transparent 1px) left top / 1px
         72px no-repeat,
-      linear-gradient(270deg, var(--zanders-cyan) 1px, transparent 1px) right
+      linear-gradient(270deg, var(--app-cyan) 1px, transparent 1px) right
         bottom / 72px 1px no-repeat,
-      linear-gradient(0deg, var(--zanders-cyan) 1px, transparent 1px) right
+      linear-gradient(0deg, var(--app-cyan) 1px, transparent 1px) right
         bottom / 1px 72px no-repeat;
   }
 
-  .zanders-hero-shade-x {
+  .app-hero-shade-x {
     background: linear-gradient(
       90deg,
-      rgb(var(--zanders-bg-rgb) / 0.98) 0%,
-      rgb(var(--zanders-bg-rgb) / 0.84) 45%,
-      rgb(var(--zanders-bg-rgb) / 0.44) 100%
+      rgb(var(--app-bg-rgb) / 0.98) 0%,
+      rgb(var(--app-bg-rgb) / 0.84) 45%,
+      rgb(var(--app-bg-rgb) / 0.44) 100%
     );
   }
 
-  .zanders-hero-shade-y {
+  .app-hero-shade-y {
     background: linear-gradient(
       180deg,
-      rgb(var(--zanders-bg-rgb) / 0.18) 0%,
-      rgb(var(--zanders-bg-rgb) / 0.2) 50%,
-      rgb(var(--zanders-bg-rgb) / 0.98) 100%
+      rgb(var(--app-bg-rgb) / 0.18) 0%,
+      rgb(var(--app-bg-rgb) / 0.2) 50%,
+      rgb(var(--app-bg-rgb) / 0.98) 100%
     );
   }
 }

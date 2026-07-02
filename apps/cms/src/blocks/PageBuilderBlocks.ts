@@ -1,4 +1,6 @@
-import type { Block, Field, TextFieldSingleValidation } from 'payload'
+import type { Block, Field, StaticLabel, TextFieldSingleValidation } from 'payload'
+
+import { adminLabel, adminLabels } from '../lib/admin-i18n'
 
 const hexColorPattern = /^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/
 const safeClassNamePattern = /^[A-Za-z0-9_:\-./\s[\]]*$/
@@ -27,7 +29,7 @@ const validateSafeClassName: TextFieldSingleValidation = (value) => {
 
 const colorField = (
   name: string,
-  label: string,
+  label: StaticLabel,
   defaultValue?: string
 ): Field => ({
   name,
@@ -41,7 +43,7 @@ const colorField = (
         exportName: 'ColorPickerField'
       }
     },
-    description: 'Formato HEX. Ejemplo: #0F172A.',
+    description: adminLabel('Formato HEX. Ejemplo: #0F172A.', 'HEX format. Example: #0F172A.'),
     placeholder: defaultValue ?? '#0F172A'
   },
   validate: validateHexColor
@@ -60,43 +62,43 @@ const videoFilter = {
 }
 
 const alignmentOptions = [
-  { label: 'Izquierda', value: 'left' },
-  { label: 'Centro', value: 'center' },
-  { label: 'Derecha', value: 'right' }
+  { label: adminLabel('Izquierda', 'Left'), value: 'left' },
+  { label: adminLabel('Centro', 'Center'), value: 'center' },
+  { label: adminLabel('Derecha', 'Right'), value: 'right' }
 ]
 
 const borderRadiusOptions = [
-  { label: 'Sin radius', value: 'none' },
-  { label: 'Pequeño', value: 'sm' },
-  { label: 'Medio', value: 'md' },
-  { label: 'Grande', value: 'lg' },
-  { label: 'Extra grande', value: 'xl' }
+  { label: adminLabel('Sin bordes redondeados', 'No rounded corners'), value: 'none' },
+  { label: adminLabel('Pequeño', 'Small'), value: 'sm' },
+  { label: adminLabel('Medio', 'Medium'), value: 'md' },
+  { label: adminLabel('Grande', 'Large'), value: 'lg' },
+  { label: adminLabel('Extra grande', 'Extra large'), value: 'xl' }
 ]
 
 const shadowOptions = [
-  { label: 'Sin sombra', value: 'none' },
-  { label: 'Suave', value: 'soft' },
-  { label: 'Fuerte', value: 'strong' }
+  { label: adminLabel('Sin sombra', 'No shadow'), value: 'none' },
+  { label: adminLabel('Suave', 'Soft'), value: 'soft' },
+  { label: adminLabel('Fuerte', 'Strong'), value: 'strong' }
 ]
 
 const paddingOptions = [
-  { label: 'Sin padding', value: 'none' },
-  { label: 'Pequeño', value: 'sm' },
-  { label: 'Medio', value: 'md' },
-  { label: 'Grande', value: 'lg' },
-  { label: 'Extra grande', value: 'xl' }
+  { label: adminLabel('Sin espacio interno', 'No padding'), value: 'none' },
+  { label: adminLabel('Pequeño', 'Small'), value: 'sm' },
+  { label: adminLabel('Medio', 'Medium'), value: 'md' },
+  { label: adminLabel('Grande', 'Large'), value: 'lg' },
+  { label: adminLabel('Extra grande', 'Extra large'), value: 'xl' }
 ]
 
 const linkFields = [
   {
     name: 'primaryButtonLabel',
     type: 'text',
-    label: 'Texto del botón principal'
+    label: adminLabel('Texto del botón principal', 'Primary button text')
   },
   {
     name: 'primaryButtonUrl',
     type: 'text',
-    label: 'URL del botón principal',
+    label: adminLabel('URL del botón principal', 'Primary button URL'),
     admin: {
       placeholder: '/contacto'
     }
@@ -104,12 +106,12 @@ const linkFields = [
   {
     name: 'secondaryButtonLabel',
     type: 'text',
-    label: 'Texto del botón secundario'
+    label: adminLabel('Texto del botón secundario', 'Secondary button text')
   },
   {
     name: 'secondaryButtonUrl',
     type: 'text',
-    label: 'URL del botón secundario',
+    label: adminLabel('URL del botón secundario', 'Secondary button URL'),
     admin: {
       placeholder: '/servicios'
     }
@@ -120,36 +122,36 @@ const snapLayoutItemFields: Field[] = [
   {
     name: 'contentType',
     type: 'select',
-    label: 'Tipo de contenido',
+    label: adminLabel('Tipo de contenido', 'Content type'),
     required: true,
     defaultValue: 'text',
     options: [
-      { label: 'Texto simple', value: 'text' },
-      { label: 'Rich text', value: 'richText' },
-      { label: 'Imagen', value: 'image' },
+      { label: adminLabel('Texto simple', 'Simple text'), value: 'text' },
+      { label: adminLabel('Texto con formato', 'Rich text'), value: 'richText' },
+      { label: adminLabel('Imagen', 'Image'), value: 'image' },
       { label: 'Video', value: 'video' },
-      { label: 'Card', value: 'card' },
-      { label: 'Ícono + texto', value: 'iconText' },
-      { label: 'Media + texto', value: 'mediaText' },
-      { label: 'Botón', value: 'button' },
-      { label: 'Lista', value: 'list' },
+      { label: adminLabel('Tarjeta', 'Card'), value: 'card' },
+      { label: adminLabel('Ícono + texto', 'Icon + text'), value: 'iconText' },
+      { label: adminLabel('Medio + texto', 'Media + text'), value: 'mediaText' },
+      { label: adminLabel('Botón', 'Button'), value: 'button' },
+      { label: adminLabel('Lista', 'List'), value: 'list' },
       { label: 'CTA', value: 'cta' }
     ]
   },
   {
     name: 'title',
     type: 'text',
-    label: 'Título'
+    label: adminLabel('Título', 'Title')
   },
   {
     name: 'subtitle',
     type: 'text',
-    label: 'Subtítulo'
+    label: adminLabel('Subtítulo', 'Subtitle')
   },
   {
     name: 'description',
     type: 'textarea',
-    label: 'Descripción',
+    label: adminLabel('Descripción', 'Description'),
     admin: {
       rows: 4
     }
@@ -157,12 +159,12 @@ const snapLayoutItemFields: Field[] = [
   {
     name: 'richText',
     type: 'richText',
-    label: 'Rich text opcional'
+    label: adminLabel('Texto con formato opcional', 'Optional rich text')
   },
   {
     name: 'image',
     type: 'upload',
-    label: 'Imagen',
+    label: adminLabel('Imagen', 'Image'),
     relationTo: 'media',
     displayPreview: true,
     filterOptions: imageFilter
@@ -177,142 +179,141 @@ const snapLayoutItemFields: Field[] = [
   {
     name: 'iconName',
     type: 'text',
-    label: 'Ícono',
+    label: adminLabel('Ícono', 'Icon'),
     admin: {
-      description:
-        'Nombre sugerido: sparkles, plane, printer, camera, phone, mail, map, wrench.'
+      description: adminLabel(
+        'Nombre sugerido: sparkles, plane, printer, camera, phone, mail, map, wrench.',
+        'Suggested name: sparkles, plane, printer, camera, phone, mail, map, wrench.'
+      )
     }
   },
   {
     name: 'linkLabel',
     type: 'text',
-    label: 'Label del link'
+    label: adminLabel('Texto del enlace', 'Link text')
   },
   {
     name: 'linkUrl',
     type: 'text',
-    label: 'URL del link'
+    label: adminLabel('URL del enlace', 'Link URL')
   },
   {
     name: 'linkOpenInNewTab',
     type: 'checkbox',
-    label: 'Abrir link en nueva pestaña',
+    label: adminLabel('Abrir enlace en nueva pestaña', 'Open link in new tab'),
     defaultValue: false
   },
   {
     name: 'buttonLabel',
     type: 'text',
-    label: 'Texto del botón'
+    label: adminLabel('Texto del botón', 'Button text')
   },
   {
     name: 'buttonUrl',
     type: 'text',
-    label: 'URL del botón'
+    label: adminLabel('URL del botón', 'Button URL')
   },
   {
     name: 'buttonOpenInNewTab',
     type: 'checkbox',
-    label: 'Abrir botón en nueva pestaña',
+    label: adminLabel('Abrir botón en nueva pestaña', 'Open button in new tab'),
     defaultValue: false
   },
   {
     name: 'listItems',
     type: 'array',
-    label: 'Lista',
-    labels: {
-      singular: 'Ítem',
-      plural: 'Ítems'
-    },
+    label: adminLabel('Lista', 'List'),
+    labels: adminLabels('Ítem', 'Ítems', 'Item', 'Items'),
     fields: [
       {
         name: 'text',
         type: 'text',
-        label: 'Texto'
+        label: adminLabel('Texto', 'Text')
       }
     ]
   },
-  colorField('backgroundColor', 'Color de fondo'),
-  colorField('textColor', 'Color de texto'),
+  colorField('backgroundColor', adminLabel('Color de fondo', 'Background color')),
+  colorField('textColor', adminLabel('Color de texto', 'Text color')),
   {
     name: 'borderRadius',
     type: 'select',
-    label: 'Border radius',
+    label: adminLabel('Bordes redondeados', 'Rounded corners'),
     defaultValue: 'md',
     options: borderRadiusOptions
   },
   {
     name: 'shadow',
     type: 'select',
-    label: 'Sombra',
+    label: adminLabel('Sombra', 'Shadow'),
     defaultValue: 'none',
     options: shadowOptions
   },
   {
     name: 'showBorder',
     type: 'checkbox',
-    label: 'Mostrar borde',
+    label: adminLabel('Mostrar borde', 'Show border'),
     defaultValue: true
   },
   {
     name: 'padding',
     type: 'select',
-    label: 'Padding interno',
+    label: adminLabel('Espacio interno', 'Padding'),
     defaultValue: 'md',
     options: paddingOptions
   },
   {
     name: 'alignment',
     type: 'select',
-    label: 'Alineación',
+    label: adminLabel('Alineación', 'Alignment'),
     defaultValue: 'left',
     options: alignmentOptions
   },
   {
     name: 'responsiveOrder',
     type: 'number',
-    label: 'Orden responsive',
+    label: adminLabel('Orden en pantallas pequeñas', 'Small-screen order'),
     admin: {
-      description: 'Número opcional para ordenar esta caja en pantallas pequeñas.'
+      description: adminLabel(
+        'Número opcional para ordenar esta caja en pantallas pequeñas.',
+        'Optional number to order this box on small screens.'
+      )
     }
   },
   {
     name: 'isActive',
     type: 'checkbox',
-    label: 'Activo',
+    label: adminLabel('Activo', 'Active'),
     defaultValue: true
   }
 ]
 
 export const HeroBlock: Block = {
   slug: 'hero',
-  labels: {
-    singular: 'Hero',
-    plural: 'Heroes'
-  },
+  labels: adminLabels('Portada principal', 'Portadas principales', 'Hero', 'Heroes'),
   admin: {
-    group: 'Diseño / Layouts'
+    group: adminLabel('Diseño / Secciones', 'Design / Sections')
   },
   fields: [
     {
       name: 'eyebrow',
       type: 'text',
-      label: 'Texto pequeño superior'
+      label: adminLabel('Texto pequeño superior', 'Small top text')
     },
     {
       name: 'title',
       type: 'text',
-      label: 'Título',
+      label: adminLabel('Título', 'Title'),
       required: true
     },
     {
       name: 'subtitle',
       type: 'text',
-      label: 'Subtítulo'
+      label: adminLabel('Subtítulo', 'Subtitle')
     },
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción',
+      label: adminLabel('Descripción', 'Description'),
       admin: {
         rows: 4
       }
@@ -320,7 +321,7 @@ export const HeroBlock: Block = {
     {
       name: 'backgroundMedia',
       type: 'upload',
-      label: 'Imagen o video de fondo',
+      label: adminLabel('Imagen o video de fondo', 'Background image or video'),
       relationTo: 'media'
     },
     ...linkFields
@@ -329,40 +330,37 @@ export const HeroBlock: Block = {
 
 export const RichTextBlock: Block = {
   slug: 'richText',
-  labels: {
-    singular: 'Texto enriquecido',
-    plural: 'Textos enriquecidos'
-  },
+  labels: adminLabels('Texto enriquecido', 'Textos enriquecidos', 'Rich text', 'Rich text'),
   admin: {
-    group: 'Contenido'
+    group: adminLabel('Contenido', 'Content')
   },
   fields: [
     {
       name: 'content',
       type: 'richText',
-      label: 'Contenido',
+      label: adminLabel('Contenido', 'Content'),
       required: true
     },
     {
       name: 'alignment',
       type: 'select',
-      label: 'Alineación',
+      label: adminLabel('Alineación', 'Alignment'),
       defaultValue: 'left',
       options: [
-        { label: 'Izquierda', value: 'left' },
-        { label: 'Centro', value: 'center' },
-        { label: 'Derecha', value: 'right' }
+        { label: adminLabel('Izquierda', 'Left'), value: 'left' },
+        { label: adminLabel('Centro', 'Center'), value: 'center' },
+        { label: adminLabel('Derecha', 'Right'), value: 'right' }
       ]
     },
     {
       name: 'width',
       type: 'select',
-      label: 'Ancho del contenido',
+      label: adminLabel('Ancho del contenido', 'Content width'),
       defaultValue: 'normal',
       options: [
         { label: 'Normal', value: 'normal' },
-        { label: 'Amplio', value: 'wide' },
-        { label: 'Estrecho', value: 'narrow' }
+        { label: adminLabel('Amplio', 'Wide'), value: 'wide' },
+        { label: adminLabel('Estrecho', 'Narrow'), value: 'narrow' }
       ]
     }
   ]
@@ -370,30 +368,27 @@ export const RichTextBlock: Block = {
 
 export const ImageTextBlock: Block = {
   slug: 'imageText',
-  labels: {
-    singular: 'Imagen + Texto',
-    plural: 'Imagen + Texto'
-  },
+  labels: adminLabels('Imagen + texto', 'Imagen + texto', 'Image + text', 'Image + text'),
   admin: {
-    group: 'Diseño / Layouts'
+    group: adminLabel('Diseño / Secciones', 'Design / Sections')
   },
   fields: [
     {
       name: 'image',
       type: 'upload',
-      label: 'Imagen',
+      label: adminLabel('Imagen', 'Image'),
       relationTo: 'media'
     },
     {
       name: 'title',
       type: 'text',
-      label: 'Título',
+      label: adminLabel('Título', 'Title'),
       required: true
     },
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción',
+      label: adminLabel('Descripción', 'Description'),
       admin: {
         rows: 5
       }
@@ -401,45 +396,42 @@ export const ImageTextBlock: Block = {
     {
       name: 'imagePosition',
       type: 'select',
-      label: 'Posición de imagen',
+      label: adminLabel('Posición de imagen', 'Image position'),
       defaultValue: 'left',
       options: [
-        { label: 'Izquierda', value: 'left' },
-        { label: 'Derecha', value: 'right' }
+        { label: adminLabel('Izquierda', 'Left'), value: 'left' },
+        { label: adminLabel('Derecha', 'Right'), value: 'right' }
       ]
     },
     {
       name: 'buttonLabel',
       type: 'text',
-      label: 'Texto de botón'
+      label: adminLabel('Texto de botón', 'Button text')
     },
     {
       name: 'buttonUrl',
       type: 'text',
-      label: 'URL de botón'
+      label: adminLabel('URL de botón', 'Button URL')
     }
   ]
 }
 
 export const CardsBlock: Block = {
   slug: 'cards',
-  labels: {
-    singular: 'Cards / Servicios',
-    plural: 'Cards / Servicios'
-  },
+  labels: adminLabels('Tarjetas / Servicios', 'Tarjetas / Servicios', 'Cards / Services', 'Cards / Services'),
   admin: {
-    group: 'Diseño / Layouts'
+    group: adminLabel('Diseño / Secciones', 'Design / Sections')
   },
   fields: [
     {
       name: 'sectionTitle',
       type: 'text',
-      label: 'Título de sección'
+      label: adminLabel('Título de sección', 'Section title')
     },
     {
       name: 'sectionDescription',
       type: 'textarea',
-      label: 'Descripción de sección',
+      label: adminLabel('Descripción de sección', 'Section description'),
       admin: {
         rows: 3
       }
@@ -447,22 +439,19 @@ export const CardsBlock: Block = {
     {
       name: 'cards',
       type: 'array',
-      label: 'Cards',
-      labels: {
-        singular: 'Card',
-        plural: 'Cards'
-      },
+      label: adminLabel('Tarjetas', 'Cards'),
+      labels: adminLabels('Tarjeta', 'Tarjetas', 'Card', 'Cards'),
       fields: [
         {
           name: 'title',
           type: 'text',
-          label: 'Título',
+          label: adminLabel('Título', 'Title'),
           required: true
         },
         {
           name: 'description',
           type: 'textarea',
-          label: 'Descripción',
+          label: adminLabel('Descripción', 'Description'),
           admin: {
             rows: 3
           }
@@ -470,7 +459,7 @@ export const CardsBlock: Block = {
         {
           name: 'media',
           type: 'upload',
-          label: 'Ícono o imagen',
+          label: adminLabel('Ícono o imagen', 'Icon or image'),
           relationTo: 'media'
         },
         {
@@ -485,23 +474,20 @@ export const CardsBlock: Block = {
 
 export const GalleryBlock: Block = {
   slug: 'gallery',
-  labels: {
-    singular: 'Galería',
-    plural: 'Galerías'
-  },
+  labels: adminLabels('Galería', 'Galerías', 'Gallery', 'Galleries'),
   admin: {
-    group: 'Multimedia'
+    group: adminLabel('Multimedia', 'Media')
   },
   fields: [
     {
       name: 'title',
       type: 'text',
-      label: 'Título'
+      label: adminLabel('Título', 'Title')
     },
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción',
+      label: adminLabel('Descripción', 'Description'),
       admin: {
         rows: 3
       }
@@ -509,19 +495,22 @@ export const GalleryBlock: Block = {
     {
       name: 'images',
       type: 'array',
-      label: 'Imágenes',
+      label: adminLabel('Imágenes', 'Images'),
       fields: [
         {
           name: 'image',
           type: 'upload',
-          label: 'Imagen',
+          label: adminLabel('Imagen', 'Image'),
           relationTo: 'media',
           required: true
         },
         {
           name: 'caption',
           type: 'text',
-          label: 'Texto alternativo o caption'
+          label: adminLabel(
+            'Texto alternativo o descripción corta',
+            'Alternative text or short description'
+          )
         }
       ]
     }
@@ -530,18 +519,15 @@ export const GalleryBlock: Block = {
 
 export const MediaBlock: Block = {
   slug: 'mediaBlock',
-  labels: {
-    singular: 'Multimedia',
-    plural: 'Multimedia'
-  },
+  labels: adminLabels('Multimedia', 'Multimedia', 'Media', 'Media'),
   admin: {
-    group: 'Multimedia'
+    group: adminLabel('Multimedia', 'Media')
   },
   fields: [
     {
       name: 'media',
       type: 'upload',
-      label: 'Imagen o video',
+      label: adminLabel('Imagen o video', 'Image or video'),
       relationTo: 'media',
       required: true,
       displayPreview: true
@@ -549,23 +535,23 @@ export const MediaBlock: Block = {
     {
       name: 'mediaKind',
       type: 'select',
-      label: 'Tipo de media',
+      label: adminLabel('Tipo de medio', 'Media type'),
       required: true,
       defaultValue: 'image',
       options: [
-        { label: 'Imagen', value: 'image' },
+        { label: adminLabel('Imagen', 'Image'), value: 'image' },
         { label: 'Video', value: 'video' }
       ]
     },
     {
       name: 'title',
       type: 'text',
-      label: 'Título opcional'
+      label: adminLabel('Título opcional', 'Optional title')
     },
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción opcional',
+      label: adminLabel('Descripción opcional', 'Optional description'),
       admin: {
         rows: 3
       }
@@ -573,25 +559,25 @@ export const MediaBlock: Block = {
     {
       name: 'altText',
       type: 'text',
-      label: 'Texto alternativo'
+      label: adminLabel('Texto alternativo', 'Alternative text')
     },
     {
       name: 'width',
       type: 'select',
-      label: 'Ancho',
+      label: adminLabel('Ancho', 'Width'),
       required: true,
       defaultValue: 'normal',
       options: [
-        { label: 'Completo', value: 'full' },
-        { label: 'Contenido normal', value: 'normal' },
-        { label: 'Pequeño', value: 'small' },
-        { label: 'Personalizado', value: 'custom' }
+        { label: adminLabel('Completo', 'Full'), value: 'full' },
+        { label: adminLabel('Contenido normal', 'Normal content'), value: 'normal' },
+        { label: adminLabel('Pequeño', 'Small'), value: 'small' },
+        { label: adminLabel('Personalizado', 'Custom'), value: 'custom' }
       ]
     },
     {
       name: 'customWidth',
       type: 'text',
-      label: 'Ancho personalizado',
+      label: adminLabel('Ancho personalizado', 'Custom width'),
       admin: {
         condition: (_, siblingData) =>
           (siblingData as { width?: string }).width === 'custom',
@@ -601,19 +587,19 @@ export const MediaBlock: Block = {
     {
       name: 'height',
       type: 'select',
-      label: 'Alto',
+      label: adminLabel('Alto', 'Height'),
       required: true,
       defaultValue: 'auto',
       options: [
-        { label: 'Automático', value: 'auto' },
-        { label: 'Fijo', value: 'fixed' },
-        { label: 'Viewport', value: 'viewport' }
+        { label: adminLabel('Automático', 'Automatic'), value: 'auto' },
+        { label: adminLabel('Fijo', 'Fixed'), value: 'fixed' },
+        { label: adminLabel('Alto de pantalla', 'Viewport height'), value: 'viewport' }
       ]
     },
     {
       name: 'fixedHeight',
       type: 'text',
-      label: 'Alto fijo',
+      label: adminLabel('Alto fijo', 'Fixed height'),
       admin: {
         condition: (_, siblingData) =>
           (siblingData as { height?: string }).height === 'fixed',
@@ -621,47 +607,47 @@ export const MediaBlock: Block = {
       }
     },
     {
-      name: 'alignment',
-      type: 'select',
-      label: 'Alineación',
+    name: 'alignment',
+    type: 'select',
+    label: adminLabel('Alineación', 'Alignment'),
       required: true,
       defaultValue: 'center',
       options: alignmentOptions
     },
     {
-      name: 'borderRadius',
-      type: 'select',
-      label: 'Border radius',
+    name: 'borderRadius',
+    type: 'select',
+    label: adminLabel('Bordes redondeados', 'Rounded corners'),
       defaultValue: 'md',
       options: borderRadiusOptions
     },
     {
-      name: 'shadow',
-      type: 'select',
-      label: 'Sombra',
+    name: 'shadow',
+    type: 'select',
+    label: adminLabel('Sombra', 'Shadow'),
       defaultValue: 'soft',
       options: shadowOptions
     },
     {
-      name: 'showBorder',
-      type: 'checkbox',
-      label: 'Mostrar borde',
+    name: 'showBorder',
+    type: 'checkbox',
+    label: adminLabel('Mostrar borde', 'Show border'),
       defaultValue: false
     },
     {
-      name: 'objectFit',
-      type: 'select',
-      label: 'Object fit',
+    name: 'objectFit',
+    type: 'select',
+    label: adminLabel('Ajuste de imagen/video', 'Image/video fit'),
       defaultValue: 'cover',
       options: [
-        { label: 'Cover', value: 'cover' },
-        { label: 'Contain', value: 'contain' }
+        { label: adminLabel('Cubrir el espacio', 'Cover the space'), value: 'cover' },
+        { label: adminLabel('Mostrar completo', 'Show complete'), value: 'contain' }
       ]
     },
     {
-      name: 'autoplay',
-      type: 'checkbox',
-      label: 'Autoplay',
+    name: 'autoplay',
+    type: 'checkbox',
+    label: adminLabel('Reproducir automáticamente', 'Autoplay'),
       defaultValue: false,
       admin: {
         condition: (_, siblingData) =>
@@ -669,9 +655,9 @@ export const MediaBlock: Block = {
       }
     },
     {
-      name: 'muted',
-      type: 'checkbox',
-      label: 'Muted',
+    name: 'muted',
+    type: 'checkbox',
+    label: adminLabel('Sin sonido', 'Muted'),
       defaultValue: true,
       admin: {
         condition: (_, siblingData) =>
@@ -679,9 +665,9 @@ export const MediaBlock: Block = {
       }
     },
     {
-      name: 'loop',
-      type: 'checkbox',
-      label: 'Loop',
+    name: 'loop',
+    type: 'checkbox',
+    label: adminLabel('Repetir al terminar', 'Loop'),
       defaultValue: false,
       admin: {
         condition: (_, siblingData) =>
@@ -689,9 +675,9 @@ export const MediaBlock: Block = {
       }
     },
     {
-      name: 'controls',
-      type: 'checkbox',
-      label: 'Controls',
+    name: 'controls',
+    type: 'checkbox',
+    label: adminLabel('Mostrar controles', 'Show controls'),
       defaultValue: true,
       admin: {
         condition: (_, siblingData) =>
@@ -699,9 +685,9 @@ export const MediaBlock: Block = {
       }
     },
     {
-      name: 'poster',
-      type: 'upload',
-      label: 'Poster',
+    name: 'poster',
+    type: 'upload',
+    label: adminLabel('Imagen de portada', 'Poster image'),
       relationTo: 'media',
       displayPreview: true,
       filterOptions: imageFilter,
@@ -715,29 +701,26 @@ export const MediaBlock: Block = {
 
 export const VideoBlock: Block = {
   slug: 'videoBlock',
-  labels: {
-    singular: 'Video',
-    plural: 'Videos'
-  },
+  labels: adminLabels('Video', 'Videos', 'Video', 'Videos'),
   admin: {
-    group: 'Multimedia'
+    group: adminLabel('Multimedia', 'Media')
   },
   fields: [
     {
       name: 'videoSource',
       type: 'select',
-      label: 'Fuente del video',
+      label: adminLabel('Fuente del video', 'Video source'),
       required: true,
       defaultValue: 'internal',
       options: [
-        { label: 'Video interno', value: 'internal' },
-        { label: 'URL externa', value: 'external' }
+        { label: adminLabel('Video interno', 'Internal video'), value: 'internal' },
+        { label: adminLabel('URL externa', 'External URL'), value: 'external' }
       ]
     },
     {
       name: 'internalVideo',
       type: 'upload',
-      label: 'Video interno',
+      label: adminLabel('Video interno', 'Internal video'),
       relationTo: 'media',
       filterOptions: videoFilter,
       admin: {
@@ -748,7 +731,7 @@ export const VideoBlock: Block = {
     {
       name: 'externalUrl',
       type: 'text',
-      label: 'URL externa',
+      label: adminLabel('URL externa', 'External URL'),
       admin: {
         condition: (_, siblingData) =>
           (siblingData as { videoSource?: string }).videoSource === 'external',
@@ -758,13 +741,13 @@ export const VideoBlock: Block = {
     {
       name: 'externalProvider',
       type: 'select',
-      label: 'Proveedor externo',
+      label: adminLabel('Proveedor externo', 'External provider'),
       defaultValue: 'auto',
       options: [
-        { label: 'Detectar automáticamente', value: 'auto' },
+        { label: adminLabel('Detectar automáticamente', 'Auto-detect'), value: 'auto' },
         { label: 'YouTube', value: 'youtube' },
         { label: 'Vimeo', value: 'vimeo' },
-        { label: 'Enlace directo', value: 'direct' }
+        { label: adminLabel('Enlace directo', 'Direct link'), value: 'direct' }
       ],
       admin: {
         condition: (_, siblingData) =>
@@ -774,12 +757,12 @@ export const VideoBlock: Block = {
     {
       name: 'title',
       type: 'text',
-      label: 'Título'
+      label: adminLabel('Título', 'Title')
     },
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción',
+      label: adminLabel('Descripción', 'Description'),
       admin: {
         rows: 3
       }
@@ -787,7 +770,7 @@ export const VideoBlock: Block = {
     {
       name: 'poster',
       type: 'upload',
-      label: 'Poster / thumbnail',
+      label: adminLabel('Imagen de portada', 'Poster image'),
       relationTo: 'media',
       displayPreview: true,
       filterOptions: imageFilter
@@ -795,31 +778,31 @@ export const VideoBlock: Block = {
     {
       name: 'autoplay',
       type: 'checkbox',
-      label: 'Autoplay',
+      label: adminLabel('Reproducir automáticamente', 'Autoplay'),
       defaultValue: false
     },
     {
       name: 'muted',
       type: 'checkbox',
-      label: 'Muted',
+      label: adminLabel('Sin sonido', 'Muted'),
       defaultValue: true
     },
     {
       name: 'loop',
       type: 'checkbox',
-      label: 'Loop',
+      label: adminLabel('Repetir al terminar', 'Loop'),
       defaultValue: false
     },
     {
       name: 'controls',
       type: 'checkbox',
-      label: 'Controls',
+      label: adminLabel('Mostrar controles', 'Show controls'),
       defaultValue: true
     },
     {
       name: 'aspectRatio',
       type: 'select',
-      label: 'Aspecto',
+      label: adminLabel('Aspecto', 'Aspect ratio'),
       required: true,
       defaultValue: '16:9',
       options: [
@@ -834,24 +817,21 @@ export const VideoBlock: Block = {
 
 export const SnapLayoutBlock: Block = {
   slug: 'snapLayoutBlock',
-  labels: {
-    singular: 'Layout Personalizado',
-    plural: 'Layouts Personalizados'
-  },
+  labels: adminLabels('Diseño personalizado', 'Diseños personalizados', 'Custom layout', 'Custom layouts'),
   admin: {
-    group: 'Diseño / Layouts'
+    group: adminLabel('Diseño / Secciones', 'Design / Sections')
   },
   fields: [
     {
       name: 'isActive',
       type: 'checkbox',
-      label: 'Sección activa',
+      label: adminLabel('Sección activa', 'Active section'),
       defaultValue: true
     },
     {
       name: 'sectionId',
       type: 'text',
-      label: 'Section ID / ancla',
+      label: adminLabel('ID de sección / ancla', 'Section ID / anchor'),
       admin: {
         placeholder: 'servicios'
       }
@@ -859,26 +839,26 @@ export const SnapLayoutBlock: Block = {
     {
       name: 'sectionTitle',
       type: 'text',
-      label: 'Título de sección'
+      label: adminLabel('Título de sección', 'Section title')
     },
     {
       name: 'sectionSubtitle',
       type: 'text',
-      label: 'Subtítulo'
+      label: adminLabel('Subtítulo', 'Subtitle')
     },
     {
       name: 'sectionDescription',
       type: 'textarea',
-      label: 'Descripción',
+      label: adminLabel('Descripción', 'Description'),
       admin: {
         rows: 4
       }
     },
-    colorField('backgroundColor', 'Color de fondo de sección'),
+    colorField('backgroundColor', adminLabel('Color de fondo de sección', 'Section background color')),
     {
       name: 'backgroundImage',
       type: 'upload',
-      label: 'Imagen de fondo',
+      label: adminLabel('Imagen de fondo', 'Background image'),
       relationTo: 'media',
       displayPreview: true,
       filterOptions: imageFilter
@@ -886,86 +866,92 @@ export const SnapLayoutBlock: Block = {
     {
       name: 'backgroundVideo',
       type: 'upload',
-      label: 'Video de fondo',
+      label: adminLabel('Video de fondo', 'Background video'),
       relationTo: 'media',
       filterOptions: videoFilter
     },
-    colorField('textColor', 'Color de texto de sección'),
+    colorField('textColor', adminLabel('Color de texto de sección', 'Section text color')),
     {
       name: 'maxWidth',
       type: 'select',
-      label: 'Ancho máximo del contenido',
+      label: adminLabel('Ancho máximo del contenido', 'Maximum content width'),
       required: true,
       defaultValue: 'wide',
       options: [
-        { label: 'Estrecho', value: 'narrow' },
+        { label: adminLabel('Estrecho', 'Narrow'), value: 'narrow' },
         { label: 'Normal', value: 'normal' },
-        { label: 'Amplio', value: 'wide' },
-        { label: 'Completo', value: 'full' }
+        { label: adminLabel('Amplio', 'Wide'), value: 'wide' },
+        { label: adminLabel('Completo', 'Full'), value: 'full' }
       ]
     },
     {
       name: 'paddingTop',
       type: 'select',
-      label: 'Padding superior',
+      label: adminLabel('Espacio superior', 'Top spacing'),
       defaultValue: 'lg',
       options: paddingOptions
     },
     {
       name: 'paddingBottom',
       type: 'select',
-      label: 'Padding inferior',
+      label: adminLabel('Espacio inferior', 'Bottom spacing'),
       defaultValue: 'lg',
       options: paddingOptions
     },
     {
       name: 'gap',
       type: 'select',
-      label: 'Gap entre cajas',
+      label: adminLabel('Separación entre cajas', 'Gap between boxes'),
       defaultValue: 'md',
       options: [
-        { label: 'Sin gap', value: 'none' },
-        { label: 'Pequeño', value: 'sm' },
-        { label: 'Medio', value: 'md' },
-        { label: 'Grande', value: 'lg' },
-        { label: 'Extra grande', value: 'xl' }
+        { label: adminLabel('Sin separación', 'No gap'), value: 'none' },
+        { label: adminLabel('Pequeño', 'Small'), value: 'sm' },
+        { label: adminLabel('Medio', 'Medium'), value: 'md' },
+        { label: adminLabel('Grande', 'Large'), value: 'lg' },
+        { label: adminLabel('Extra grande', 'Extra large'), value: 'xl' }
       ]
     },
     {
       name: 'alignment',
       type: 'select',
-      label: 'Alineación general',
+      label: adminLabel('Alineación general', 'General alignment'),
       defaultValue: 'left',
       options: alignmentOptions
     },
     {
       name: 'layout',
       type: 'select',
-      label: 'Layout seleccionado',
+      label: adminLabel('Diseño seleccionado', 'Selected layout'),
       required: true,
       defaultValue: 'oneColumn',
       options: [
-        { label: 'Una columna completa', value: 'oneColumn' },
-        { label: 'Dos columnas 50/50', value: 'twoColumns' },
-        { label: 'Dos columnas 70/30', value: 'twoColumnsWideLeft' },
-        { label: 'Dos columnas 30/70', value: 'twoColumnsWideRight' },
-        { label: 'Tres columnas iguales', value: 'threeColumns' },
-        { label: 'Cuatro columnas iguales', value: 'fourColumns' },
+        { label: adminLabel('Una columna completa', 'One full column'), value: 'oneColumn' },
+        { label: adminLabel('Dos columnas 50/50', 'Two columns 50/50'), value: 'twoColumns' },
+        { label: adminLabel('Dos columnas 70/30', 'Two columns 70/30'), value: 'twoColumnsWideLeft' },
+        { label: adminLabel('Dos columnas 30/70', 'Two columns 30/70'), value: 'twoColumnsWideRight' },
+        { label: adminLabel('Tres columnas iguales', 'Three equal columns'), value: 'threeColumns' },
+        { label: adminLabel('Cuatro columnas iguales', 'Four equal columns'), value: 'fourColumns' },
         {
-          label: 'Caja grande izquierda + dos pequeñas derecha',
+          label: adminLabel(
+            'Caja grande izquierda + dos pequeñas derecha',
+            'Large box left + two small right'
+          ),
           value: 'featureLeft'
         },
         {
-          label: 'Dos pequeñas izquierda + caja grande derecha',
+          label: adminLabel(
+            'Dos pequeñas izquierda + caja grande derecha',
+            'Two small left + large box right'
+          ),
           value: 'featureRight'
         },
-        { label: 'Bento Grid', value: 'bentoGrid' },
-        { label: 'Cards de servicios', value: 'serviceCards' },
-        { label: 'Texto izquierda + media derecha', value: 'textMedia' },
-        { label: 'Media izquierda + texto derecha', value: 'mediaText' },
-        { label: 'Contacto: datos + formulario/tarjeta', value: 'contact' },
-        { label: 'Galería en mosaico', value: 'mosaicGallery' },
-        { label: 'Hero dividido', value: 'splitHero' }
+        { label: adminLabel('Cuadrícula tipo bento', 'Bento grid'), value: 'bentoGrid' },
+        { label: adminLabel('Tarjetas de servicios', 'Service cards'), value: 'serviceCards' },
+        { label: adminLabel('Texto izquierda + medio derecha', 'Text left + media right'), value: 'textMedia' },
+        { label: adminLabel('Medio izquierda + texto derecha', 'Media left + text right'), value: 'mediaText' },
+        { label: adminLabel('Contacto: datos + formulario/tarjeta', 'Contact: details + form/card'), value: 'contact' },
+        { label: adminLabel('Galería en mosaico', 'Mosaic gallery'), value: 'mosaicGallery' },
+        { label: adminLabel('Portada dividida', 'Split hero'), value: 'splitHero' }
       ]
     },
     {
@@ -983,21 +969,20 @@ export const SnapLayoutBlock: Block = {
     {
       name: 'className',
       type: 'text',
-      label: 'Clase CSS adicional',
+      label: adminLabel('Clase CSS adicional', 'Additional CSS class'),
       admin: {
-        description:
-          'Opcional. Usa solo clases conocidas y simples; no acepta CSS libre.'
+        description: adminLabel(
+          'Opcional. Usa solo clases conocidas y simples; no acepta CSS libre.',
+          'Optional. Use only known simple classes; free CSS is not accepted.'
+        )
       },
       validate: validateSafeClassName
     },
     {
       name: 'items',
       type: 'array',
-      label: 'Cajitas / cards',
-      labels: {
-        singular: 'Caja',
-        plural: 'Cajas'
-      },
+      label: adminLabel('Cajas / tarjetas', 'Boxes / cards'),
+      labels: adminLabels('Caja', 'Cajas', 'Box', 'Boxes'),
       fields: snapLayoutItemFields
     }
   ]
@@ -1005,24 +990,21 @@ export const SnapLayoutBlock: Block = {
 
 export const CTABlock: Block = {
   slug: 'cta',
-  labels: {
-    singular: 'CTA',
-    plural: 'CTAs'
-  },
+  labels: adminLabels('Llamado a la acción', 'Llamados a la acción', 'Call to action', 'Calls to action'),
   admin: {
-    group: 'Interacción'
+    group: adminLabel('Interacción', 'Interaction')
   },
   fields: [
     {
       name: 'title',
       type: 'text',
-      label: 'Título',
+      label: adminLabel('Título', 'Title'),
       required: true
     },
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción',
+      label: adminLabel('Descripción', 'Description'),
       admin: {
         rows: 3
       }
@@ -1030,22 +1012,22 @@ export const CTABlock: Block = {
     {
       name: 'buttonLabel',
       type: 'text',
-      label: 'Texto de botón'
+      label: adminLabel('Texto de botón', 'Button text')
     },
     {
       name: 'buttonUrl',
       type: 'text',
-      label: 'URL de botón'
+      label: adminLabel('URL de botón', 'Button URL')
     },
     {
       name: 'variant',
       type: 'select',
-      label: 'Variante visual',
+      label: adminLabel('Variante visual', 'Visual variant'),
       defaultValue: 'solid',
       options: [
-        { label: 'Sólida', value: 'solid' },
-        { label: 'Contorno', value: 'outline' },
-        { label: 'Minimal', value: 'minimal' }
+        { label: adminLabel('Sólida', 'Solid'), value: 'solid' },
+        { label: adminLabel('Contorno', 'Outline'), value: 'outline' },
+        { label: adminLabel('Simple', 'Minimal'), value: 'minimal' }
       ]
     }
   ]
@@ -1053,38 +1035,32 @@ export const CTABlock: Block = {
 
 export const FAQBlock: Block = {
   slug: 'faq',
-  labels: {
-    singular: 'FAQ',
-    plural: 'FAQs'
-  },
+  labels: adminLabels('Preguntas frecuentes', 'Preguntas frecuentes', 'FAQ', 'FAQ'),
   admin: {
-    group: 'Contenido'
+    group: adminLabel('Contenido', 'Content')
   },
   fields: [
     {
       name: 'title',
       type: 'text',
-      label: 'Título de sección'
+      label: adminLabel('Título de sección', 'Section title')
     },
     {
       name: 'items',
       type: 'array',
-      label: 'Preguntas',
-      labels: {
-        singular: 'Pregunta',
-        plural: 'Preguntas'
-      },
+      label: adminLabel('Preguntas', 'Questions'),
+      labels: adminLabels('Pregunta', 'Preguntas', 'Question', 'Questions'),
       fields: [
         {
           name: 'question',
           type: 'text',
-          label: 'Pregunta',
+          label: adminLabel('Pregunta', 'Question'),
           required: true
         },
         {
           name: 'answer',
           type: 'textarea',
-          label: 'Respuesta',
+          label: adminLabel('Respuesta', 'Answer'),
           required: true,
           admin: {
             rows: 4

@@ -90,7 +90,7 @@ export interface Config {
   db: {
     defaultIDType: number;
   };
-  fallbackLocale: null;
+  fallbackLocale: ('false' | 'none' | 'null') | false | null | ('es' | 'en') | ('es' | 'en')[];
   globals: {
     'main-navigation': MainNavigation;
     'footer-settings': FooterSettings;
@@ -101,7 +101,7 @@ export interface Config {
     'footer-settings': FooterSettingsSelect<false> | FooterSettingsSelect<true>;
     'company-settings': CompanySettingsSelect<false> | CompanySettingsSelect<true>;
   };
-  locale: null;
+  locale: 'es' | 'en';
   widgets: {
     collections: CollectionsWidget;
   };
@@ -138,13 +138,13 @@ export interface Page {
   title: string;
   excerpt?: string | null;
   /**
-   * Sin slash inicial. Ejemplos: impresiones, drones, servicios/diseno-web.
+   * Without initial slash. Examples: services, projects, services/web-design.
    */
   slug: string;
   status: 'draft' | 'published';
   featuredImage?: (number | null) | Media;
   /**
-   * Aquí se agregan los bloques visuales. SnapLayout aparece como "Layout Personalizado" dentro de Agregar bloque; no pertenece al Menú Principal.
+   * Add visual blocks here. "Custom layout" appears inside Add block; it is not part of the Main Menu.
    */
   content?:
     | (
@@ -273,13 +273,13 @@ export interface Page {
             sectionSubtitle?: string | null;
             sectionDescription?: string | null;
             /**
-             * Formato HEX. Ejemplo: #0F172A.
+             * HEX format. Example: #0F172A.
              */
             backgroundColor?: string | null;
             backgroundImage?: (number | null) | Media;
             backgroundVideo?: (number | null) | Media;
             /**
-             * Formato HEX. Ejemplo: #0F172A.
+             * HEX format. Example: #0F172A.
              */
             textColor?: string | null;
             maxWidth: 'narrow' | 'normal' | 'wide' | 'full';
@@ -304,7 +304,7 @@ export interface Page {
               | 'mosaicGallery'
               | 'splitHero';
             /**
-             * Opcional. Usa solo clases conocidas y simples; no acepta CSS libre.
+             * Optional. Use only known simple classes; free CSS is not accepted.
              */
             className?: string | null;
             items?:
@@ -341,7 +341,7 @@ export interface Page {
                   image?: (number | null) | Media;
                   video?: (number | null) | Media;
                   /**
-                   * Nombre sugerido: sparkles, plane, printer, camera, phone, mail, map, wrench.
+                   * Suggested name: sparkles, plane, printer, camera, phone, mail, map, wrench.
                    */
                   iconName?: string | null;
                   linkLabel?: string | null;
@@ -357,11 +357,11 @@ export interface Page {
                       }[]
                     | null;
                   /**
-                   * Formato HEX. Ejemplo: #0F172A.
+                   * HEX format. Example: #0F172A.
                    */
                   backgroundColor?: string | null;
                   /**
-                   * Formato HEX. Ejemplo: #0F172A.
+                   * HEX format. Example: #0F172A.
                    */
                   textColor?: string | null;
                   borderRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
@@ -370,7 +370,7 @@ export interface Page {
                   padding?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
                   alignment?: ('left' | 'center' | 'right') | null;
                   /**
-                   * Número opcional para ordenar esta caja en pantallas pequeñas.
+                   * Optional number to order this box on small screens.
                    */
                   responsiveOrder?: number | null;
                   isActive?: boolean | null;
@@ -410,29 +410,29 @@ export interface Page {
     metaTitle?: string | null;
     metaDescription?: string | null;
     /**
-     * Separar palabras clave con comas.
+     * Separate keywords with commas.
      */
     keywords?: string | null;
     ogImage?: (number | null) | Media;
   };
   /**
-   * Actívalo para que esta página aparezca en el header del sitio público.
+   * Enable it so this page appears in the public site header.
    */
   showInMainNavigation?: boolean | null;
   /**
-   * Opcional. Si queda vacío, se usará el título interno de la página.
+   * Optional. If empty, the internal page title will be used.
    */
   navigationLabel?: string | null;
   /**
-   * Déjalo vacío para un elemento principal. Selecciona una página padre para convertir esta página en submenú.
+   * Leave empty for a top-level item. Select a parent page to turn this page into a submenu.
    */
   parentPage?: (number | null) | Page;
   /**
-   * Si el footer usa "páginas publicadas automáticamente", esta página aparecerá cuando esté publicada.
+   * If the footer uses "published pages automatically", this page will appear when published.
    */
   showInFooter?: boolean | null;
   /**
-   * Número menor aparece primero. Aplica para menú principal, submenús y footer automático.
+   * Lower numbers appear first. Applies to main menu, submenus and automatic footer.
    */
   navigationOrder?: number | null;
   heroTitle?: string | null;
@@ -954,7 +954,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Compatibilidad para menús manuales anteriores. El menú principal ahora se administra desde Páginas.
+ * Compatibility with previous manual menus. The main menu is now managed from Pages.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "main-navigation".
@@ -966,14 +966,14 @@ export interface MainNavigation {
         label: string;
         linkType: 'page' | 'external' | 'anchor' | 'container';
         /**
-         * Solo se pueden seleccionar páginas publicadas.
+         * Only published pages can be selected.
          */
         page?: (number | null) | Page;
         manualUrl?: string | null;
         openInNewTab?: boolean | null;
         isActive?: boolean | null;
         /**
-         * También puedes reordenar arrastrando. Este número ayuda a ordenar de forma explícita.
+         * You can also reorder by dragging. This number helps set an explicit order.
          */
         order?: number | null;
         children?:
@@ -981,14 +981,14 @@ export interface MainNavigation {
               label: string;
               linkType: 'page' | 'external' | 'anchor' | 'container';
               /**
-               * Solo se pueden seleccionar páginas publicadas.
+               * Only published pages can be selected.
                */
               page?: (number | null) | Page;
               manualUrl?: string | null;
               openInNewTab?: boolean | null;
               isActive?: boolean | null;
               /**
-               * También puedes reordenar arrastrando. Este número ayuda a ordenar de forma explícita.
+               * You can also reorder by dragging. This number helps set an explicit order.
                */
               order?: number | null;
               id?: string | null;
@@ -1001,7 +1001,7 @@ export interface MainNavigation {
   createdAt?: string | null;
 }
 /**
- * Footer dinámico del sitio público: columnas, navegación inferior, contacto y legal.
+ * Compatibility with the previous footer settings. Footer is now managed from General Settings.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer-settings".
@@ -1077,13 +1077,17 @@ export interface FooterSettings {
   createdAt?: string | null;
 }
 /**
- * Información global de la empresa, branding, redes sociales, SEO y textos legales.
+ * Global company information, brand, footer, social links, SEO and legal text.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "company-settings".
  */
 export interface CompanySettings {
   id: number;
+  /**
+   * If a visitor has not chosen a language, the public site loads this language.
+   */
+  defaultLanguage: 'es' | 'en';
   commercialName: string;
   legalName?: string | null;
   slogan?: string | null;
@@ -1100,27 +1104,27 @@ export interface CompanySettings {
   favicon?: (number | null) | Media;
   ogImage?: (number | null) | Media;
   /**
-   * Formato HEX. Ejemplo: #0F172A.
+   * HEX format. Example: #0F172A.
    */
   colorPrimary: string;
   /**
-   * Formato HEX. Ejemplo: #0F172A.
+   * HEX format. Example: #0F172A.
    */
   colorSecondary: string;
   /**
-   * Formato HEX. Ejemplo: #0F172A.
+   * HEX format. Example: #0F172A.
    */
   colorAccent: string;
   /**
-   * Formato HEX. Ejemplo: #0F172A.
+   * HEX format. Example: #0F172A.
    */
   colorBackground: string;
   /**
-   * Formato HEX. Ejemplo: #0F172A.
+   * HEX format. Example: #0F172A.
    */
   colorTextPrimary: string;
   /**
-   * Formato HEX. Ejemplo: #0F172A.
+   * HEX format. Example: #0F172A.
    */
   colorTextSecondary: string;
   facebookUrl?: string | null;
@@ -1134,7 +1138,7 @@ export interface CompanySettings {
   contactHeadline?: string | null;
   contactIntro?: string | null;
   /**
-   * Puedes agregar varios correos. Cada mensaje del formulario se guardará en el admin y se enviará a estos correos.
+   * You can add multiple emails. Each form message is saved in the admin and sent to these addresses.
    */
   contactRecipients?:
     | {
@@ -1142,10 +1146,75 @@ export interface CompanySettings {
         id?: string | null;
       }[]
     | null;
+  footerIsEnabled?: boolean | null;
+  footerShowLogo?: boolean | null;
+  footerLogo?: (number | null) | Media;
+  footerShowCompanyName?: boolean | null;
+  footerCompanyNameOverride?: string | null;
+  footerShortDescription?: string | null;
+  footerAdditionalText?: string | null;
+  footerColumns?:
+    | {
+        title: string;
+        contentType: 'publishedPages' | 'mainNavigation' | 'manualLinks' | 'socialLinks' | 'contact' | 'customText';
+        customText?: string | null;
+        links?:
+          | {
+              label: string;
+              url: string;
+              openInNewTab?: boolean | null;
+              isActive?: boolean | null;
+              order?: number | null;
+              id?: string | null;
+            }[]
+          | null;
+        order?: number | null;
+        isActive?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Optional. If you do not add links here, the site uses the main social links from General Settings.
+   */
+  footerSocialLinks?:
+    | {
+        name: string;
+        type:
+          | 'facebook'
+          | 'instagram'
+          | 'tiktok'
+          | 'linkedin'
+          | 'youtube'
+          | 'twitter'
+          | 'whatsapp'
+          | 'website'
+          | 'other';
+        url: string;
+        iconName?: string | null;
+        showInFooter?: boolean | null;
+        showInHeader?: boolean | null;
+        openInNewTab?: boolean | null;
+        isActive?: boolean | null;
+        order?: number | null;
+        id?: string | null;
+      }[]
+    | null;
+  footerUseCompanySettings?: boolean | null;
+  footerEmail?: string | null;
+  footerPhone?: string | null;
+  footerWhatsapp?: string | null;
+  footerAddress?: string | null;
+  footerBusinessHours?: string | null;
+  footerCountry?: string | null;
+  footerCity?: string | null;
+  footerCopyrightText?: string | null;
+  footerPrivacyPage?: (number | null) | Page;
+  footerTermsPage?: (number | null) | Page;
+  footerLegalTextOverride?: string | null;
   defaultMetaTitle: string;
   defaultMetaDescription: string;
   /**
-   * Separar palabras clave con comas.
+   * Separate keywords with commas.
    */
   globalKeywords?: string | null;
   canonicalBaseUrl?: string | null;
@@ -1256,6 +1325,7 @@ export interface FooterSettingsSelect<T extends boolean = true> {
  * via the `definition` "company-settings_select".
  */
 export interface CompanySettingsSelect<T extends boolean = true> {
+  defaultLanguage?: T;
   commercialName?: T;
   legalName?: T;
   slogan?: T;
@@ -1293,6 +1363,59 @@ export interface CompanySettingsSelect<T extends boolean = true> {
         email?: T;
         id?: T;
       };
+  footerIsEnabled?: T;
+  footerShowLogo?: T;
+  footerLogo?: T;
+  footerShowCompanyName?: T;
+  footerCompanyNameOverride?: T;
+  footerShortDescription?: T;
+  footerAdditionalText?: T;
+  footerColumns?:
+    | T
+    | {
+        title?: T;
+        contentType?: T;
+        customText?: T;
+        links?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              openInNewTab?: T;
+              isActive?: T;
+              order?: T;
+              id?: T;
+            };
+        order?: T;
+        isActive?: T;
+        id?: T;
+      };
+  footerSocialLinks?:
+    | T
+    | {
+        name?: T;
+        type?: T;
+        url?: T;
+        iconName?: T;
+        showInFooter?: T;
+        showInHeader?: T;
+        openInNewTab?: T;
+        isActive?: T;
+        order?: T;
+        id?: T;
+      };
+  footerUseCompanySettings?: T;
+  footerEmail?: T;
+  footerPhone?: T;
+  footerWhatsapp?: T;
+  footerAddress?: T;
+  footerBusinessHours?: T;
+  footerCountry?: T;
+  footerCity?: T;
+  footerCopyrightText?: T;
+  footerPrivacyPage?: T;
+  footerTermsPage?: T;
+  footerLegalTextOverride?: T;
   defaultMetaTitle?: T;
   defaultMetaDescription?: T;
   globalKeywords?: T;

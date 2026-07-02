@@ -4,6 +4,8 @@ import { useState } from 'react'
 import type { ChangeEvent, FormEvent } from 'react'
 import { Send } from 'lucide-react'
 
+import { getUIText, type Locale } from '@/lib/i18n'
+
 type ContactFormFields = {
   email: string
   firstName: string
@@ -29,7 +31,12 @@ const initialForm: ContactFormFields = {
   subject: ''
 }
 
-export function ContactForm() {
+type ContactFormProps = {
+  locale: Locale
+}
+
+export function ContactForm({ locale }: ContactFormProps) {
+  const text = getUIText(locale)
   const [form, setForm] = useState<ContactFormFields>(initialForm)
   const [errors, setErrors] = useState<
     Partial<Record<keyof ContactFormFields, string>>
@@ -59,7 +66,10 @@ export function ContactForm() {
 
     try {
       const response = await fetch('/api/contact', {
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          locale
+        }),
         headers: {
           'Content-Type': 'application/json'
         },
@@ -70,22 +80,17 @@ export function ContactForm() {
       if (!response.ok || data.ok === false) {
         setErrors(data.errors ?? {})
         setStatus('error')
-        setStatusMessage(
-          data.message ?? 'Revisa los campos e intenta enviarlo otra vez.'
-        )
+        setStatusMessage(data.message ?? text.contact.submitReview)
         return
       }
 
       setForm(initialForm)
       setErrors({})
       setStatus('success')
-      setStatusMessage(
-        data.warning ??
-          'Mensaje enviado. También quedó guardado en el panel administrativo.'
-      )
+      setStatusMessage(data.warning ?? text.contact.submitSuccess)
     } catch {
       setStatus('error')
-      setStatusMessage('No se pudo enviar el mensaje. Inténtalo de nuevo.')
+      setStatusMessage(text.contact.submitError)
     } finally {
       setIsSubmitting(false)
     }
@@ -98,13 +103,13 @@ export function ContactForm() {
     >
       <div className="grid gap-5 sm:grid-cols-2">
         <label className="block">
-          <span className="sr-only">Nombre</span>
+          <span className="sr-only">{text.contact.firstName}</span>
           <input
             autoComplete="given-name"
             className="h-12 w-full rounded-md border border-[#8daaff] bg-[#f0f4ff] px-4 text-sm font-medium text-[#07164b] outline-none transition placeholder:text-[#1a3170] focus:border-[#27337e] focus:bg-white"
             name="firstName"
             onChange={updateField('firstName')}
-            placeholder="Nombre"
+            placeholder={text.contact.firstName}
             value={form.firstName}
           />
           {errors.firstName ? (
@@ -114,26 +119,26 @@ export function ContactForm() {
           ) : null}
         </label>
         <label className="block">
-          <span className="sr-only">Apellido</span>
+          <span className="sr-only">{text.contact.lastName}</span>
           <input
             autoComplete="family-name"
             className="h-12 w-full rounded-md border border-[#8daaff] bg-[#f0f4ff] px-4 text-sm font-medium text-[#07164b] outline-none transition placeholder:text-[#1a3170] focus:border-[#27337e] focus:bg-white"
             name="lastName"
             onChange={updateField('lastName')}
-            placeholder="Apellido"
+            placeholder={text.contact.lastName}
             value={form.lastName}
           />
         </label>
       </div>
 
       <label className="block">
-        <span className="sr-only">Tu número de contacto</span>
+        <span className="sr-only">{text.contact.phone}</span>
         <input
           autoComplete="tel"
           className="h-12 w-full rounded-md border border-[#8daaff] bg-[#f0f4ff] px-4 text-sm font-medium text-[#07164b] outline-none transition placeholder:text-[#1a3170] focus:border-[#27337e] focus:bg-white sm:w-3/5"
           name="phone"
           onChange={updateField('phone')}
-          placeholder="Tu número de contacto"
+          placeholder={text.contact.phone}
           value={form.phone}
         />
         {errors.phone ? (
@@ -144,13 +149,13 @@ export function ContactForm() {
       </label>
 
       <label className="block">
-        <span className="sr-only">Tu correo electrónico</span>
+        <span className="sr-only">{text.contact.email}</span>
         <input
           autoComplete="email"
           className="h-12 w-full rounded-md border border-[#8daaff] bg-[#f0f4ff] px-4 text-sm font-medium text-[#07164b] outline-none transition placeholder:text-[#1a3170] focus:border-[#27337e] focus:bg-white"
           name="email"
           onChange={updateField('email')}
-          placeholder="Tu correo electrónico"
+          placeholder={text.contact.email}
           type="email"
           value={form.email}
         />
@@ -162,12 +167,12 @@ export function ContactForm() {
       </label>
 
       <label className="block">
-        <span className="sr-only">Asunto</span>
+        <span className="sr-only">{text.contact.subject}</span>
         <input
           className="h-12 w-full rounded-md border border-[#8daaff] bg-[#f0f4ff] px-4 text-sm font-medium text-[#07164b] outline-none transition placeholder:text-[#1a3170] focus:border-[#27337e] focus:bg-white sm:w-3/5"
           name="subject"
           onChange={updateField('subject')}
-          placeholder="Asunto"
+          placeholder={text.contact.subject}
           value={form.subject}
         />
         {errors.subject ? (
@@ -178,12 +183,12 @@ export function ContactForm() {
       </label>
 
       <label className="block">
-        <span className="sr-only">Tu mensaje</span>
+        <span className="sr-only">{text.contact.message}</span>
         <textarea
           className="min-h-32 w-full resize-y rounded-md border border-[#8daaff] bg-[#f0f4ff] px-4 py-4 text-sm font-medium text-[#07164b] outline-none transition placeholder:text-[#1a3170] focus:border-[#27337e] focus:bg-white"
           name="message"
           onChange={updateField('message')}
-          placeholder="Tu mensaje"
+          placeholder={text.contact.message}
           value={form.message}
         />
         {errors.message ? (
@@ -200,7 +205,7 @@ export function ContactForm() {
           type="submit"
         >
           <Send aria-hidden="true" size={17} strokeWidth={1.8} />
-          {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
+          {isSubmitting ? text.contact.sending : text.contact.send}
         </button>
         {statusMessage ? (
           <p

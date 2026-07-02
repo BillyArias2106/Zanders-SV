@@ -1,5 +1,7 @@
 import type { CollectionConfig } from 'payload'
 
+import { adminLabel, adminLabels } from '../lib/admin-i18n'
+
 const allowedMimeTypes = [
   'image/jpeg',
   'image/png',
@@ -16,13 +18,10 @@ export const Media: CollectionConfig = {
     read: () => true
   },
   admin: {
-    group: 'Contenido',
+    group: adminLabel('Contenido', 'Content'),
     useAsTitle: 'alt'
   },
-  labels: {
-    singular: 'Medio',
-    plural: 'Medios'
-  },
+  labels: adminLabels('Medio', 'Medios', 'Media item', 'Media'),
   upload: {
     staticDir: 'media',
     mimeTypes: allowedMimeTypes
@@ -31,30 +30,32 @@ export const Media: CollectionConfig = {
     {
       name: 'alt',
       type: 'text',
-      label: 'Texto alternativo',
+      label: adminLabel('Texto alternativo', 'Alternative text'),
+      localized: true,
       required: true
     },
     {
       name: 'caption',
       type: 'text',
-      label: 'Caption'
+      label: adminLabel('Texto corto', 'Short text'),
+      localized: true
     },
     {
       name: 'mediaType',
       type: 'select',
-      label: 'Tipo de media',
+      label: adminLabel('Tipo de medio', 'Media type'),
       required: true,
       defaultValue: 'image',
       options: [
-        { label: 'Imagen', value: 'image' },
+        { label: adminLabel('Imagen', 'Image'), value: 'image' },
         { label: 'Video', value: 'video' },
-        { label: 'Otro', value: 'other' }
+        { label: adminLabel('Otro', 'Other'), value: 'other' }
       ]
     },
     {
       name: 'poster',
       type: 'upload',
-      label: 'Poster / thumbnail para video',
+      label: adminLabel('Imagen de portada para video', 'Video poster image'),
       relationTo: 'media',
       displayPreview: true,
       filterOptions: {
@@ -70,7 +71,8 @@ export const Media: CollectionConfig = {
     {
       name: 'description',
       type: 'textarea',
-      label: 'Descripción',
+      label: adminLabel('Descripción', 'Description'),
+      localized: true,
       admin: {
         rows: 3
       }

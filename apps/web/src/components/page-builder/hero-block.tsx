@@ -25,8 +25,8 @@ export function HeroBlock({ block }: { block: HeroPageBlock }) {
           src={imageUrl}
         />
       ) : null}
-      <div className="zanders-hero-shade-x absolute inset-0 z-10" />
-      <div className="zanders-hero-shade-y absolute inset-0 z-10" />
+      <div className="app-hero-shade-x absolute inset-0 z-10" />
+      <div className="app-hero-shade-y absolute inset-0 z-10" />
       <div className="relative z-20 mx-auto flex min-h-[72svh] max-w-7xl items-center px-5 py-16 sm:px-8">
         <div className="max-w-3xl">
           {block.eyebrow ? (

@@ -4,17 +4,20 @@ import type {
   NavigationItem,
   PageBuilderPage
 } from '@/lib/cms'
+import type { Locale } from '@/lib/i18n'
 
 import { RenderBlocks } from './render-blocks'
 
 type PageRendererProps = {
   companySettings: CompanySettingsContent
+  locale: Locale
   navigationItems: NavigationItem[]
   page: PageBuilderPage
 }
 
 export function PageRenderer({
   companySettings,
+  locale,
   navigationItems,
   page
 }: PageRendererProps) {
@@ -22,6 +25,7 @@ export function PageRenderer({
     <main className="min-h-screen bg-deep-950 text-silver-50">
       <HeroNavigation
         companySettings={companySettings}
+        locale={locale}
         navigationItems={navigationItems}
       />
       {page.content.length > 0 ? (
