@@ -25,8 +25,7 @@ const contactMessages = {
     email: 'Enter a valid email address.',
     firstName: 'Enter your first name.',
     message: 'Enter your message.',
-    noRecipients:
-      'Message saved, but no recipient emails are configured.',
+    noRecipients: 'Message saved, but no recipient emails are configured.',
     noRecipientsAdmin:
       'No recipients are configured in General Settings > Contact.',
     phone: 'Enter your contact number.',
@@ -181,6 +180,7 @@ export async function POST(request: Request) {
       lastName,
       message,
       phone,
+      priority: 'normal',
       source: text.source,
       status: 'new',
       subject,

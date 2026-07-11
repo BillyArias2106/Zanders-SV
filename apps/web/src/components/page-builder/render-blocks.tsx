@@ -6,9 +6,12 @@ import { FAQBlock } from './faq-block'
 import { GalleryBlock } from './gallery-block'
 import { HeroBlock } from './hero-block'
 import { ImageTextBlock } from './image-text-block'
+import { LogoStripBlock } from './logo-strip-block'
 import { MediaBlock } from './media-block'
 import { RichTextBlock } from './rich-text-block'
 import { SnapLayoutBlock } from './snap-layout-block'
+import { StatsBlock } from './stats-block'
+import { TestimonialsBlock } from './testimonials-block'
 import { VideoBlock } from './video-block'
 
 type RenderBlocksProps = {
@@ -24,6 +27,10 @@ export function RenderBlocks({ blocks }: RenderBlocksProps) {
         switch (block.type) {
           case 'hero':
             return <HeroBlock block={block} key={key} />
+          case 'logoStrip':
+            return <LogoStripBlock block={block} key={key} />
+          case 'stats':
+            return <StatsBlock block={block} key={key} />
           case 'richText':
             return <RichTextBlock block={block} key={key} />
           case 'imageText':
@@ -38,6 +45,8 @@ export function RenderBlocks({ blocks }: RenderBlocksProps) {
             return <VideoBlock block={block} key={key} />
           case 'snapLayoutBlock':
             return <SnapLayoutBlock block={block} key={key} />
+          case 'testimonials':
+            return <TestimonialsBlock block={block} key={key} />
           case 'cta':
             return <CTABlock block={block} key={key} />
           case 'faq':

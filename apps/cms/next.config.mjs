@@ -8,6 +8,9 @@ const workspaceRoot = path.resolve(__dirname, '../..')
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  experimental: {
+    reactDebugChannel: false
+  },
   turbopack: {
     root: workspaceRoot
   },

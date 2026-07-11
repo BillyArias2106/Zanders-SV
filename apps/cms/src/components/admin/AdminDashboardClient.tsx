@@ -7,62 +7,77 @@ import './admin-dashboard.css'
 const quickActions = [
   {
     description: {
-      en: 'Create public pages and decide if they appear in the menu or submenu.',
-      es: 'Crear páginas públicas y decidir si van en menú o submenú.'
+      en: 'Create public pages, assign type/template and control menu/footer visibility.',
+      es: 'Crear páginas públicas, asignar tipo/plantilla y controlar menú/footer.'
     },
     href: '/admin/collections/pages',
-    label: { en: 'Pages and menu', es: 'Páginas y menú' }
+    label: { en: 'Website pages', es: 'Páginas del sitio' }
   },
   {
     description: {
-      en: 'Upload images, SVGs and videos for visual blocks.',
-      es: 'Subir imágenes, SVGs y videos para bloques visuales.'
+      en: 'Upload images, SVGs, videos and PDFs with usage, folders and tags.',
+      es: 'Subir imágenes, SVGs, videos y PDFs con uso, carpetas y tags.'
     },
     href: '/admin/collections/media',
-    label: { en: 'Media', es: 'Medios' }
+    label: { en: 'Media library', es: 'Biblioteca de medios' }
   },
   {
     description: {
-      en: 'Brand, footer, social links, contact, SEO and general details.',
-      es: 'Marca, pie de página, redes sociales, contacto, SEO y datos generales.'
+      en: 'Company, brand, footer, contact, social links, SEO and legal text.',
+      es: 'Empresa, marca, footer, contacto, redes, SEO y textos legales.'
     },
     href: '/admin/globals/company-settings',
-    label: { en: 'General settings', es: 'Configuración general' }
+    label: { en: 'Site settings', es: 'Configuración del sitio' }
   },
   {
     description: {
-      en: 'Review messages received from the site form.',
-      es: 'Revisar mensajes recibidos desde el formulario del sitio.'
+      en: 'Review, prioritize, assign and follow up messages from the website.',
+      es: 'Revisar, priorizar, asignar y dar seguimiento a mensajes del sitio.'
     },
     href: '/admin/collections/contact-submissions',
-    label: { en: 'Contact messages', es: 'Mensajes de contacto' }
+    label: { en: 'Leads inbox', es: 'Bandeja de leads' }
   },
   {
     description: {
-      en: 'Internal users with access to the admin panel.',
-      es: 'Usuarios internos con acceso al panel administrativo.'
+      en: 'Manage internal users and prepare role-based permissions.',
+      es: 'Gestionar usuarios internos y preparar permisos por rol.'
     },
     href: '/admin/collections/users',
-    label: { en: 'Users', es: 'Usuarios' }
+    label: { en: 'Users and roles', es: 'Usuarios y roles' }
   }
 ]
 
 const contentFlow = {
   en: [
-    'Create or edit a page.',
-    'Open the Menu tab and enable it if it appears in the top navigation.',
-    'Choose a parent page if it belongs inside a submenu.',
-    'Open Design / Sections.',
-    'Add the Custom layout block.',
-    'Choose a layout, complete the boxes and publish.'
+    'Complete Site Settings first: company, contact, brand, SEO and legal basics.',
+    'Create or edit a page and define its page type and suggested template.',
+    'Use the Menu tab only for simple automatic navigation and footer placement.',
+    'Build the content with specific blocks before using Custom layout.',
+    'Publish only when SEO, media alt text and contact recipients are ready.'
   ],
   es: [
-    'Crear o editar una página.',
-    'Entrar a la pestaña Menú y activar si aparece en la navegación superior.',
-    'Elegir una página padre si será parte de un submenú.',
-    'Entrar a Diseño / Secciones.',
-    'Agregar el bloque Diseño personalizado.',
-    'Elegir un diseño, completar cajas y publicar.'
+    'Completar primero Configuración del sitio: empresa, contacto, marca, SEO y legales.',
+    'Crear o editar una página y definir su tipo de página y plantilla sugerida.',
+    'Usar la pestaña Menú solo para navegación automática simple y ubicación en footer.',
+    'Construir el contenido con bloques específicos antes de usar Diseño personalizado.',
+    'Publicar solo cuando SEO, alt de medios y destinatarios de contacto estén listos.'
+  ]
+}
+
+const adminMap = {
+  en: [
+    'Website: pages, slugs, page presentation and automatic menu/footer placement.',
+    'Content: media library with folders, tags, usage and video posters.',
+    'Site Settings: company, brand, footer, contact, SEO, social links and legal text.',
+    'Leads: inbox, lead status, priority, owners, notes and next actions.',
+    'System: users and role metadata ready for granular permissions.'
+  ],
+  es: [
+    'Sitio web: páginas, slugs, presentación y ubicación automática en menú/footer.',
+    'Contenido: biblioteca de medios con carpetas, tags, uso y posters de video.',
+    'Configuración: empresa, marca, footer, contacto, SEO, redes y legales.',
+    'Leads: bandeja, estado, prioridad, responsables, notas y próximas acciones.',
+    'Sistema: usuarios y metadatos de rol listos para permisos granulares.'
   ]
 }
 
@@ -74,13 +89,13 @@ export function AdminDashboardClient() {
     <main className="app-admin-dashboard">
       <section className="app-admin-dashboard__hero">
         <p className="app-admin-dashboard__eyebrow">
-          {language === 'en' ? 'Content / Messages' : 'Contenido / Mensajes'}
+          {language === 'en' ? 'Website operations' : 'Operación del sitio'}
         </p>
-        <h1>New Site</h1>
+        <h1>Site CMS</h1>
         <p>
           {language === 'en'
-            ? 'Operational panel for public content, navigation, brand and a structure ready to grow with customer follow-up.'
-            : 'Panel operativo para contenido público, navegación, marca y estructura preparada para crecer con seguimiento de clientes.'}
+            ? 'Custom administration panel for publishing corporate websites, maintaining brand settings and following up leads without touching code.'
+            : 'Panel administrativo personalizado para publicar sitios corporativos, mantener marca y dar seguimiento a leads sin tocar código.'}
         </p>
       </section>
 
@@ -119,8 +134,8 @@ export function AdminDashboardClient() {
           </p>
           <h2>
             {language === 'en'
-              ? 'Flow for using Custom layout'
-              : 'Flujo para usar Diseño personalizado'}
+              ? 'Recommended publishing flow'
+              : 'Flujo recomendado de publicación'}
           </h2>
           <ol>
             {contentFlow[language].map((step) => (
@@ -132,26 +147,11 @@ export function AdminDashboardClient() {
           <p className="app-admin-dashboard__eyebrow">
             {language === 'en' ? 'Structure' : 'Estructura'}
           </p>
-          <h2>{language === 'en' ? 'Admin groups' : 'Grupos del admin'}</h2>
+          <h2>{language === 'en' ? 'Admin map' : 'Mapa del admin'}</h2>
           <ul>
-            <li>
-              {language === 'en'
-                ? 'Content: Pages, main menu and Media.'
-                : 'Contenido: Páginas, menú principal y Medios.'}
-            </li>
-            <li>
-              {language === 'en'
-                ? 'Company: General Settings and Footer.'
-                : 'Empresa: Configuración General y Pie de página.'}
-            </li>
-            <li>
-              {language === 'en'
-                ? 'Messages: Received contact forms.'
-                : 'Mensajes: Formularios de contacto recibidos.'}
-            </li>
-            <li>
-              {language === 'en' ? 'System: Users.' : 'Sistema: Usuarios.'}
-            </li>
+            {adminMap[language].map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </div>
       </section>

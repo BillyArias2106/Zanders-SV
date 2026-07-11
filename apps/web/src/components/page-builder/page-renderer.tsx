@@ -1,37 +1,48 @@
-import { HeroNavigation } from '@/components/organisms/hero-navigation'
+import { HeroNavigation } from "@/components/organisms/hero-navigation";
 import type {
   CompanySettingsContent,
   NavigationItem,
-  PageBuilderPage
-} from '@/lib/cms'
-import type { Locale } from '@/lib/i18n'
+  PageBuilderPage,
+} from "@/lib/cms";
+import type { Locale } from "@/lib/i18n";
 
-import { RenderBlocks } from './render-blocks'
+import { RenderBlocks } from "./render-blocks";
 
 type PageRendererProps = {
-  companySettings: CompanySettingsContent
-  locale: Locale
-  navigationItems: NavigationItem[]
-  page: PageBuilderPage
-}
+  companySettings: CompanySettingsContent;
+  isCanvasPreview?: boolean;
+  locale: Locale;
+  navigationItems: NavigationItem[];
+  page: PageBuilderPage;
+};
 
 export function PageRenderer({
   companySettings,
+  isCanvasPreview = false,
   locale,
   navigationItems,
-  page
+  page,
 }: PageRendererProps) {
   return (
-    <main className="min-h-screen bg-deep-950 text-silver-50">
-      <HeroNavigation
-        companySettings={companySettings}
-        locale={locale}
-        navigationItems={navigationItems}
-      />
+    <main
+      className="min-h-screen bg-deep-950 text-silver-50"
+      data-cms-preview-canvas={isCanvasPreview ? "true" : undefined}
+    >
+      {isCanvasPreview ? null : (
+        <HeroNavigation
+          companySettings={companySettings}
+          locale={locale}
+          navigationItems={navigationItems}
+        />
+      )}
       {page.content.length > 0 ? (
         <RenderBlocks blocks={page.content} />
       ) : (
-        <section className="mx-auto max-w-4xl px-5 pb-20 pt-36 sm:px-8">
+        <section
+          className={`mx-auto max-w-4xl px-5 pb-20 sm:px-8 ${
+            isCanvasPreview ? "pt-12" : "pt-36"
+          }`}
+        >
           <p className="font-heading text-sm font-bold uppercase text-cyan-200">
             {page.slug}
           </p>
@@ -46,5 +57,5 @@ export function PageRenderer({
         </section>
       )}
     </main>
-  )
+  );
 }

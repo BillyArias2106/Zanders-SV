@@ -8,6 +8,9 @@ const workspaceRoot = path.resolve(__dirname, '../..')
 const nextConfig = {
   reactStrictMode: true,
   allowedDevOrigins: ['127.0.0.1', 'localhost'],
+  experimental: {
+    reactDebugChannel: false
+  },
   transpilePackages: ['@starter/ui'],
   turbopack: {
     root: workspaceRoot

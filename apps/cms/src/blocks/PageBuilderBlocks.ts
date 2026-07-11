@@ -4,6 +4,7 @@ import { adminLabel, adminLabels } from '../lib/admin-i18n'
 
 const hexColorPattern = /^#(?:[0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/
 const safeClassNamePattern = /^[A-Za-z0-9_:\-./\s[\]]*$/
+const sectionBuilderGroup = adminLabel('Secciones de página', 'Page sections')
 
 const validateHexColor: TextFieldSingleValidation = (value) => {
   if (!value) {
@@ -291,7 +292,7 @@ export const HeroBlock: Block = {
   slug: 'hero',
   labels: adminLabels('Portada principal', 'Portadas principales', 'Hero', 'Heroes'),
   admin: {
-    group: adminLabel('Diseño / Secciones', 'Design / Sections')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -330,15 +331,15 @@ export const HeroBlock: Block = {
 
 export const RichTextBlock: Block = {
   slug: 'richText',
-  labels: adminLabels('Texto enriquecido', 'Textos enriquecidos', 'Rich text', 'Rich text'),
+  labels: adminLabels('Texto', 'Textos', 'Text', 'Text'),
   admin: {
-    group: adminLabel('Contenido', 'Content')
+    group: sectionBuilderGroup
   },
   fields: [
     {
       name: 'content',
       type: 'richText',
-      label: adminLabel('Contenido', 'Content'),
+      label: adminLabel('Texto', 'Text'),
       required: true
     },
     {
@@ -370,7 +371,7 @@ export const ImageTextBlock: Block = {
   slug: 'imageText',
   labels: adminLabels('Imagen + texto', 'Imagen + texto', 'Image + text', 'Image + text'),
   admin: {
-    group: adminLabel('Diseño / Secciones', 'Design / Sections')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -420,7 +421,7 @@ export const CardsBlock: Block = {
   slug: 'cards',
   labels: adminLabels('Tarjetas / Servicios', 'Tarjetas / Servicios', 'Cards / Services', 'Cards / Services'),
   admin: {
-    group: adminLabel('Diseño / Secciones', 'Design / Sections')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -476,7 +477,7 @@ export const GalleryBlock: Block = {
   slug: 'gallery',
   labels: adminLabels('Galería', 'Galerías', 'Gallery', 'Galleries'),
   admin: {
-    group: adminLabel('Multimedia', 'Media')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -521,7 +522,7 @@ export const MediaBlock: Block = {
   slug: 'mediaBlock',
   labels: adminLabels('Multimedia', 'Multimedia', 'Media', 'Media'),
   admin: {
-    group: adminLabel('Multimedia', 'Media')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -569,7 +570,7 @@ export const MediaBlock: Block = {
       defaultValue: 'normal',
       options: [
         { label: adminLabel('Completo', 'Full'), value: 'full' },
-        { label: adminLabel('Contenido normal', 'Normal content'), value: 'normal' },
+        { label: adminLabel('Ancho normal', 'Normal width'), value: 'normal' },
         { label: adminLabel('Pequeño', 'Small'), value: 'small' },
         { label: adminLabel('Personalizado', 'Custom'), value: 'custom' }
       ]
@@ -703,7 +704,7 @@ export const VideoBlock: Block = {
   slug: 'videoBlock',
   labels: adminLabels('Video', 'Videos', 'Video', 'Videos'),
   admin: {
-    group: adminLabel('Multimedia', 'Media')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -817,9 +818,9 @@ export const VideoBlock: Block = {
 
 export const SnapLayoutBlock: Block = {
   slug: 'snapLayoutBlock',
-  labels: adminLabels('Diseño personalizado', 'Diseños personalizados', 'Custom layout', 'Custom layouts'),
+  labels: adminLabels('Sección personalizada', 'Secciones personalizadas', 'Custom section', 'Custom sections'),
   admin: {
-    group: adminLabel('Diseño / Secciones', 'Design / Sections')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -921,7 +922,7 @@ export const SnapLayoutBlock: Block = {
     {
       name: 'layout',
       type: 'select',
-      label: adminLabel('Diseño seleccionado', 'Selected layout'),
+      label: adminLabel('Estructura de la sección', 'Section structure'),
       required: true,
       defaultValue: 'oneColumn',
       options: [
@@ -992,7 +993,7 @@ export const CTABlock: Block = {
   slug: 'cta',
   labels: adminLabels('Llamado a la acción', 'Llamados a la acción', 'Call to action', 'Calls to action'),
   admin: {
-    group: adminLabel('Interacción', 'Interaction')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -1037,7 +1038,7 @@ export const FAQBlock: Block = {
   slug: 'faq',
   labels: adminLabels('Preguntas frecuentes', 'Preguntas frecuentes', 'FAQ', 'FAQ'),
   admin: {
-    group: adminLabel('Contenido', 'Content')
+    group: sectionBuilderGroup
   },
   fields: [
     {
@@ -1071,8 +1072,217 @@ export const FAQBlock: Block = {
   ]
 }
 
+export const LogoStripBlock: Block = {
+  slug: 'logoStrip',
+  labels: adminLabels('Logos de clientes', 'Logos de clientes', 'Client logos', 'Client logos'),
+  admin: {
+    group: sectionBuilderGroup
+  },
+  fields: [
+    {
+      name: 'sectionTitle',
+      type: 'text',
+      label: adminLabel('Título corto', 'Short title')
+    },
+    {
+      name: 'sectionDescription',
+      type: 'textarea',
+      label: adminLabel('Descripción corta', 'Short description'),
+      admin: {
+        rows: 2
+      }
+    },
+    {
+      name: 'displayStyle',
+      type: 'select',
+      label: adminLabel('Estilo visual', 'Visual style'),
+      defaultValue: 'logos',
+      options: [
+        { label: adminLabel('Logos / nombres en fila', 'Logos / names in a row'), value: 'logos' },
+        { label: adminLabel('Marquesina horizontal', 'Horizontal marquee'), value: 'marquee' },
+        { label: adminLabel('Bloques compactos', 'Compact tiles'), value: 'tiles' }
+      ]
+    },
+    {
+      name: 'items',
+      type: 'array',
+      label: adminLabel('Clientes o marcas', 'Clients or brands'),
+      labels: adminLabels('Marca', 'Marcas', 'Brand', 'Brands'),
+      minRows: 1,
+      fields: [
+        {
+          name: 'name',
+          type: 'text',
+          label: adminLabel('Nombre', 'Name'),
+          required: true
+        },
+        {
+          name: 'image',
+          type: 'upload',
+          label: 'Logo',
+          relationTo: 'media',
+          displayPreview: true,
+          filterOptions: imageFilter
+        },
+        {
+          name: 'url',
+          type: 'text',
+          label: 'URL'
+        },
+        {
+          name: 'openInNewTab',
+          type: 'checkbox',
+          label: adminLabel('Abrir enlace en nueva pestaña', 'Open link in new tab'),
+          defaultValue: true
+        }
+      ]
+    }
+  ]
+}
+
+export const StatsBlock: Block = {
+  slug: 'stats',
+  labels: adminLabels('Métricas destacadas', 'Métricas destacadas', 'Featured stats', 'Featured stats'),
+  admin: {
+    group: sectionBuilderGroup
+  },
+  fields: [
+    {
+      name: 'eyebrow',
+      type: 'text',
+      label: adminLabel('Texto pequeño superior', 'Small top text')
+    },
+    {
+      name: 'title',
+      type: 'text',
+      label: adminLabel('Título', 'Title')
+    },
+    {
+      name: 'description',
+      type: 'textarea',
+      label: adminLabel('Descripción', 'Description'),
+      admin: {
+        rows: 3
+      }
+    },
+    {
+      name: 'variant',
+      type: 'select',
+      label: adminLabel('Variante visual', 'Visual variant'),
+      defaultValue: 'editorial',
+      options: [
+        { label: adminLabel('Editorial', 'Editorial'), value: 'editorial' },
+        { label: adminLabel('Compacta', 'Compact'), value: 'compact' },
+        { label: adminLabel('Oscura', 'Dark'), value: 'dark' }
+      ]
+    },
+    {
+      name: 'items',
+      type: 'array',
+      label: adminLabel('Métricas', 'Stats'),
+      labels: adminLabels('Métrica', 'Métricas', 'Stat', 'Stats'),
+      minRows: 1,
+      fields: [
+        {
+          name: 'value',
+          type: 'text',
+          label: adminLabel('Número o dato', 'Number or value'),
+          required: true,
+          admin: {
+            placeholder: '+120'
+          }
+        },
+        {
+          name: 'label',
+          type: 'text',
+          label: adminLabel('Etiqueta', 'Label'),
+          required: true
+        },
+        {
+          name: 'description',
+          type: 'textarea',
+          label: adminLabel('Detalle opcional', 'Optional detail'),
+          admin: {
+            rows: 2
+          }
+        }
+      ]
+    }
+  ]
+}
+
+export const TestimonialsBlock: Block = {
+  slug: 'testimonials',
+  labels: adminLabels('Testimonios', 'Testimonios', 'Testimonials', 'Testimonials'),
+  admin: {
+    group: sectionBuilderGroup
+  },
+  fields: [
+    {
+      name: 'sectionTitle',
+      type: 'text',
+      label: adminLabel('Título de sección', 'Section title')
+    },
+    {
+      name: 'sectionDescription',
+      type: 'textarea',
+      label: adminLabel('Descripción de sección', 'Section description'),
+      admin: {
+        rows: 3
+      }
+    },
+    {
+      name: 'items',
+      type: 'array',
+      label: adminLabel('Testimonios', 'Testimonials'),
+      labels: adminLabels('Testimonio', 'Testimonios', 'Testimonial', 'Testimonials'),
+      minRows: 1,
+      fields: [
+        {
+          name: 'quote',
+          type: 'textarea',
+          label: adminLabel('Comentario', 'Quote'),
+          required: true,
+          admin: {
+            rows: 4
+          }
+        },
+        {
+          name: 'name',
+          type: 'text',
+          label: adminLabel('Nombre', 'Name'),
+          required: true
+        },
+        {
+          name: 'role',
+          type: 'text',
+          label: adminLabel('Cargo o empresa', 'Role or company')
+        },
+        {
+          name: 'rating',
+          type: 'number',
+          label: adminLabel('Calificación', 'Rating'),
+          min: 1,
+          max: 5,
+          defaultValue: 5
+        },
+        {
+          name: 'avatar',
+          type: 'upload',
+          label: adminLabel('Foto opcional', 'Optional photo'),
+          relationTo: 'media',
+          displayPreview: true,
+          filterOptions: imageFilter
+        }
+      ]
+    }
+  ]
+}
+
 export const pageBuilderBlocks = [
   HeroBlock,
+  LogoStripBlock,
+  StatsBlock,
   RichTextBlock,
   ImageTextBlock,
   CardsBlock,
@@ -1080,6 +1290,7 @@ export const pageBuilderBlocks = [
   MediaBlock,
   VideoBlock,
   SnapLayoutBlock,
+  TestimonialsBlock,
   CTABlock,
   FAQBlock
 ]

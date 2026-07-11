@@ -1,4 +1,5 @@
 import {
+  ChevronDown,
   Facebook,
   Globe2,
   Instagram,
@@ -9,34 +10,35 @@ import {
   Music2,
   Phone,
   Twitter,
-  Youtube
-} from 'lucide-react'
-import type { LucideIcon } from 'lucide-react'
+  Youtube,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 import type {
   CompanySettingsContent,
   FooterSettingsContent,
   FooterSocialType,
   LinkTarget,
-  NavigationItem
-} from '@/lib/cms'
-import type { Locale } from '@/lib/i18n'
+  NavigationItem,
+} from "@/lib/cms";
+import type { Locale } from "@/lib/i18n";
 
 type SiteFooterProps = {
-  companySettings: CompanySettingsContent
-  footerSettings: FooterSettingsContent
-  locale: Locale
-  navigationItems: NavigationItem[]
-  publishedPageLinks: LinkTarget[]
-}
+  companySettings: CompanySettingsContent;
+  footerSettings: FooterSettingsContent;
+  legalPageLinks: LinkTarget[];
+  locale: Locale;
+  navigationItems: NavigationItem[];
+  publishedPageLinks: NavigationItem[];
+};
 
 type DisplaySocialLink = {
-  iconName?: string | null
-  name: string
-  openInNewTab: boolean
-  type: FooterSocialType
-  url: string
-}
+  iconName?: string | null;
+  name: string;
+  openInNewTab: boolean;
+  type: FooterSocialType;
+  url: string;
+};
 
 const socialIconMap = {
   facebook: Facebook,
@@ -47,20 +49,20 @@ const socialIconMap = {
   twitter: Twitter,
   website: Globe2,
   whatsapp: MessageCircle,
-  youtube: Youtube
-} satisfies Record<FooterSocialType, LucideIcon>
+  youtube: Youtube,
+} satisfies Record<FooterSocialType, LucideIcon>;
 
-const isExternalHref = (href: string) => /^https?:\/\//.test(href)
+const isExternalHref = (href: string) => /^https?:\/\//.test(href);
 
 const getAnchorProps = (link: LinkTarget) => {
-  const opensNewTab = link.openInNewTab || isExternalHref(link.href)
+  const opensNewTab = link.openInNewTab || isExternalHref(link.href);
 
   return {
     href: link.href,
-    rel: opensNewTab ? 'noopener noreferrer' : undefined,
-    target: opensNewTab ? '_blank' : undefined
-  }
-}
+    rel: opensNewTab ? "noopener noreferrer" : undefined,
+    target: opensNewTab ? "_blank" : undefined,
+  };
+};
 
 const flattenNavigation = (items: NavigationItem[]): LinkTarget[] =>
   items.flatMap((item) => {
@@ -69,13 +71,13 @@ const flattenNavigation = (items: NavigationItem[]): LinkTarget[] =>
           {
             href: item.href,
             label: item.label,
-            openInNewTab: item.openInNewTab
-          }
+            openInNewTab: item.openInNewTab,
+          },
         ]
-      : []
+      : [];
 
-    return [...currentLink, ...flattenNavigation(item.children ?? [])]
-  })
+    return [...currentLink, ...flattenNavigation(item.children ?? [])];
+  });
 
 function FooterLink({ link }: { link: LinkTarget }) {
   return (
@@ -85,40 +87,66 @@ function FooterLink({ link }: { link: LinkTarget }) {
     >
       {link.label}
     </a>
-  )
+  );
+}
+
+function FooterPageLink({ item }: { item: NavigationItem }) {
+  if (item.children && item.children.length > 0) {
+    return (
+      <details className="group w-full">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm leading-7 text-silver-300 transition hover:text-cyan-200 [&::-webkit-details-marker]:hidden">
+          <span>{item.label}</span>
+          <ChevronDown
+            aria-hidden="true"
+            className="text-cyan-200 transition group-open:rotate-180"
+            size={14}
+            strokeWidth={1.8}
+          />
+        </summary>
+        <div className="mt-1 flex flex-col gap-1 border-l border-cyan-200/15 pl-3">
+          <FooterLink link={item} />
+          {item.children.map((child) => (
+            <FooterPageLink key={`${child.label}-${child.href}`} item={child} />
+          ))}
+        </div>
+      </details>
+    );
+  }
+
+  return <FooterLink link={item} />;
 }
 
 const companySocialEntries = [
-  ['facebook', 'Facebook'],
-  ['instagram', 'Instagram'],
-  ['tiktok', 'TikTok'],
-  ['linkedin', 'LinkedIn'],
-  ['youtube', 'YouTube'],
-  ['twitter', 'X'],
-  ['whatsapp', 'WhatsApp']
-] as const
+  ["facebook", "Facebook"],
+  ["instagram", "Instagram"],
+  ["tiktok", "TikTok"],
+  ["linkedin", "LinkedIn"],
+  ["youtube", "YouTube"],
+  ["twitter", "X"],
+  ["whatsapp", "WhatsApp"],
+] as const;
 
 const getCompanySocialLinks = (
-  companySettings: CompanySettingsContent
+  companySettings: CompanySettingsContent,
 ): DisplaySocialLink[] =>
   companySocialEntries
     .map(([type, name]): DisplaySocialLink | null => {
-      const url = companySettings.social[type]
+      const url = companySettings.social[type];
 
       return url
         ? {
             name,
             openInNewTab: true,
             type,
-            url
+            url,
           }
-        : null
+        : null;
     })
-    .filter((link): link is DisplaySocialLink => Boolean(link))
+    .filter((link): link is DisplaySocialLink => Boolean(link));
 
 const getDisplaySocialLinks = (
   footerSettings: FooterSettingsContent,
-  companySettings: CompanySettingsContent
+  companySettings: CompanySettingsContent,
 ) => {
   const footerSocialLinks = footerSettings.socialLinks
     .filter((link) => link.isActive && link.showInFooter)
@@ -128,23 +156,23 @@ const getDisplaySocialLinks = (
         name: link.name,
         openInNewTab: link.openInNewTab,
         type: link.type,
-        url: link.url
-      })
-    )
+        url: link.url,
+      }),
+    );
 
   return footerSocialLinks.length > 0
     ? footerSocialLinks
-    : getCompanySocialLinks(companySettings)
-}
+    : getCompanySocialLinks(companySettings);
+};
 
 const getContactDisplay = (
   footerSettings: FooterSettingsContent,
-  companySettings: CompanySettingsContent
+  companySettings: CompanySettingsContent,
 ) => {
-  const contact = footerSettings.contact
+  const contact = footerSettings.contact;
 
   if (!contact.useCompanySettings) {
-    return contact
+    return contact;
   }
 
   return {
@@ -155,22 +183,22 @@ const getContactDisplay = (
     email: contact.email ?? companySettings.mainEmail,
     phone: contact.phone ?? companySettings.mainPhone,
     useCompanySettings: true,
-    whatsapp: contact.whatsapp ?? companySettings.whatsapp
-  }
-}
+    whatsapp: contact.whatsapp ?? companySettings.whatsapp,
+  };
+};
 
-const getPhoneHref = (phone: string) => phone.replace(/[^\d+]/g, '')
+const getPhoneHref = (phone: string) => phone.replace(/[^\d+]/g, "");
 
 function SocialLinks({ links }: { links: DisplaySocialLink[] }) {
   if (links.length === 0) {
-    return null
+    return null;
   }
 
   return (
     <div className="flex flex-wrap gap-3">
       {links.map((link) => {
-        const Icon = socialIconMap[link.type] ?? Globe2
-        const opensNewTab = link.openInNewTab || isExternalHref(link.url)
+        const Icon = socialIconMap[link.type] ?? Globe2;
+        const opensNewTab = link.openInNewTab || isExternalHref(link.url);
 
         return (
           <a
@@ -178,26 +206,26 @@ function SocialLinks({ links }: { links: DisplaySocialLink[] }) {
             className="grid h-10 w-10 place-items-center border border-cyan-200/25 text-cyan-200 transition hover:border-cyan-200 hover:bg-cyan-200 hover:text-deep-950"
             href={link.url}
             key={`${link.name}-${link.url}`}
-            rel={opensNewTab ? 'noopener noreferrer' : undefined}
-            target={opensNewTab ? '_blank' : undefined}
+            rel={opensNewTab ? "noopener noreferrer" : undefined}
+            target={opensNewTab ? "_blank" : undefined}
             title={link.name}
           >
             <Icon aria-hidden="true" size={18} strokeWidth={1.8} />
           </a>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
 
 function ContactColumn({
   companySettings,
-  footerSettings
+  footerSettings,
 }: {
-  companySettings: CompanySettingsContent
-  footerSettings: FooterSettingsContent
+  companySettings: CompanySettingsContent;
+  footerSettings: FooterSettingsContent;
 }) {
-  const contact = getContactDisplay(footerSettings, companySettings)
+  const contact = getContactDisplay(footerSettings, companySettings);
 
   return (
     <div className="space-y-3 text-sm leading-7 text-silver-300">
@@ -222,7 +250,7 @@ function ContactColumn({
       {contact.whatsapp ? (
         <a
           className="flex gap-3 transition hover:text-cyan-200"
-          href={`https://wa.me/${getPhoneHref(contact.whatsapp).replace('+', '')}`}
+          href={`https://wa.me/${getPhoneHref(contact.whatsapp).replace("+", "")}`}
           rel="noopener noreferrer"
           target="_blank"
         >
@@ -241,41 +269,43 @@ function ContactColumn({
         </p>
       ) : null}
       {contact.country || contact.city ? (
-        <p>{[contact.city, contact.country].filter(Boolean).join(', ')}</p>
+        <p>{[contact.city, contact.country].filter(Boolean).join(", ")}</p>
       ) : null}
       {contact.businessHours ? <p>{contact.businessHours}</p> : null}
     </div>
-  )
+  );
 }
 
 export function SiteFooter({
   companySettings,
   footerSettings,
+  legalPageLinks,
   locale: _locale,
   navigationItems,
-  publishedPageLinks
+  publishedPageLinks,
 }: SiteFooterProps) {
   if (!footerSettings.isEnabled) {
-    return null
+    return null;
   }
 
   const companyName =
-    footerSettings.companyNameOverride ?? companySettings.commercialName
+    footerSettings.companyNameOverride ?? companySettings.commercialName;
   const description =
-    footerSettings.shortDescription ?? companySettings.shortDescription
+    footerSettings.shortDescription ?? companySettings.shortDescription;
   const logo =
     footerSettings.logo ??
     companySettings.logoSecondary ??
-    companySettings.logoPrimary
-  const socialLinks = getDisplaySocialLinks(footerSettings, companySettings)
-  const navigationLinks = flattenNavigation(navigationItems)
+    companySettings.logoPrimary;
+  const socialLinks = getDisplaySocialLinks(footerSettings, companySettings);
+  const navigationLinks = flattenNavigation(navigationItems);
   const copyrightText =
-    footerSettings.legal.copyrightText ??
-    companySettings.legal.copyrightText
-  const legalLinks = [
+    footerSettings.legal.copyrightText ?? companySettings.legal.copyrightText;
+  const configuredLegalLinks = [
     footerSettings.legal.privacyPage,
-    footerSettings.legal.termsPage
-  ].filter((link): link is LinkTarget => Boolean(link))
+    footerSettings.legal.termsPage,
+  ].filter((link): link is LinkTarget => Boolean(link));
+  const legalLinks =
+    configuredLegalLinks.length > 0 ? configuredLegalLinks : legalPageLinks;
 
   return (
     <footer className="border-t border-cyan-200/14 bg-deep-950 text-silver-50">
@@ -312,9 +342,6 @@ export function SiteFooter({
                 {footerSettings.additionalText}
               </p>
             ) : null}
-            <div className="mt-6">
-              <SocialLinks links={socialLinks} />
-            </div>
           </div>
 
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
@@ -324,15 +351,15 @@ export function SiteFooter({
                   {column.title}
                 </h2>
                 <div className="mt-4 flex flex-col items-start gap-2">
-                  {column.contentType === 'publishedPages'
+                  {column.contentType === "publishedPages"
                     ? publishedPageLinks.map((link) => (
-                        <FooterLink
+                        <FooterPageLink
                           key={`${link.label}-${link.href}`}
-                          link={link}
+                          item={link}
                         />
                       ))
                     : null}
-                  {column.contentType === 'mainNavigation'
+                  {column.contentType === "mainNavigation"
                     ? navigationLinks.map((link) => (
                         <FooterLink
                           key={`${link.label}-${link.href}`}
@@ -340,7 +367,7 @@ export function SiteFooter({
                         />
                       ))
                     : null}
-                  {column.contentType === 'manualLinks'
+                  {column.contentType === "manualLinks"
                     ? column.links.map((link) => (
                         <FooterLink
                           key={`${link.label}-${link.href}`}
@@ -348,16 +375,16 @@ export function SiteFooter({
                         />
                       ))
                     : null}
-                  {column.contentType === 'socialLinks' ? (
+                  {column.contentType === "socialLinks" ? (
                     <SocialLinks links={socialLinks} />
                   ) : null}
-                  {column.contentType === 'contact' ? (
+                  {column.contentType === "contact" ? (
                     <ContactColumn
                       companySettings={companySettings}
                       footerSettings={footerSettings}
                     />
                   ) : null}
-                  {column.contentType === 'customText' && column.customText ? (
+                  {column.contentType === "customText" && column.customText ? (
                     <p className="text-sm leading-7 text-silver-300">
                       {column.customText}
                     </p>
@@ -385,5 +412,5 @@ export function SiteFooter({
         </div>
       </div>
     </footer>
-  )
+  );
 }
