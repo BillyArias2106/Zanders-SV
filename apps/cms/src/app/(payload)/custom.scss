@@ -15,3 +15,112 @@
 .template-default {
   background-color: var(--theme-bg);
 }
+
+/* The active locale is already visible in the admin toolbar. Keep field labels clean. */
+.field-label > .localized {
+  display: none !important;
+}
+
+/* Pages use a builder workflow: edit on the left, see the current page on the right. */
+.collection-edit--pages:has(.app-page-preview) {
+  .document-fields {
+    --sidebar-wrap-width: clamp(560px, 58vw, 980px);
+    --doc-sidebar-width: 520px;
+    --main-width: calc(100% - var(--sidebar-wrap-width));
+    --main-gutter-h-left: calc(var(--base) * 0.75);
+    --main-gutter-h-right: calc(var(--base) * 0.75);
+    --sidebar-gutter-h-left: calc(var(--base) * 1.1);
+    --sidebar-wrap-height: calc(100vh - var(--doc-controls-height));
+  }
+
+  .document-fields__sidebar-fields {
+    height: calc(100vh - var(--doc-controls-height));
+    min-height: 680px;
+  }
+
+  .document-fields__edit {
+    padding-top: calc(var(--base) * 0.8);
+  }
+
+  .document-fields__fields > .collapsible-field:first-child {
+    margin-bottom: calc(var(--base) * 0.75);
+  }
+
+  .document-fields__fields
+    > .collapsible-field:first-child
+    .collapsible__content
+    > .render-fields {
+    display: grid;
+    gap: calc(var(--base) * 0.75) calc(var(--base) * 0.9);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .document-fields__fields
+    > .collapsible-field:first-child
+    .field-type.textarea {
+    grid-column: 1 / -1;
+  }
+
+  .document-fields__fields
+    > .collapsible-field:first-child
+    .field-description {
+    margin-top: calc(var(--base) * 0.25);
+  }
+}
+
+.collection-edit--pages:has(.app-page-preview--editor-focus) {
+  .document-fields {
+    --sidebar-wrap-width: calc(100% - 72px);
+    --doc-sidebar-width: calc(100% - 72px);
+    --main-width: calc(100% - var(--sidebar-wrap-width));
+    --main-gutter-h-left: calc(var(--base) * 0.35);
+    --main-gutter-h-right: calc(var(--base) * 0.35);
+    --sidebar-gutter-h-left: calc(var(--base) * 0.8);
+    --sidebar-gutter-h-right: calc(var(--base) * 0.8);
+  }
+
+  .document-fields__main {
+    border-right: 1px solid var(--theme-elevation-150);
+    overflow: hidden;
+  }
+
+  .document-fields__edit {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+@media (max-width: 1180px) {
+  .collection-edit--pages:has(.app-page-preview) {
+    .document-fields {
+      display: block;
+      --sidebar-wrap-width: 100%;
+      --doc-sidebar-width: 0;
+      --main-width: 100%;
+    }
+
+    .document-fields__main,
+    .document-fields__sidebar-wrap {
+      height: auto;
+      min-width: 0;
+      position: static;
+      width: 100%;
+    }
+
+    .document-fields__sidebar-fields {
+      height: auto;
+      min-height: 0;
+    }
+  }
+}
+
+@media (max-width: 760px) {
+  .collection-edit--pages:has(.app-page-preview) {
+    .document-fields__fields
+      > .collapsible-field:first-child
+      .collapsible__content
+      > .render-fields {
+      display: block;
+    }
+  }
+}

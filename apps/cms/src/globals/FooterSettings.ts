@@ -52,14 +52,14 @@ const manualLinkFields: Field[] = [
   }
 ]
 
-const showForColumnType = (
-  contentType: FooterColumnSiblingData['contentType']
-) => (_: unknown, siblingData: unknown) =>
-  (siblingData as FooterColumnSiblingData).contentType === contentType
+const showForColumnType =
+  (contentType: FooterColumnSiblingData['contentType']) =>
+  (_: unknown, siblingData: unknown) =>
+    (siblingData as FooterColumnSiblingData).contentType === contentType
 
 export const FooterSettings: GlobalConfig = {
   slug: 'footer-settings',
-  label: adminLabel('Pie de página del sitio', 'Site Footer'),
+  label: adminLabel('Pie de página (legado)', 'Footer (legacy)'),
   access: {
     read: () => true,
     update: ({ req }) => Boolean(req.user)
@@ -68,8 +68,8 @@ export const FooterSettings: GlobalConfig = {
     group: false,
     hidden: true,
     description: adminLabel(
-      'Compatibilidad con la configuración anterior del pie de página. Ahora se administra desde Configuración General.',
-      'Compatibility with the previous footer settings. Footer is now managed from General Settings.'
+      'Compatibilidad con la configuración anterior del pie de página. El footer operativo ahora se administra desde Configuración del sitio.',
+      'Compatibility with the previous footer settings. The active footer is now managed from Site Settings.'
     )
   },
   typescript: {

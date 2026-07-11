@@ -130,21 +130,32 @@ export interface UserAuthOperations {
   };
 }
 /**
+ * Create, organize and publish the public website pages.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
  */
 export interface Page {
   id: number;
+  /**
+   * Also used automatically as menu text and SEO title unless you set something different.
+   */
   title: string;
+  /**
+   * Generated from the name. Change it only if you need a specific URL.
+   */
+  slug?: string | null;
+  status: 'draft' | 'published';
+  /**
+   * Defines automatic defaults for menu, footer and suggested template.
+   */
+  pageType: 'landing' | 'service' | 'legal' | 'contact' | 'internal' | 'blog' | 'portfolio';
+  /**
+   * Optional. If SEO is not manually edited, this summary works as the description.
+   */
   excerpt?: string | null;
   /**
-   * Without initial slash. Examples: services, projects, services/web-design.
-   */
-  slug: string;
-  status: 'draft' | 'published';
-  featuredImage?: (number | null) | Media;
-  /**
-   * Add visual blocks here. "Custom layout" appears inside Add block; it is not part of the Main Menu.
+   * Add generic visual blocks to build any page. You can edit text from the preview or inside each section.
    */
   content?:
     | (
@@ -161,6 +172,40 @@ export interface Page {
             id?: string | null;
             blockName?: string | null;
             blockType: 'hero';
+          }
+        | {
+            sectionTitle?: string | null;
+            sectionDescription?: string | null;
+            displayStyle?: ('logos' | 'marquee' | 'tiles') | null;
+            items?:
+              | {
+                  name: string;
+                  image?: (number | null) | Media;
+                  url?: string | null;
+                  openInNewTab?: boolean | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'logoStrip';
+          }
+        | {
+            eyebrow?: string | null;
+            title?: string | null;
+            description?: string | null;
+            variant?: ('editorial' | 'compact' | 'dark') | null;
+            items?:
+              | {
+                  value: string;
+                  label: string;
+                  description?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'stats';
           }
         | {
             content: {
@@ -382,6 +427,23 @@ export interface Page {
             blockType: 'snapLayoutBlock';
           }
         | {
+            sectionTitle?: string | null;
+            sectionDescription?: string | null;
+            items?:
+              | {
+                  quote: string;
+                  name: string;
+                  role?: string | null;
+                  rating?: number | null;
+                  avatar?: (number | null) | Media;
+                  id?: string | null;
+                }[]
+              | null;
+            id?: string | null;
+            blockName?: string | null;
+            blockType: 'testimonials';
+          }
+        | {
             title: string;
             description?: string | null;
             buttonLabel?: string | null;
@@ -406,35 +468,51 @@ export interface Page {
           }
       )[]
     | null;
+  /**
+   * Enable it so this page appears in the header.
+   */
+  showInMainNavigation?: boolean | null;
+  /**
+   * Leave empty for a top-level item. Select a page to create a dropdown.
+   */
+  parentPage?: (number | null) | Page;
+  showInFooter?: boolean | null;
+  /**
+   * Lower numbers appear first. Also sorts subpages.
+   */
+  navigationOrder?: number | null;
+  navigationLabel?: string | null;
+  featuredImage?: (number | null) | Media;
+  isFeatured?: boolean | null;
+  /**
+   * Only for pages with special layouts.
+   */
+  headerStyle: 'inherit' | 'solid' | 'transparent';
+  hideFooter?: boolean | null;
+  /**
+   * Optional for design-controlled adjustments. Dangerous characters are not accepted.
+   */
+  customClassName?: string | null;
+  /**
+   * Usually you do not need to touch this: it falls back to name, summary and featured image.
+   */
   seo?: {
     metaTitle?: string | null;
     metaDescription?: string | null;
     /**
-     * Separate keywords with commas.
+     * Optional. Separate keywords with commas.
      */
     keywords?: string | null;
+    /**
+     * Leave empty to use the public URL for this page.
+     */
+    canonicalUrl?: string | null;
+    noIndex?: boolean | null;
+    noFollow?: boolean | null;
     ogImage?: (number | null) | Media;
   };
-  /**
-   * Enable it so this page appears in the public site header.
-   */
-  showInMainNavigation?: boolean | null;
-  /**
-   * Optional. If empty, the internal page title will be used.
-   */
-  navigationLabel?: string | null;
-  /**
-   * Leave empty for a top-level item. Select a parent page to turn this page into a submenu.
-   */
-  parentPage?: (number | null) | Page;
-  /**
-   * If the footer uses "published pages automatically", this page will appear when published.
-   */
-  showInFooter?: boolean | null;
-  /**
-   * Lower numbers appear first. Applies to main menu, submenus and automatic footer.
-   */
-  navigationOrder?: number | null;
+  pageTemplate: 'default' | 'landing' | 'serviceDetail' | 'legal' | 'contact' | 'portfolio';
+  enableBreadcrumbs?: boolean | null;
   heroTitle?: string | null;
   heroSubtitle?: string | null;
   videoBackground?: (number | null) | Media;
@@ -451,6 +529,8 @@ export interface Page {
   _status?: ('draft' | 'published') | null;
 }
 /**
+ * Library for website images, videos, SVGs and downloadable documents.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "media".
  */
@@ -458,9 +538,23 @@ export interface Media {
   id: number;
   alt: string;
   caption?: string | null;
-  mediaType: 'image' | 'video' | 'other';
+  mediaType: 'image' | 'video' | 'document' | 'other';
+  /**
+   * Helps find the right asset and avoid using logos or favicons as regular content.
+   */
+  usageType: 'general' | 'logo' | 'hero' | 'gallery' | 'video' | 'favicon' | 'ogImage' | 'download';
+  folder?: string | null;
+  tags?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
   poster?: (number | null) | Media;
   description?: string | null;
+  credits?: string | null;
+  copyright?: string | null;
+  sourceUrl?: string | null;
   updatedAt: string;
   createdAt: string;
   url?: string | null;
@@ -472,8 +566,36 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    hero?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
 }
 /**
+ * Mini CRM to review, assign and follow up website messages.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "contact-submissions".
  */
@@ -486,7 +608,27 @@ export interface ContactSubmission {
   email: string;
   subject: string;
   message: string;
-  status: 'new' | 'inProgress' | 'replied' | 'archived';
+  status: 'new' | 'contacted' | 'followUp' | 'inProgress' | 'replied' | 'won' | 'lost' | 'archived';
+  priority: 'low' | 'normal' | 'high' | 'urgent';
+  assignedTo?: (number | null) | User;
+  leadTags?:
+    | {
+        value: string;
+        id?: string | null;
+      }[]
+    | null;
+  internalNotes?: string | null;
+  followUpHistory?:
+    | {
+        date?: string | null;
+        note: string;
+        nextActionAt?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  lastResponseAt?: string | null;
+  nextActionAt?: string | null;
+  lostReason?: string | null;
   emailSent?: boolean | null;
   emailRecipients?:
     | {
@@ -501,12 +643,18 @@ export interface ContactSubmission {
   createdAt: string;
 }
 /**
+ * Internal users and admin panel access roles.
+ *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "users".
  */
 export interface User {
   id: number;
   name?: string | null;
+  /**
+   * Foundation for granular permissions. The app keeps broad permissions until the security phase is implemented.
+   */
+  role: 'superAdmin' | 'admin' | 'editor' | 'marketing' | 'viewer' | 'client';
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -614,10 +762,10 @@ export interface PayloadMigration {
  */
 export interface PagesSelect<T extends boolean = true> {
   title?: T;
-  excerpt?: T;
   slug?: T;
   status?: T;
-  featuredImage?: T;
+  pageType?: T;
+  excerpt?: T;
   content?:
     | T
     | {
@@ -633,6 +781,42 @@ export interface PagesSelect<T extends boolean = true> {
               primaryButtonUrl?: T;
               secondaryButtonLabel?: T;
               secondaryButtonUrl?: T;
+              id?: T;
+              blockName?: T;
+            };
+        logoStrip?:
+          | T
+          | {
+              sectionTitle?: T;
+              sectionDescription?: T;
+              displayStyle?: T;
+              items?:
+                | T
+                | {
+                    name?: T;
+                    image?: T;
+                    url?: T;
+                    openInNewTab?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
+        stats?:
+          | T
+          | {
+              eyebrow?: T;
+              title?: T;
+              description?: T;
+              variant?: T;
+              items?:
+                | T
+                | {
+                    value?: T;
+                    label?: T;
+                    description?: T;
+                    id?: T;
+                  };
               id?: T;
               blockName?: T;
             };
@@ -788,6 +972,24 @@ export interface PagesSelect<T extends boolean = true> {
               id?: T;
               blockName?: T;
             };
+        testimonials?:
+          | T
+          | {
+              sectionTitle?: T;
+              sectionDescription?: T;
+              items?:
+                | T
+                | {
+                    quote?: T;
+                    name?: T;
+                    role?: T;
+                    rating?: T;
+                    avatar?: T;
+                    id?: T;
+                  };
+              id?: T;
+              blockName?: T;
+            };
         cta?:
           | T
           | {
@@ -814,19 +1016,29 @@ export interface PagesSelect<T extends boolean = true> {
               blockName?: T;
             };
       };
+  showInMainNavigation?: T;
+  parentPage?: T;
+  showInFooter?: T;
+  navigationOrder?: T;
+  navigationLabel?: T;
+  featuredImage?: T;
+  isFeatured?: T;
+  headerStyle?: T;
+  hideFooter?: T;
+  customClassName?: T;
   seo?:
     | T
     | {
         metaTitle?: T;
         metaDescription?: T;
         keywords?: T;
+        canonicalUrl?: T;
+        noIndex?: T;
+        noFollow?: T;
         ogImage?: T;
       };
-  showInMainNavigation?: T;
-  navigationLabel?: T;
-  parentPage?: T;
-  showInFooter?: T;
-  navigationOrder?: T;
+  pageTemplate?: T;
+  enableBreadcrumbs?: T;
   heroTitle?: T;
   heroSubtitle?: T;
   videoBackground?: T;
@@ -850,8 +1062,19 @@ export interface MediaSelect<T extends boolean = true> {
   alt?: T;
   caption?: T;
   mediaType?: T;
+  usageType?: T;
+  folder?: T;
+  tags?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
   poster?: T;
   description?: T;
+  credits?: T;
+  copyright?: T;
+  sourceUrl?: T;
   updatedAt?: T;
   createdAt?: T;
   url?: T;
@@ -863,6 +1086,40 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        hero?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -877,6 +1134,26 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
   subject?: T;
   message?: T;
   status?: T;
+  priority?: T;
+  assignedTo?: T;
+  leadTags?:
+    | T
+    | {
+        value?: T;
+        id?: T;
+      };
+  internalNotes?: T;
+  followUpHistory?:
+    | T
+    | {
+        date?: T;
+        note?: T;
+        nextActionAt?: T;
+        id?: T;
+      };
+  lastResponseAt?: T;
+  nextActionAt?: T;
+  lostReason?: T;
   emailSent?: T;
   emailRecipients?:
     | T
@@ -896,6 +1173,7 @@ export interface ContactSubmissionsSelect<T extends boolean = true> {
  */
 export interface UsersSelect<T extends boolean = true> {
   name?: T;
+  role?: T;
   updatedAt?: T;
   createdAt?: T;
   email?: T;
@@ -954,7 +1232,7 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Compatibility with previous manual menus. The main menu is now managed from Pages.
+ * Compatibility with previous manual menus. The active main menu is now managed from Pages.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "main-navigation".
@@ -1001,7 +1279,7 @@ export interface MainNavigation {
   createdAt?: string | null;
 }
 /**
- * Compatibility with the previous footer settings. Footer is now managed from General Settings.
+ * Compatibility with the previous footer settings. The active footer is now managed from Site Settings.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "footer-settings".
@@ -1077,7 +1355,7 @@ export interface FooterSettings {
   createdAt?: string | null;
 }
 /**
- * Global company information, brand, footer, social links, SEO and legal text.
+ * Single center for company, brand, contact, footer, social links, SEO and legal text.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "company-settings".
@@ -1146,8 +1424,14 @@ export interface CompanySettings {
         id?: string | null;
       }[]
     | null;
+  /**
+   * The footer is built automatically from company details, social links and published pages.
+   */
   footerIsEnabled?: boolean | null;
   footerShowLogo?: boolean | null;
+  /**
+   * Optional. If empty, the secondary or primary brand logo is used.
+   */
   footerLogo?: (number | null) | Media;
   footerShowCompanyName?: boolean | null;
   footerCompanyNameOverride?: string | null;
@@ -1208,7 +1492,13 @@ export interface CompanySettings {
   footerCountry?: string | null;
   footerCity?: string | null;
   footerCopyrightText?: string | null;
+  /**
+   * Optional. If empty, the footer uses published legal pages marked for footer.
+   */
   footerPrivacyPage?: (number | null) | Page;
+  /**
+   * Optional. If empty, the footer uses published legal pages marked for footer.
+   */
   footerTermsPage?: (number | null) | Page;
   footerLegalTextOverride?: string | null;
   defaultMetaTitle: string;

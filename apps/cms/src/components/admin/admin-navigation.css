@@ -4,7 +4,8 @@
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
-  border-bottom: 1px solid color-mix(in srgb, var(--theme-blue-500) 18%, transparent);
+  border-bottom: 1px solid
+    color-mix(in srgb, var(--theme-blue-500) 18%, transparent);
   background: color-mix(in srgb, var(--theme-elevation-50) 92%, transparent);
   padding: 0.75rem 1.5rem;
 }
@@ -34,6 +35,12 @@
 .app-admin-top-nav__link:hover {
   border-color: color-mix(in srgb, var(--theme-blue-500) 58%, transparent);
   color: var(--theme-blue-500);
+}
+
+.app-admin-top-nav__link--active {
+  background: color-mix(in srgb, var(--theme-blue-500) 18%, transparent);
+  border-color: color-mix(in srgb, var(--theme-blue-500) 70%, transparent);
+  color: var(--theme-text);
 }
 
 .app-admin-top-nav__link--muted {

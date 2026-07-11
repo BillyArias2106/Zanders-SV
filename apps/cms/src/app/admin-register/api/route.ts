@@ -82,7 +82,8 @@ export async function POST(request: Request) {
     data: {
       email,
       name,
-      password
+      password,
+      role: 'editor'
     },
     overrideAccess: true
   })

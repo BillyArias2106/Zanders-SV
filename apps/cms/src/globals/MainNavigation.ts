@@ -61,8 +61,14 @@ const linkTypeField: Field = {
   options: [
     { label: adminLabel('Página interna', 'Internal page'), value: 'page' },
     { label: adminLabel('URL externa', 'External URL'), value: 'external' },
-    { label: adminLabel('Ancla dentro de página', 'Page anchor'), value: 'anchor' },
-    { label: adminLabel('Solo contenedor', 'Container only'), value: 'container' }
+    {
+      label: adminLabel('Ancla dentro de página', 'Page anchor'),
+      value: 'anchor'
+    },
+    {
+      label: adminLabel('Solo contenedor', 'Container only'),
+      value: 'container'
+    }
   ]
 }
 
@@ -137,7 +143,7 @@ const baseNavigationItemFields: Field[] = [
 
 export const MainNavigation: GlobalConfig = {
   slug: 'main-navigation',
-  label: adminLabel('Menú Principal', 'Main Menu'),
+  label: adminLabel('Menú principal (legado)', 'Main menu (legacy)'),
   access: {
     read: () => true,
     update: ({ req }) => Boolean(req.user)
@@ -146,8 +152,8 @@ export const MainNavigation: GlobalConfig = {
     group: false,
     hidden: true,
     description: adminLabel(
-      'Compatibilidad para menús manuales anteriores. El menú principal ahora se administra desde Páginas.',
-      'Compatibility with previous manual menus. The main menu is now managed from Pages.'
+      'Compatibilidad para menús manuales anteriores. El menú principal operativo ahora se administra desde Páginas.',
+      'Compatibility with previous manual menus. The active main menu is now managed from Pages.'
     )
   },
   typescript: {

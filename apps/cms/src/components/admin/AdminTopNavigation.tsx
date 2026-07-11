@@ -8,19 +8,30 @@ import { AdminOnboardingGate } from './AdminOnboardingGate'
 import './admin-navigation.css'
 
 const navItems = [
-  { href: '/admin/collections/pages', label: { en: 'Pages / Menu', es: 'Páginas / Menú' } },
-  { href: '/admin/collections/media', label: { en: 'Media', es: 'Medios' } },
-  { href: '/admin/globals/company-settings', label: { en: 'Company', es: 'Empresa' } },
-  { href: '/admin/collections/contact-submissions', label: { en: 'Messages', es: 'Mensajes' } },
-  { href: '/admin/collections/users', label: { en: 'Users', es: 'Usuarios' } }
+  { href: '/admin', label: { en: 'Dashboard', es: 'Dashboard' } },
+  {
+    href: '/admin/collections/pages',
+    label: { en: 'Website', es: 'Sitio web' }
+  },
+  {
+    href: '/admin/collections/media',
+    label: { en: 'Content', es: 'Contenido' }
+  },
+  {
+    href: '/admin/globals/company-settings',
+    label: { en: 'Site settings', es: 'Configuración' }
+  },
+  {
+    href: '/admin/collections/contact-submissions',
+    label: { en: 'Leads', es: 'Leads' }
+  },
+  {
+    href: '/admin/collections/users',
+    label: { en: 'Users', es: 'Usuarios' }
+  }
 ]
 
-const hiddenPathSegments = [
-  '/create-first-user',
-  '/forgot',
-  '/login',
-  '/reset'
-]
+const hiddenPathSegments = ['/create-first-user', '/forgot', '/login', '/reset']
 
 export function AdminTopNavigation() {
   const pathname = usePathname()
@@ -50,13 +61,21 @@ export function AdminTopNavigation() {
         className="app-admin-top-nav"
       >
         <a className="app-admin-top-nav__brand" href="/admin">
-          CMS
+          Site CMS
         </a>
         <div className="app-admin-top-nav__links">
-          {navItems.map((item) =>
-            item.href ? (
+          {navItems.map((item) => {
+            const isActive =
+              item.href === '/admin'
+                ? pathname === '/admin'
+                : pathname.startsWith(item.href)
+
+            return item.href ? (
               <a
-                className="app-admin-top-nav__link"
+                aria-current={isActive ? 'page' : undefined}
+                className={`app-admin-top-nav__link${
+                  isActive ? ' app-admin-top-nav__link--active' : ''
+                }`}
                 href={item.href}
                 key={item.href}
               >
@@ -70,7 +89,7 @@ export function AdminTopNavigation() {
                 {item.label[labelLanguage]}
               </span>
             )
-          )}
+          })}
         </div>
       </nav>
     </>

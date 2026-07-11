@@ -36,7 +36,9 @@ const pagesAllowedPaths = [
 ]
 
 const isAllowedPath = (pathname: string, allowedPaths: string[]) =>
-  allowedPaths.some((path) => pathname === path || pathname.startsWith(`${path}/`))
+  allowedPaths.some(
+    (path) => pathname === path || pathname.startsWith(`${path}/`)
+  )
 
 const getRedirectPath = (pathname: string, status: OnboardingStatus) => {
   if (!status.authenticated || status.step === 'complete') {
@@ -46,13 +48,14 @@ const getRedirectPath = (pathname: string, status: OnboardingStatus) => {
   if (status.step === 'company') {
     return isAllowedPath(pathname, companyAllowedPaths)
       ? null
-      : status.nextPath ?? '/admin/globals/company-settings?onboarding=company'
+      : (status.nextPath ??
+          '/admin/globals/company-settings?onboarding=company')
   }
 
   if (status.step === 'pages') {
     return isAllowedPath(pathname, pagesAllowedPaths)
       ? null
-      : status.nextPath ?? '/admin/collections/pages/create?onboarding=pages'
+      : (status.nextPath ?? '/admin/collections/pages/create?onboarding=pages')
   }
 
   return null
@@ -131,8 +134,8 @@ export function AdminOnboardingGate() {
       <div className="app-admin-onboarding-banner">
         <strong>
           {language === 'en'
-            ? 'Complete General Settings'
-            : 'Completa Configuración General'}
+            ? 'Complete Site Settings'
+            : 'Completa Configuración del sitio'}
         </strong>
         <span>
           {language === 'en'
@@ -146,7 +149,9 @@ export function AdminOnboardingGate() {
   return (
     <div className="app-admin-onboarding-banner">
       <strong>
-        {language === 'en' ? 'Create your first page' : 'Crea tu primera página'}
+        {language === 'en'
+          ? 'Create your first page'
+          : 'Crea tu primera página'}
       </strong>
       <span>
         {language === 'en'

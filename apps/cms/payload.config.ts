@@ -94,6 +94,12 @@ export default buildConfig({
   secret: process.env.PAYLOAD_SECRET ?? '',
   serverURL: process.env.PAYLOAD_PUBLIC_SERVER_URL ?? 'http://localhost:3001',
   sharp,
+  upload: {
+    limits: {
+      fileSize: 100 * 1024 * 1024
+    },
+    safeFileNames: true
+  },
   typescript: {
     outputFile: path.resolve(dirname, 'src/payload-types.ts')
   }

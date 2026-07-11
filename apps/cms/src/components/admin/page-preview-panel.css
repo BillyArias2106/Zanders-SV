@@ -1,0 +1,191 @@
+.app-page-preview {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - var(--doc-controls-height) - 2rem);
+  min-height: 680px;
+  position: relative;
+  border: 1px solid
+    color-mix(in srgb, var(--theme-elevation-200), transparent 25%);
+  background: color-mix(in srgb, var(--theme-elevation-50), transparent 18%);
+  padding: 0.75rem;
+}
+
+.app-page-preview--fullscreen {
+  bottom: 1rem;
+  box-shadow: 0 24px 90px rgb(0 0 0 / 0.55);
+  height: auto;
+  left: 1rem;
+  min-height: 0;
+  position: fixed;
+  right: 1rem;
+  top: calc(var(--doc-controls-height) + 1rem);
+  z-index: 80;
+}
+
+.app-page-preview--fullscreen .app-page-preview__split-toggle {
+  display: none;
+}
+
+.app-page-preview__split-toggle {
+  align-items: center;
+  background: color-mix(in srgb, var(--theme-elevation-150), #000 8%);
+  border: 1px solid var(--theme-elevation-300);
+  border-radius: 999px;
+  box-shadow: 0 10px 26px rgb(0 0 0 / 0.32);
+  color: var(--theme-elevation-900);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  height: 3.25rem;
+  justify-content: center;
+  left: -1.55rem;
+  line-height: 1;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    box-shadow 140ms ease,
+    transform 140ms ease;
+  width: 3.1rem;
+  z-index: 4;
+}
+
+.app-page-preview__split-toggle:hover,
+.app-page-preview__split-toggle:focus-visible {
+  background: var(--theme-elevation-200);
+  border-color: var(--theme-blue-500);
+  box-shadow: 0 12px 34px rgb(0 0 0 / 0.42);
+  outline: none;
+  transform: translateY(-50%) scale(1.04);
+}
+
+.app-page-preview__split-toggle span {
+  align-items: center;
+  border: 1px solid var(--theme-elevation-350);
+  border-radius: 999px;
+  display: inline-flex;
+  height: 1.7rem;
+  justify-content: center;
+  width: 1.7rem;
+}
+
+.app-page-preview__header {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+.app-page-preview__eyebrow {
+  color: var(--theme-elevation-500);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+}
+
+.app-page-preview h2 {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.app-page-preview p {
+  color: var(--theme-elevation-650);
+  margin: 0.45rem 0 0;
+}
+
+.app-page-preview__actions {
+  align-items: start;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: end;
+}
+
+.app-page-preview__actions a,
+.app-page-preview__actions button {
+  background: transparent;
+  border: 1px solid var(--theme-elevation-250);
+  color: var(--theme-elevation-900);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 0.85rem;
+  line-height: 1;
+  padding: 0.45rem 0.65rem;
+  text-decoration: none;
+}
+
+.app-page-preview__actions a:hover,
+.app-page-preview__actions button:hover {
+  background: var(--theme-elevation-100);
+}
+
+.app-page-preview__meta {
+  align-items: center;
+  color: var(--theme-elevation-550);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 0.82rem;
+  gap: 0.5rem;
+  margin-top: 0.7rem;
+}
+
+.app-page-preview__status {
+  border: 1px solid var(--theme-elevation-250);
+  color: var(--theme-elevation-850);
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: 0.32rem 0.45rem;
+  text-transform: uppercase;
+}
+
+.app-page-preview__frame-wrap {
+  flex: 1;
+  background: var(--theme-bg);
+  border: 1px solid var(--theme-elevation-200);
+  height: 100%;
+  min-height: 0;
+  margin-top: 0.75rem;
+  overflow: hidden;
+}
+
+.app-page-preview__frame {
+  border: 0;
+  display: block;
+  height: 100%;
+  min-height: 100%;
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .app-page-preview__header {
+    grid-template-columns: 1fr;
+  }
+
+  .app-page-preview__actions {
+    justify-content: start;
+  }
+
+  .app-page-preview {
+    height: auto;
+    min-height: auto;
+  }
+
+  .app-page-preview--fullscreen {
+    inset: 0.75rem;
+    height: auto;
+    position: fixed;
+  }
+
+  .app-page-preview__frame-wrap {
+    height: min(62vh, 560px);
+    min-height: 420px;
+  }
+}

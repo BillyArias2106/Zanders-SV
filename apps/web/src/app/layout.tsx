@@ -1,31 +1,74 @@
-import type { Metadata } from 'next'
-import type { ReactNode } from 'react'
+import type { Metadata } from "next";
+import Script from "next/script";
+import type { ReactNode } from "react";
 
-import { ProgressiveLoader } from '@/components/molecules/progressive-loader'
-import { SmoothScrollProvider } from '@/components/organisms/smooth-scroll-provider'
-import { SiteFooter } from '@/components/organisms/site-footer'
+import { ProgressiveLoader } from "@/components/molecules/progressive-loader";
+import { SmoothScrollProvider } from "@/components/organisms/smooth-scroll-provider";
+import { SiteContactSection } from "@/components/organisms/site-contact-section";
+import { SiteFooter } from "@/components/organisms/site-footer";
 import {
   getCompanySettings,
   getCompanyThemeCSS,
   getFooterSettings,
   getMainNavigation,
-  getPublishedPageLinks
-} from '@/lib/cms'
-import { getServerLocale } from '@/lib/server-locale'
-import '@/styles/globals.css'
+  getPublishedLegalPageLinks,
+  getPublishedPageLinks,
+} from "@/lib/cms";
+import { getServerLocale } from "@/lib/server-locale";
+import "@/styles/globals.css";
+
+const performanceMeasureGuardScript =
+  process.env.NODE_ENV === "development"
+    ? `
+(() => {
+  if (
+    typeof performance === "undefined" ||
+    typeof performance.measure !== "function" ||
+    performance.__zanderMeasureGuard
+  ) {
+    return;
+  }
+
+  const originalMeasure = performance.measure.bind(performance);
+
+  Object.defineProperty(performance, "__zanderMeasureGuard", {
+    configurable: false,
+    enumerable: false,
+    value: true,
+  });
+
+  performance.measure = function guardedMeasure(name, startOrOptions, endMark) {
+    try {
+      return originalMeasure(name, startOrOptions, endMark);
+    } catch (error) {
+      const message =
+        error && typeof error === "object" && "message" in error
+          ? String(error.message)
+          : "";
+
+      if (message.includes("cannot have a negative time stamp")) {
+        return undefined;
+      }
+
+      throw error;
+    }
+  };
+})();
+`
+    : null;
 
 const createMetadataBase = (url: string) => {
   try {
-    return new URL(url)
+    return new URL(url);
   } catch {
-    return new URL('http://localhost:3000')
+    return new URL("http://localhost:3000");
   }
-}
+};
 
 export async function generateMetadata(): Promise<Metadata> {
-  const locale = await getServerLocale()
-  const companySettings = await getCompanySettings(locale)
-  const ogImageUrl = companySettings.ogImage?.url ?? undefined
+  const locale = await getServerLocale();
+  const companySettings = await getCompanySettings(locale);
+  const ogImageUrl = companySettings.ogImage?.url ?? undefined;
 
   return {
     title: companySettings.seo.title,
@@ -37,11 +80,11 @@ export async function generateMetadata(): Promise<Metadata> {
         ? companySettings.seo.keywords
         : undefined,
     alternates: {
-      canonical: '/'
+      canonical: "/",
     },
     icons: companySettings.favicon?.url
       ? {
-          icon: companySettings.favicon.url
+          icon: companySettings.favicon.url,
         }
       : undefined,
     openGraph: {
@@ -53,38 +96,40 @@ export async function generateMetadata(): Promise<Metadata> {
             {
               url: ogImageUrl,
               alt:
-                companySettings.ogImage?.alt ?? companySettings.commercialName
-            }
+                companySettings.ogImage?.alt ?? companySettings.commercialName,
+            },
           ]
-        : undefined
+        : undefined,
     },
     twitter: {
-      card: ogImageUrl ? 'summary_large_image' : 'summary',
+      card: ogImageUrl ? "summary_large_image" : "summary",
       title: companySettings.seo.title,
       description: companySettings.seo.description,
-      images: ogImageUrl ? [ogImageUrl] : undefined
-    }
-  }
+      images: ogImageUrl ? [ogImageUrl] : undefined,
+    },
+  };
 }
 
 type RootLayoutProps = {
-  children: ReactNode
-}
+  children: ReactNode;
+};
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const locale = await getServerLocale()
+  const locale = await getServerLocale();
   const [
     companySettings,
     footerSettings,
     navigationItems,
-    publishedPageLinks
+    legalPageLinks,
+    publishedPageLinks,
   ] = await Promise.all([
     getCompanySettings(locale),
     getFooterSettings(locale),
     getMainNavigation(locale),
-    getPublishedPageLinks(locale)
-  ])
-  const themeCSS = getCompanyThemeCSS(companySettings)
+    getPublishedLegalPageLinks(locale),
+    getPublishedPageLinks(locale),
+  ]);
+  const themeCSS = getCompanyThemeCSS(companySettings);
 
   return (
     <html lang={locale} className="dark" suppressHydrationWarning>
@@ -103,6 +148,13 @@ export default async function RootLayout({ children }: RootLayoutProps) {
           id="app-company-theme"
           dangerouslySetInnerHTML={{ __html: themeCSS }}
         />
+        {performanceMeasureGuardScript ? (
+          <Script
+            dangerouslySetInnerHTML={{ __html: performanceMeasureGuardScript }}
+            id="zander-performance-measure-guard"
+            strategy="beforeInteractive"
+          />
+        ) : null}
       </head>
       <body
         className="bg-deep-950 text-silver-50 antialiased"
@@ -111,9 +163,14 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <SmoothScrollProvider>
           <ProgressiveLoader />
           {children}
+          <SiteContactSection
+            companySettings={companySettings}
+            locale={locale}
+          />
           <SiteFooter
             companySettings={companySettings}
             footerSettings={footerSettings}
+            legalPageLinks={legalPageLinks}
             locale={locale}
             navigationItems={navigationItems}
             publishedPageLinks={publishedPageLinks}
@@ -121,5 +178,5 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         </SmoothScrollProvider>
       </body>
     </html>
-  )
+  );
 }
