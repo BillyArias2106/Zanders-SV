@@ -7,11 +7,11 @@ import './admin-dashboard.css'
 const quickActions = [
   {
     description: {
-      en: 'Create public pages, assign type/template and control menu/footer visibility.',
-      es: 'Crear páginas públicas, asignar tipo/plantilla y controlar menú/footer.'
+      en: 'Choose a goal, apply a guided recipe and publish pages that keep the brand consistent.',
+      es: 'Elegir un objetivo, aplicar una receta guiada y publicar páginas consistentes con la marca.'
     },
     href: '/admin/collections/pages',
-    label: { en: 'Website pages', es: 'Páginas del sitio' }
+    label: { en: 'Create pages', es: 'Crear páginas' }
   },
   {
     description: {
@@ -50,32 +50,30 @@ const quickActions = [
 const contentFlow = {
   en: [
     'Complete Site Settings first: company, contact, brand, SEO and legal basics.',
-    'Create or edit a page and define its page type and suggested template.',
-    'Use the Menu tab only for simple automatic navigation and footer placement.',
-    'Build the content with specific blocks before using Custom layout.',
-    'Publish only when SEO, media alt text and contact recipients are ready.'
+    'Organize the media library so the new admin has approved assets from day one.',
+    'Create a page from a goal and recipe, then use the quality guide before publishing.',
+    'Review incoming leads and improve pages from what real customers ask for.'
   ],
   es: [
     'Completar primero Configuración del sitio: empresa, contacto, marca, SEO y legales.',
-    'Crear o editar una página y definir su tipo de página y plantilla sugerida.',
-    'Usar la pestaña Menú solo para navegación automática simple y ubicación en footer.',
-    'Construir el contenido con bloques específicos antes de usar Diseño personalizado.',
-    'Publicar solo cuando SEO, alt de medios y destinatarios de contacto estén listos.'
+    'Organizar la biblioteca de medios para que el nuevo admin arranque con recursos aprobados.',
+    'Crear una página desde un objetivo y una receta, luego usar la guía de calidad antes de publicar.',
+    'Revisar los leads entrantes y mejorar las páginas según lo que preguntan los clientes.'
   ]
 }
 
 const adminMap = {
   en: [
-    'Website: pages, slugs, page presentation and automatic menu/footer placement.',
+    'Pages: guided recipes, safe sections, visual direction, quality checks and preview.',
     'Content: media library with folders, tags, usage and video posters.',
-    'Site Settings: company, brand, footer, contact, SEO, social links and legal text.',
+    'Site Settings: company, brand, contact, SEO, social links and legal text.',
     'Leads: inbox, lead status, priority, owners, notes and next actions.',
     'System: users and role metadata ready for granular permissions.'
   ],
   es: [
-    'Sitio web: páginas, slugs, presentación y ubicación automática en menú/footer.',
+    'Páginas: recetas guiadas, secciones seguras, estilo visual, calidad y vista previa.',
     'Contenido: biblioteca de medios con carpetas, tags, uso y posters de video.',
-    'Configuración: empresa, marca, footer, contacto, SEO, redes y legales.',
+    'Configuración: empresa, marca, contacto, SEO, redes y legales.',
     'Leads: bandeja, estado, prioridad, responsables, notas y próximas acciones.',
     'Sistema: usuarios y metadatos de rol listos para permisos granulares.'
   ]
@@ -89,13 +87,13 @@ export function AdminDashboardClient() {
     <main className="app-admin-dashboard">
       <section className="app-admin-dashboard__hero">
         <p className="app-admin-dashboard__eyebrow">
-          {language === 'en' ? 'Website operations' : 'Operación del sitio'}
+          {language === 'en' ? 'Guided publishing' : 'Publicación guiada'}
         </p>
         <h1>Site CMS</h1>
         <p>
           {language === 'en'
-            ? 'Custom administration panel for publishing corporate websites, maintaining brand settings and following up leads without touching code.'
-            : 'Panel administrativo personalizado para publicar sitios corporativos, mantener marca y dar seguimiento a leads sin tocar código.'}
+            ? 'Create polished pages from a business goal, not from an empty canvas. The system protects clarity, brand consistency and conversion.'
+            : 'Crea páginas profesionales desde un objetivo de negocio, no desde un lienzo vacío. El sistema protege claridad, consistencia de marca y conversión.'}
         </p>
       </section>
 
@@ -130,7 +128,7 @@ export function AdminDashboardClient() {
       <section className="app-admin-dashboard__split">
         <div>
           <p className="app-admin-dashboard__eyebrow">
-            {language === 'en' ? 'Visual builder' : 'Constructor visual'}
+            {language === 'en' ? 'Fresh start' : 'Nuevo comienzo'}
           </p>
           <h2>
             {language === 'en'

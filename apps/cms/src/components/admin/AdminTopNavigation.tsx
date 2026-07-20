@@ -11,7 +11,7 @@ const navItems = [
   { href: '/admin', label: { en: 'Dashboard', es: 'Dashboard' } },
   {
     href: '/admin/collections/pages',
-    label: { en: 'Website', es: 'Sitio web' }
+    label: { en: 'Pages', es: 'Páginas' }
   },
   {
     href: '/admin/collections/media',

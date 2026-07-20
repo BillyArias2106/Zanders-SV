@@ -12,24 +12,52 @@ type SmoothScrollProviderProps = {
 
 export function SmoothScrollProvider({ children }: SmoothScrollProviderProps) {
   useEffect(() => {
-    const lenis = new Lenis({
-      lerp: 0.08,
-      smoothWheel: true,
-      wheelMultiplier: 0.9
-    })
+    const reducedMotionQuery = window.matchMedia(
+      '(prefers-reduced-motion: reduce)',
+    )
+    let cleanupLenis = () => undefined
 
-    const update = (time: number) => {
-      lenis.raf(time * 1000)
+    const stopLenis = () => {
+      cleanupLenis()
+      cleanupLenis = () => undefined
     }
 
-    lenis.on('scroll', ScrollTrigger.update)
-    gsap.ticker.add(update)
-    gsap.ticker.lagSmoothing(0)
+    const startLenis = () => {
+      if (reducedMotionQuery.matches) {
+        return
+      }
+
+      const lenis = new Lenis({
+        lerp: 0.08,
+        smoothWheel: true,
+        wheelMultiplier: 0.9,
+      })
+      const update = (time: number) => {
+        lenis.raf(time * 1000)
+      }
+
+      lenis.on('scroll', ScrollTrigger.update)
+      gsap.ticker.add(update)
+      gsap.ticker.lagSmoothing(0)
+
+      cleanupLenis = () => {
+        lenis.off('scroll', ScrollTrigger.update)
+        gsap.ticker.remove(update)
+        lenis.destroy()
+      }
+    }
+
+    const syncMotionPreference = () => {
+      stopLenis()
+      startLenis()
+    }
+
+    syncMotionPreference()
+    reducedMotionQuery.addEventListener('change', syncMotionPreference)
 
     return () => {
-      lenis.off('scroll', ScrollTrigger.update)
-      gsap.ticker.remove(update)
-      lenis.destroy()
+      reducedMotionQuery.removeEventListener('change', syncMotionPreference)
+      stopLenis()
     }
   }, [])
 

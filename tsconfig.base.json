@@ -15,6 +15,8 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
+      "@starter/page-sections": ["packages/page-sections/src/index.ts"],
+      "@starter/page-sections/*": ["packages/page-sections/src/*"],
       "@starter/ui": ["packages/ui/src/index.ts"],
       "@starter/ui/*": ["packages/ui/src/*"]
     }

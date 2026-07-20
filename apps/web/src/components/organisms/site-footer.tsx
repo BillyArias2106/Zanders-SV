@@ -1,5 +1,4 @@
 import {
-  ChevronDown,
   Facebook,
   Globe2,
   Instagram,
@@ -29,7 +28,6 @@ type SiteFooterProps = {
   legalPageLinks: LinkTarget[];
   locale: Locale;
   navigationItems: NavigationItem[];
-  publishedPageLinks: NavigationItem[];
 };
 
 type DisplaySocialLink = {
@@ -88,32 +86,6 @@ function FooterLink({ link }: { link: LinkTarget }) {
       {link.label}
     </a>
   );
-}
-
-function FooterPageLink({ item }: { item: NavigationItem }) {
-  if (item.children && item.children.length > 0) {
-    return (
-      <details className="group w-full">
-        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm leading-7 text-silver-300 transition hover:text-cyan-200 [&::-webkit-details-marker]:hidden">
-          <span>{item.label}</span>
-          <ChevronDown
-            aria-hidden="true"
-            className="text-cyan-200 transition group-open:rotate-180"
-            size={14}
-            strokeWidth={1.8}
-          />
-        </summary>
-        <div className="mt-1 flex flex-col gap-1 border-l border-cyan-200/15 pl-3">
-          <FooterLink link={item} />
-          {item.children.map((child) => (
-            <FooterPageLink key={`${child.label}-${child.href}`} item={child} />
-          ))}
-        </div>
-      </details>
-    );
-  }
-
-  return <FooterLink link={item} />;
 }
 
 const companySocialEntries = [
@@ -282,7 +254,6 @@ export function SiteFooter({
   legalPageLinks,
   locale: _locale,
   navigationItems,
-  publishedPageLinks,
 }: SiteFooterProps) {
   if (!footerSettings.isEnabled) {
     return null;
@@ -298,11 +269,20 @@ export function SiteFooter({
     companySettings.logoPrimary;
   const socialLinks = getDisplaySocialLinks(footerSettings, companySettings);
   const navigationLinks = flattenNavigation(navigationItems);
-  const copyrightText =
-    footerSettings.legal.copyrightText ?? companySettings.legal.copyrightText;
+  const copyrightText = footerSettings.legal.copyrightText;
   const configuredLegalLinks = [
-    footerSettings.legal.privacyPage,
-    footerSettings.legal.termsPage,
+    footerSettings.legal.privacyUrl
+      ? {
+          href: footerSettings.legal.privacyUrl,
+          label: "Privacidad",
+        }
+      : null,
+    footerSettings.legal.termsUrl
+      ? {
+          href: footerSettings.legal.termsUrl,
+          label: "Términos",
+        }
+      : null,
   ].filter((link): link is LinkTarget => Boolean(link));
   const legalLinks =
     configuredLegalLinks.length > 0 ? configuredLegalLinks : legalPageLinks;
@@ -351,15 +331,9 @@ export function SiteFooter({
                   {column.title}
                 </h2>
                 <div className="mt-4 flex flex-col items-start gap-2">
-                  {column.contentType === "publishedPages"
-                    ? publishedPageLinks.map((link) => (
-                        <FooterPageLink
-                          key={`${link.label}-${link.href}`}
-                          item={link}
-                        />
-                      ))
-                    : null}
-                  {column.contentType === "mainNavigation"
+                  {column.contentType === "manualLinks" &&
+                  column.links.length === 0 &&
+                  navigationLinks.length > 0
                     ? navigationLinks.map((link) => (
                         <FooterLink
                           key={`${link.label}-${link.href}`}

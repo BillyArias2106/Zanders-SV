@@ -8,12 +8,12 @@ import { buildConfig } from 'payload'
 import sharp from 'sharp'
 
 import { ContactSubmissions } from './src/collections/ContactSubmissions'
+import { CaseStudies } from './src/collections/CaseStudies'
 import { Media } from './src/collections/Media'
 import { Pages } from './src/collections/Pages'
+import { Testimonials } from './src/collections/Testimonials'
 import { Users } from './src/collections/Users'
 import { CompanySettings } from './src/globals/CompanySettings'
-import { FooterSettings } from './src/globals/FooterSettings'
-import { MainNavigation } from './src/globals/MainNavigation'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -48,8 +48,8 @@ export default buildConfig({
       titleSuffix: ' - CMS'
     }
   },
-  collections: [Pages, Media, ContactSubmissions, Users],
-  globals: [MainNavigation, FooterSettings, CompanySettings],
+  collections: [Pages, Media, CaseStudies, Testimonials, ContactSubmissions, Users],
+  globals: [CompanySettings],
   i18n: {
     fallbackLanguage: 'es',
     supportedLanguages: {

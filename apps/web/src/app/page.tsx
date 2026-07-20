@@ -1,57 +1,40 @@
 import type { Metadata } from "next";
 
-import { PageLivePreviewCanvas } from "@/components/page-builder/page-live-preview-canvas";
-import { PageRenderer } from "@/components/page-builder/page-renderer";
-import { LandingExperience } from "@/components/templates/landing-experience";
+import { SliceRenderer } from "@/components/content-slices/SliceRenderer";
+import { PageLivePreviewCanvas } from "@/components/page-composer/PageLivePreviewCanvas";
 import {
   getCompanySettings,
-  getMainNavigation,
-  getPageBySlug,
-  type PageBuilderPage,
+  getHomePage,
+  getSiteSettings,
+  type SitePage,
 } from "@/lib/cms";
-import type { Locale } from "@/lib/i18n";
 import { getServerLocale } from "@/lib/server-locale";
-
-const getHomePage = async (locale: Locale): Promise<PageBuilderPage | null> =>
-  (await getPageBySlug("home", locale)) ??
-  (await getPageBySlug("inicio", locale));
 
 type HomePageProps = {
   searchParams?: Promise<Record<string, string | string[] | undefined>>;
 };
 
-const isCanvasPreviewRequest = async (
-  searchParams: HomePageProps["searchParams"],
-) => {
-  const params = searchParams ? await searchParams : {};
-  const previewValue = params.cmsPreview;
-
-  return Array.isArray(previewValue)
-    ? previewValue.includes("page")
-    : previewValue === "page";
-};
-
-const previewFallbackHomePage: PageBuilderPage = {
-  content: [],
-  excerpt: null,
-  featuredImage: null,
-  headerStyle: "inherit",
-  hideFooter: false,
-  isFeatured: false,
-  pageTemplate: "landing",
-  pageType: "landing",
+const previewHomePage: SitePage = {
+  id: "preview-home",
+  navigationLabel: null,
+  parentPage: null,
+  sections: [],
   seo: {
-    canonicalUrl: null,
-    keywords: [],
     metaDescription: null,
     metaTitle: null,
-    noFollow: false,
     noIndex: true,
     ogImage: null,
   },
+  showInNavigation: false,
   slug: "inicio",
-  status: "draft",
-  title: "Nueva página",
+  title: "Nueva pagina de inicio",
+};
+
+const isPreviewRequest = async (searchParams: HomePageProps["searchParams"]) => {
+  const params = searchParams ? await searchParams : {};
+  const preview = params.cmsPreview;
+
+  return Array.isArray(preview) ? preview.includes("page") : preview === "page";
 };
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -60,108 +43,46 @@ export async function generateMetadata(): Promise<Metadata> {
     getCompanySettings(locale),
     getHomePage(locale),
   ]);
-
-  if (!page) {
-    return {
-      title: companySettings.seo.title,
-      description: companySettings.seo.description,
-    };
-  }
-
-  const title =
-    page.seo.metaTitle ?? `${page.title} | ${companySettings.commercialName}`;
+  const title = page?.seo.metaTitle ?? page?.title ?? companySettings.seo.title;
   const description =
-    page.seo.metaDescription ?? page.excerpt ?? companySettings.seo.description;
-  const ogImage =
-    page.seo.ogImage ?? page.featuredImage ?? companySettings.ogImage;
+    page?.seo.metaDescription ?? companySettings.seo.description;
+  const ogImage = page?.seo.ogImage ?? companySettings.ogImage;
 
   return {
     title,
     description,
-    keywords:
-      page.seo.keywords.length > 0
-        ? page.seo.keywords
-        : companySettings.seo.keywords,
+    keywords: companySettings.seo.keywords,
     openGraph: {
       title,
       description,
       images: ogImage?.url
-        ? [
-            {
-              url: ogImage.url,
-              alt: ogImage.alt ?? page.title,
-            },
-          ]
+        ? [{ alt: ogImage.alt ?? title, url: ogImage.url }]
         : undefined,
-    },
-    robots: {
-      follow: !page.seo.noFollow,
-      index: !page.seo.noIndex,
-    },
-    twitter: {
-      card: ogImage?.url ? "summary_large_image" : "summary",
-      title,
-      description,
-      images: ogImage?.url ? [ogImage.url] : undefined,
     },
   };
 }
 
 export default async function HomePage({ searchParams }: HomePageProps) {
   const locale = await getServerLocale();
-  const isCanvasPreview = await isCanvasPreviewRequest(searchParams);
-  const [companySettings, navigationItems, page] = await Promise.all([
-    getCompanySettings(locale),
-    getMainNavigation(locale),
+  const [page, isPreview, siteSettings] = await Promise.all([
     getHomePage(locale),
+    isPreviewRequest(searchParams),
+    getSiteSettings(locale),
   ]);
 
-  if (page) {
+  if (isPreview) {
     return (
-      <>
-        {isCanvasPreview ? (
-          <style>{`
-            body:has([data-cms-preview-canvas="true"]) > section#contacto,
-            body:has([data-cms-preview-canvas="true"]) > footer,
-            body:has([data-cms-preview-canvas="true"]) > div.fixed.inset-0 {
-              display: none !important;
-            }
-          `}</style>
-        ) : null}
-        {isCanvasPreview ? (
-          <PageLivePreviewCanvas initialPage={page} />
-        ) : (
-          <PageRenderer
-            companySettings={companySettings}
-            locale={locale}
-            navigationItems={navigationItems}
-            page={page}
-          />
-        )}
-      </>
-    );
-  }
-
-  if (isCanvasPreview) {
-    return (
-      <>
-        <style>{`
-          body:has([data-cms-preview-canvas="true"]) > section#contacto,
-          body:has([data-cms-preview-canvas="true"]) > footer,
-          body:has([data-cms-preview-canvas="true"]) > div.fixed.inset-0 {
-            display: none !important;
-          }
-        `}</style>
-        <PageLivePreviewCanvas initialPage={previewFallbackHomePage} />
-      </>
+      <PageLivePreviewCanvas
+        initialPage={page ?? previewHomePage}
+        siteProfile={siteSettings.siteProfile}
+      />
     );
   }
 
   return (
-    <LandingExperience
-      companySettings={companySettings}
-      locale={locale}
-      navigationItems={navigationItems}
+    <SliceRenderer
+      page={page ?? previewHomePage}
+      siteProfile={siteSettings.siteProfile}
     />
   );
 }

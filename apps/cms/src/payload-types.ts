@@ -69,6 +69,8 @@ export interface Config {
   collections: {
     pages: Page;
     media: Media;
+    'case-studies': CaseStudy;
+    testimonials: Testimonial;
     'contact-submissions': ContactSubmission;
     users: User;
     'payload-kv': PayloadKv;
@@ -80,6 +82,8 @@ export interface Config {
   collectionsSelect: {
     pages: PagesSelect<false> | PagesSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    'case-studies': CaseStudiesSelect<false> | CaseStudiesSelect<true>;
+    testimonials: TestimonialsSelect<false> | TestimonialsSelect<true>;
     'contact-submissions': ContactSubmissionsSelect<false> | ContactSubmissionsSelect<true>;
     users: UsersSelect<false> | UsersSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
@@ -92,13 +96,9 @@ export interface Config {
   };
   fallbackLocale: ('false' | 'none' | 'null') | false | null | ('es' | 'en') | ('es' | 'en')[];
   globals: {
-    'main-navigation': MainNavigation;
-    'footer-settings': FooterSettings;
     'company-settings': CompanySettings;
   };
   globalsSelect: {
-    'main-navigation': MainNavigationSelect<false> | MainNavigationSelect<true>;
-    'footer-settings': FooterSettingsSelect<false> | FooterSettingsSelect<true>;
     'company-settings': CompanySettingsSelect<false> | CompanySettingsSelect<true>;
   };
   locale: 'es' | 'en';
@@ -130,7 +130,7 @@ export interface UserAuthOperations {
   };
 }
 /**
- * Create, organize and publish the public website pages.
+ * Create pages simply: sections first, then page info, menu and publishing.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "pages".
@@ -138,395 +138,97 @@ export interface UserAuthOperations {
 export interface Page {
   id: number;
   /**
-   * Also used automatically as menu text and SEO title unless you set something different.
+   * Defines the recommendations shown below. It does not add sections automatically.
+   */
+  pageType?:
+    | (
+        | 'home'
+        | 'landing'
+        | 'service'
+        | 'product'
+        | 'institutional'
+        | 'news'
+        | 'education'
+        | 'event'
+        | 'contact'
+        | 'free'
+      )
+    | null;
+  /**
+   * Add pure content slices. There is no visual configuration: the site decides the design automatically.
+   */
+  sections?: (HeroSlice | FeatureGridSlice | CTASlice | CanvasSlice)[] | null;
+  /**
+   * This name is also used as the URL base if you leave it empty.
    */
   title: string;
   /**
-   * Generated from the name. Change it only if you need a specific URL.
+   * Example: services/web-design. For the home page use home.
    */
-  slug?: string | null;
-  status: 'draft' | 'published';
+  slug: string;
   /**
-   * Defines automatic defaults for menu, footer and suggested template.
+   * Enable this if the page should appear in the main navigation.
    */
-  pageType: 'landing' | 'service' | 'legal' | 'contact' | 'internal' | 'blog' | 'portfolio';
+  showInNavigation?: boolean | null;
   /**
-   * Optional. If SEO is not manually edited, this summary works as the description.
-   */
-  excerpt?: string | null;
-  /**
-   * Add generic visual blocks to build any page. You can edit text from the preview or inside each section.
-   */
-  content?:
-    | (
-        | {
-            eyebrow?: string | null;
-            title: string;
-            subtitle?: string | null;
-            description?: string | null;
-            backgroundMedia?: (number | null) | Media;
-            primaryButtonLabel?: string | null;
-            primaryButtonUrl?: string | null;
-            secondaryButtonLabel?: string | null;
-            secondaryButtonUrl?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'hero';
-          }
-        | {
-            sectionTitle?: string | null;
-            sectionDescription?: string | null;
-            displayStyle?: ('logos' | 'marquee' | 'tiles') | null;
-            items?:
-              | {
-                  name: string;
-                  image?: (number | null) | Media;
-                  url?: string | null;
-                  openInNewTab?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'logoStrip';
-          }
-        | {
-            eyebrow?: string | null;
-            title?: string | null;
-            description?: string | null;
-            variant?: ('editorial' | 'compact' | 'dark') | null;
-            items?:
-              | {
-                  value: string;
-                  label: string;
-                  description?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'stats';
-          }
-        | {
-            content: {
-              root: {
-                type: string;
-                children: {
-                  type: any;
-                  version: number;
-                  [k: string]: unknown;
-                }[];
-                direction: ('ltr' | 'rtl') | null;
-                format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                indent: number;
-                version: number;
-              };
-              [k: string]: unknown;
-            };
-            alignment?: ('left' | 'center' | 'right') | null;
-            width?: ('normal' | 'wide' | 'narrow') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'richText';
-          }
-        | {
-            image?: (number | null) | Media;
-            title: string;
-            description?: string | null;
-            imagePosition?: ('left' | 'right') | null;
-            buttonLabel?: string | null;
-            buttonUrl?: string | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'imageText';
-          }
-        | {
-            sectionTitle?: string | null;
-            sectionDescription?: string | null;
-            cards?:
-              | {
-                  title: string;
-                  description?: string | null;
-                  media?: (number | null) | Media;
-                  url?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'cards';
-          }
-        | {
-            title?: string | null;
-            description?: string | null;
-            images?:
-              | {
-                  image: number | Media;
-                  caption?: string | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'gallery';
-          }
-        | {
-            media: number | Media;
-            mediaKind: 'image' | 'video';
-            title?: string | null;
-            description?: string | null;
-            altText?: string | null;
-            width: 'full' | 'normal' | 'small' | 'custom';
-            customWidth?: string | null;
-            height: 'auto' | 'fixed' | 'viewport';
-            fixedHeight?: string | null;
-            alignment: 'left' | 'center' | 'right';
-            borderRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
-            shadow?: ('none' | 'soft' | 'strong') | null;
-            showBorder?: boolean | null;
-            objectFit?: ('cover' | 'contain') | null;
-            autoplay?: boolean | null;
-            muted?: boolean | null;
-            loop?: boolean | null;
-            controls?: boolean | null;
-            poster?: (number | null) | Media;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'mediaBlock';
-          }
-        | {
-            videoSource: 'internal' | 'external';
-            internalVideo?: (number | null) | Media;
-            externalUrl?: string | null;
-            externalProvider?: ('auto' | 'youtube' | 'vimeo' | 'direct') | null;
-            title?: string | null;
-            description?: string | null;
-            poster?: (number | null) | Media;
-            autoplay?: boolean | null;
-            muted?: boolean | null;
-            loop?: boolean | null;
-            controls?: boolean | null;
-            aspectRatio: '16:9' | '4:3' | '1:1' | 'vertical';
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'videoBlock';
-          }
-        | {
-            isActive?: boolean | null;
-            sectionId?: string | null;
-            sectionTitle?: string | null;
-            sectionSubtitle?: string | null;
-            sectionDescription?: string | null;
-            /**
-             * HEX format. Example: #0F172A.
-             */
-            backgroundColor?: string | null;
-            backgroundImage?: (number | null) | Media;
-            backgroundVideo?: (number | null) | Media;
-            /**
-             * HEX format. Example: #0F172A.
-             */
-            textColor?: string | null;
-            maxWidth: 'narrow' | 'normal' | 'wide' | 'full';
-            paddingTop?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
-            paddingBottom?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
-            gap?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
-            alignment?: ('left' | 'center' | 'right') | null;
-            layout:
-              | 'oneColumn'
-              | 'twoColumns'
-              | 'twoColumnsWideLeft'
-              | 'twoColumnsWideRight'
-              | 'threeColumns'
-              | 'fourColumns'
-              | 'featureLeft'
-              | 'featureRight'
-              | 'bentoGrid'
-              | 'serviceCards'
-              | 'textMedia'
-              | 'mediaText'
-              | 'contact'
-              | 'mosaicGallery'
-              | 'splitHero';
-            /**
-             * Optional. Use only known simple classes; free CSS is not accepted.
-             */
-            className?: string | null;
-            items?:
-              | {
-                  contentType:
-                    | 'text'
-                    | 'richText'
-                    | 'image'
-                    | 'video'
-                    | 'card'
-                    | 'iconText'
-                    | 'mediaText'
-                    | 'button'
-                    | 'list'
-                    | 'cta';
-                  title?: string | null;
-                  subtitle?: string | null;
-                  description?: string | null;
-                  richText?: {
-                    root: {
-                      type: string;
-                      children: {
-                        type: any;
-                        version: number;
-                        [k: string]: unknown;
-                      }[];
-                      direction: ('ltr' | 'rtl') | null;
-                      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-                      indent: number;
-                      version: number;
-                    };
-                    [k: string]: unknown;
-                  } | null;
-                  image?: (number | null) | Media;
-                  video?: (number | null) | Media;
-                  /**
-                   * Suggested name: sparkles, plane, printer, camera, phone, mail, map, wrench.
-                   */
-                  iconName?: string | null;
-                  linkLabel?: string | null;
-                  linkUrl?: string | null;
-                  linkOpenInNewTab?: boolean | null;
-                  buttonLabel?: string | null;
-                  buttonUrl?: string | null;
-                  buttonOpenInNewTab?: boolean | null;
-                  listItems?:
-                    | {
-                        text?: string | null;
-                        id?: string | null;
-                      }[]
-                    | null;
-                  /**
-                   * HEX format. Example: #0F172A.
-                   */
-                  backgroundColor?: string | null;
-                  /**
-                   * HEX format. Example: #0F172A.
-                   */
-                  textColor?: string | null;
-                  borderRadius?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
-                  shadow?: ('none' | 'soft' | 'strong') | null;
-                  showBorder?: boolean | null;
-                  padding?: ('none' | 'sm' | 'md' | 'lg' | 'xl') | null;
-                  alignment?: ('left' | 'center' | 'right') | null;
-                  /**
-                   * Optional number to order this box on small screens.
-                   */
-                  responsiveOrder?: number | null;
-                  isActive?: boolean | null;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'snapLayoutBlock';
-          }
-        | {
-            sectionTitle?: string | null;
-            sectionDescription?: string | null;
-            items?:
-              | {
-                  quote: string;
-                  name: string;
-                  role?: string | null;
-                  rating?: number | null;
-                  avatar?: (number | null) | Media;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'testimonials';
-          }
-        | {
-            title: string;
-            description?: string | null;
-            buttonLabel?: string | null;
-            buttonUrl?: string | null;
-            variant?: ('solid' | 'outline' | 'minimal') | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'cta';
-          }
-        | {
-            title?: string | null;
-            items?:
-              | {
-                  question: string;
-                  answer: string;
-                  id?: string | null;
-                }[]
-              | null;
-            id?: string | null;
-            blockName?: string | null;
-            blockType: 'faq';
-          }
-      )[]
-    | null;
-  /**
-   * Enable it so this page appears in the header.
-   */
-  showInMainNavigation?: boolean | null;
-  /**
-   * Leave empty for a top-level item. Select a page to create a dropdown.
+   * Leave empty for a main page. Choose a parent page if it should live inside another one.
    */
   parentPage?: (number | null) | Page;
-  showInFooter?: boolean | null;
   /**
-   * Lower numbers appear first. Also sorts subpages.
+   * If empty, the page name is used.
+   */
+  navigationLabel?: string | null;
+  /**
+   * Lower numbers appear first.
    */
   navigationOrder?: number | null;
-  navigationLabel?: string | null;
-  featuredImage?: (number | null) | Media;
-  isFeatured?: boolean | null;
-  /**
-   * Only for pages with special layouts.
-   */
-  headerStyle: 'inherit' | 'solid' | 'transparent';
-  hideFooter?: boolean | null;
-  /**
-   * Optional for design-controlled adjustments. Dangerous characters are not accepted.
-   */
-  customClassName?: string | null;
-  /**
-   * Usually you do not need to touch this: it falls back to name, summary and featured image.
-   */
   seo?: {
     metaTitle?: string | null;
     metaDescription?: string | null;
-    /**
-     * Optional. Separate keywords with commas.
-     */
-    keywords?: string | null;
-    /**
-     * Leave empty to use the public URL for this page.
-     */
-    canonicalUrl?: string | null;
-    noIndex?: boolean | null;
-    noFollow?: boolean | null;
     ogImage?: (number | null) | Media;
+    noIndex?: boolean | null;
   };
-  pageTemplate: 'default' | 'landing' | 'serviceDetail' | 'legal' | 'contact' | 'portfolio';
-  enableBreadcrumbs?: boolean | null;
-  heroTitle?: string | null;
-  heroSubtitle?: string | null;
-  videoBackground?: (number | null) | Media;
-  navbarLinks?:
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroSlice".
+ */
+export interface HeroSlice {
+  /**
+   * Describes intent. The frontend decides the final layout.
+   */
+  purpose: 'clear-intro' | 'product-focus' | 'campaign' | 'institutional';
+  eyebrow?: string | null;
+  title: string;
+  description?: string | null;
+  backgroundMedia?: (number | null) | Media;
+  media?: (number | null) | Media;
+  actions?:
     | {
-        label?: string | null;
-        href?: string | null;
+        label: string;
+        url: string;
         openInNewTab?: boolean | null;
         id?: string | null;
       }[]
     | null;
-  updatedAt: string;
-  createdAt: string;
-  _status?: ('draft' | 'published') | null;
+  /**
+   * Reserved for the Hybrid Visual Builder: coordinates, scale, layers and responsive overrides sent from preview.
+   */
+  visualOverrides?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'heroSlice';
 }
 /**
  * Library for website images, videos, SVGs and downloadable documents.
@@ -592,6 +294,144 @@ export interface Media {
       filename?: string | null;
     };
   };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureGridSlice".
+ */
+export interface FeatureGridSlice {
+  /**
+   * Choose editorial intent, not design.
+   */
+  purpose: 'simple-grid' | 'bento-showcase' | 'editorial';
+  eyebrow?: string | null;
+  title: string;
+  intro?: string | null;
+  items?:
+    | {
+        title: string;
+        description?: string | null;
+        icon?: string | null;
+        media?: (number | null) | Media;
+        link?: {
+          label?: string | null;
+          url?: string | null;
+          openInNewTab?: boolean | null;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  /**
+   * Reserved for the Hybrid Visual Builder: coordinates, scale, layers and responsive overrides sent from preview.
+   */
+  visualOverrides?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureGridSlice';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CTASlice".
+ */
+export interface CTASlice {
+  purpose: 'contact' | 'conversion' | 'subscription' | 'navigation';
+  eyebrow?: string | null;
+  title: string;
+  description?: string | null;
+  actions?:
+    | {
+        label: string;
+        url: string;
+        openInNewTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  finePrint?: string | null;
+  /**
+   * Reserved for the Hybrid Visual Builder: coordinates, scale, layers and responsive overrides sent from preview.
+   */
+  visualOverrides?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaSlice';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CanvasSlice".
+ */
+export interface CanvasSlice {
+  title: string;
+  backgroundMedia?: (number | null) | Media;
+  /**
+   * Stores elements, positions, styles, layers and breakpoints for the visual editor.
+   */
+  canvas?:
+    | {
+        [k: string]: unknown;
+      }
+    | unknown[]
+    | string
+    | number
+    | boolean
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'canvasSlice';
+}
+/**
+ * Reusable case studies for social proof sections.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-studies".
+ */
+export interface CaseStudy {
+  id: number;
+  title: string;
+  slug: string;
+  client?: string | null;
+  summary?: string | null;
+  challenge?: string | null;
+  solution?: string | null;
+  result?: string | null;
+  media?: (number | null) | Media;
+  url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * Reusable testimonials for trust and conversion sections.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials".
+ */
+export interface Testimonial {
+  id: number;
+  quote: string;
+  name: string;
+  role?: string | null;
+  media?: (number | null) | Media;
+  featured?: boolean | null;
+  url?: string | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
 }
 /**
  * Mini CRM to review, assign and follow up website messages.
@@ -707,6 +547,14 @@ export interface PayloadLockedDocument {
         value: number | Media;
       } | null)
     | ({
+        relationTo: 'case-studies';
+        value: number | CaseStudy;
+      } | null)
+    | ({
+        relationTo: 'testimonials';
+        value: number | Testimonial;
+      } | null)
+    | ({
         relationTo: 'contact-submissions';
         value: number | ContactSubmission;
       } | null)
@@ -761,298 +609,117 @@ export interface PayloadMigration {
  * via the `definition` "pages_select".
  */
 export interface PagesSelect<T extends boolean = true> {
-  title?: T;
-  slug?: T;
-  status?: T;
   pageType?: T;
-  excerpt?: T;
-  content?:
+  sections?:
     | T
     | {
-        hero?:
-          | T
-          | {
-              eyebrow?: T;
-              title?: T;
-              subtitle?: T;
-              description?: T;
-              backgroundMedia?: T;
-              primaryButtonLabel?: T;
-              primaryButtonUrl?: T;
-              secondaryButtonLabel?: T;
-              secondaryButtonUrl?: T;
-              id?: T;
-              blockName?: T;
-            };
-        logoStrip?:
-          | T
-          | {
-              sectionTitle?: T;
-              sectionDescription?: T;
-              displayStyle?: T;
-              items?:
-                | T
-                | {
-                    name?: T;
-                    image?: T;
-                    url?: T;
-                    openInNewTab?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        stats?:
-          | T
-          | {
-              eyebrow?: T;
-              title?: T;
-              description?: T;
-              variant?: T;
-              items?:
-                | T
-                | {
-                    value?: T;
-                    label?: T;
-                    description?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        richText?:
-          | T
-          | {
-              content?: T;
-              alignment?: T;
-              width?: T;
-              id?: T;
-              blockName?: T;
-            };
-        imageText?:
-          | T
-          | {
-              image?: T;
-              title?: T;
-              description?: T;
-              imagePosition?: T;
-              buttonLabel?: T;
-              buttonUrl?: T;
-              id?: T;
-              blockName?: T;
-            };
-        cards?:
-          | T
-          | {
-              sectionTitle?: T;
-              sectionDescription?: T;
-              cards?:
-                | T
-                | {
-                    title?: T;
-                    description?: T;
-                    media?: T;
-                    url?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        gallery?:
-          | T
-          | {
-              title?: T;
-              description?: T;
-              images?:
-                | T
-                | {
-                    image?: T;
-                    caption?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        mediaBlock?:
-          | T
-          | {
-              media?: T;
-              mediaKind?: T;
-              title?: T;
-              description?: T;
-              altText?: T;
-              width?: T;
-              customWidth?: T;
-              height?: T;
-              fixedHeight?: T;
-              alignment?: T;
-              borderRadius?: T;
-              shadow?: T;
-              showBorder?: T;
-              objectFit?: T;
-              autoplay?: T;
-              muted?: T;
-              loop?: T;
-              controls?: T;
-              poster?: T;
-              id?: T;
-              blockName?: T;
-            };
-        videoBlock?:
-          | T
-          | {
-              videoSource?: T;
-              internalVideo?: T;
-              externalUrl?: T;
-              externalProvider?: T;
-              title?: T;
-              description?: T;
-              poster?: T;
-              autoplay?: T;
-              muted?: T;
-              loop?: T;
-              controls?: T;
-              aspectRatio?: T;
-              id?: T;
-              blockName?: T;
-            };
-        snapLayoutBlock?:
-          | T
-          | {
-              isActive?: T;
-              sectionId?: T;
-              sectionTitle?: T;
-              sectionSubtitle?: T;
-              sectionDescription?: T;
-              backgroundColor?: T;
-              backgroundImage?: T;
-              backgroundVideo?: T;
-              textColor?: T;
-              maxWidth?: T;
-              paddingTop?: T;
-              paddingBottom?: T;
-              gap?: T;
-              alignment?: T;
-              layout?: T;
-              className?: T;
-              items?:
-                | T
-                | {
-                    contentType?: T;
-                    title?: T;
-                    subtitle?: T;
-                    description?: T;
-                    richText?: T;
-                    image?: T;
-                    video?: T;
-                    iconName?: T;
-                    linkLabel?: T;
-                    linkUrl?: T;
-                    linkOpenInNewTab?: T;
-                    buttonLabel?: T;
-                    buttonUrl?: T;
-                    buttonOpenInNewTab?: T;
-                    listItems?:
-                      | T
-                      | {
-                          text?: T;
-                          id?: T;
-                        };
-                    backgroundColor?: T;
-                    textColor?: T;
-                    borderRadius?: T;
-                    shadow?: T;
-                    showBorder?: T;
-                    padding?: T;
-                    alignment?: T;
-                    responsiveOrder?: T;
-                    isActive?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        testimonials?:
-          | T
-          | {
-              sectionTitle?: T;
-              sectionDescription?: T;
-              items?:
-                | T
-                | {
-                    quote?: T;
-                    name?: T;
-                    role?: T;
-                    rating?: T;
-                    avatar?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
-        cta?:
-          | T
-          | {
-              title?: T;
-              description?: T;
-              buttonLabel?: T;
-              buttonUrl?: T;
-              variant?: T;
-              id?: T;
-              blockName?: T;
-            };
-        faq?:
-          | T
-          | {
-              title?: T;
-              items?:
-                | T
-                | {
-                    question?: T;
-                    answer?: T;
-                    id?: T;
-                  };
-              id?: T;
-              blockName?: T;
-            };
+        heroSlice?: T | HeroSliceSelect<T>;
+        featureGridSlice?: T | FeatureGridSliceSelect<T>;
+        ctaSlice?: T | CTASliceSelect<T>;
+        canvasSlice?: T | CanvasSliceSelect<T>;
       };
-  showInMainNavigation?: T;
+  title?: T;
+  slug?: T;
+  showInNavigation?: T;
   parentPage?: T;
-  showInFooter?: T;
-  navigationOrder?: T;
   navigationLabel?: T;
-  featuredImage?: T;
-  isFeatured?: T;
-  headerStyle?: T;
-  hideFooter?: T;
-  customClassName?: T;
+  navigationOrder?: T;
   seo?:
     | T
     | {
         metaTitle?: T;
         metaDescription?: T;
-        keywords?: T;
-        canonicalUrl?: T;
-        noIndex?: T;
-        noFollow?: T;
         ogImage?: T;
-      };
-  pageTemplate?: T;
-  enableBreadcrumbs?: T;
-  heroTitle?: T;
-  heroSubtitle?: T;
-  videoBackground?: T;
-  navbarLinks?:
-    | T
-    | {
-        label?: T;
-        href?: T;
-        openInNewTab?: T;
-        id?: T;
+        noIndex?: T;
       };
   updatedAt?: T;
   createdAt?: T;
   _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroSlice_select".
+ */
+export interface HeroSliceSelect<T extends boolean = true> {
+  purpose?: T;
+  eyebrow?: T;
+  title?: T;
+  description?: T;
+  backgroundMedia?: T;
+  media?: T;
+  actions?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        openInNewTab?: T;
+        id?: T;
+      };
+  visualOverrides?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureGridSlice_select".
+ */
+export interface FeatureGridSliceSelect<T extends boolean = true> {
+  purpose?: T;
+  eyebrow?: T;
+  title?: T;
+  intro?: T;
+  items?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        icon?: T;
+        media?: T;
+        link?:
+          | T
+          | {
+              label?: T;
+              url?: T;
+              openInNewTab?: T;
+            };
+        id?: T;
+      };
+  visualOverrides?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CTASlice_select".
+ */
+export interface CTASliceSelect<T extends boolean = true> {
+  purpose?: T;
+  eyebrow?: T;
+  title?: T;
+  description?: T;
+  actions?:
+    | T
+    | {
+        label?: T;
+        url?: T;
+        openInNewTab?: T;
+        id?: T;
+      };
+  finePrint?: T;
+  visualOverrides?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CanvasSlice_select".
+ */
+export interface CanvasSliceSelect<T extends boolean = true> {
+  title?: T;
+  backgroundMedia?: T;
+  canvas?: T;
+  id?: T;
+  blockName?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1120,6 +787,39 @@ export interface MediaSelect<T extends boolean = true> {
               filename?: T;
             };
       };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "case-studies_select".
+ */
+export interface CaseStudiesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  client?: T;
+  summary?: T;
+  challenge?: T;
+  solution?: T;
+  result?: T;
+  media?: T;
+  url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "testimonials_select".
+ */
+export interface TestimonialsSelect<T extends boolean = true> {
+  quote?: T;
+  name?: T;
+  role?: T;
+  media?: T;
+  featured?: T;
+  url?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1232,129 +932,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   createdAt?: T;
 }
 /**
- * Compatibility with previous manual menus. The active main menu is now managed from Pages.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "main-navigation".
- */
-export interface MainNavigation {
-  id: number;
-  items?:
-    | {
-        label: string;
-        linkType: 'page' | 'external' | 'anchor' | 'container';
-        /**
-         * Only published pages can be selected.
-         */
-        page?: (number | null) | Page;
-        manualUrl?: string | null;
-        openInNewTab?: boolean | null;
-        isActive?: boolean | null;
-        /**
-         * You can also reorder by dragging. This number helps set an explicit order.
-         */
-        order?: number | null;
-        children?:
-          | {
-              label: string;
-              linkType: 'page' | 'external' | 'anchor' | 'container';
-              /**
-               * Only published pages can be selected.
-               */
-              page?: (number | null) | Page;
-              manualUrl?: string | null;
-              openInNewTab?: boolean | null;
-              isActive?: boolean | null;
-              /**
-               * You can also reorder by dragging. This number helps set an explicit order.
-               */
-              order?: number | null;
-              id?: string | null;
-            }[]
-          | null;
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * Compatibility with the previous footer settings. The active footer is now managed from Site Settings.
- *
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer-settings".
- */
-export interface FooterSettings {
-  id: number;
-  isEnabled?: boolean | null;
-  showLogo?: boolean | null;
-  logo?: (number | null) | Media;
-  showCompanyName?: boolean | null;
-  companyNameOverride?: string | null;
-  shortDescription?: string | null;
-  additionalText?: string | null;
-  columns?:
-    | {
-        title: string;
-        contentType: 'publishedPages' | 'mainNavigation' | 'manualLinks' | 'socialLinks' | 'contact' | 'customText';
-        customText?: string | null;
-        links?:
-          | {
-              label: string;
-              url: string;
-              openInNewTab?: boolean | null;
-              isActive?: boolean | null;
-              order?: number | null;
-              id?: string | null;
-            }[]
-          | null;
-        order?: number | null;
-        isActive?: boolean | null;
-        id?: string | null;
-      }[]
-    | null;
-  /**
-   * Opcional. Si no agregas redes aquí, el sitio usa las redes principales de Configuración General.
-   */
-  socialLinks?:
-    | {
-        name: string;
-        type:
-          | 'facebook'
-          | 'instagram'
-          | 'tiktok'
-          | 'linkedin'
-          | 'youtube'
-          | 'twitter'
-          | 'whatsapp'
-          | 'website'
-          | 'other';
-        url: string;
-        iconName?: string | null;
-        showInFooter?: boolean | null;
-        showInHeader?: boolean | null;
-        openInNewTab?: boolean | null;
-        isActive?: boolean | null;
-        order?: number | null;
-        id?: string | null;
-      }[]
-    | null;
-  useCompanySettings?: boolean | null;
-  email?: string | null;
-  phone?: string | null;
-  whatsapp?: string | null;
-  address?: string | null;
-  businessHours?: string | null;
-  country?: string | null;
-  city?: string | null;
-  copyrightText?: string | null;
-  privacyPage?: (number | null) | Page;
-  termsPage?: (number | null) | Page;
-  legalText?: string | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
  * Single center for company, brand, contact, footer, social links, SEO and legal text.
  *
  * This interface was referenced by `Config`'s JSON-Schema
@@ -1362,6 +939,10 @@ export interface FooterSettings {
  */
 export interface CompanySettings {
   id: number;
+  /**
+   * Defines the global visual tone. The frontend uses it to interpret slices without asking for visual settings per section.
+   */
+  siteProfile: 'government' | 'saas-apple' | 'agency' | 'ecommerce' | 'education';
   /**
    * If a visitor has not chosen a language, the public site loads this language.
    */
@@ -1425,7 +1006,7 @@ export interface CompanySettings {
       }[]
     | null;
   /**
-   * The footer is built automatically from company details, social links and published pages.
+   * The footer is assembled from company details, social links and manual links.
    */
   footerIsEnabled?: boolean | null;
   footerShowLogo?: boolean | null;
@@ -1440,7 +1021,7 @@ export interface CompanySettings {
   footerColumns?:
     | {
         title: string;
-        contentType: 'publishedPages' | 'mainNavigation' | 'manualLinks' | 'socialLinks' | 'contact' | 'customText';
+        contentType: 'manualLinks' | 'socialLinks' | 'contact' | 'customText';
         customText?: string | null;
         links?:
           | {
@@ -1492,14 +1073,8 @@ export interface CompanySettings {
   footerCountry?: string | null;
   footerCity?: string | null;
   footerCopyrightText?: string | null;
-  /**
-   * Optional. If empty, the footer uses published legal pages marked for footer.
-   */
-  footerPrivacyPage?: (number | null) | Page;
-  /**
-   * Optional. If empty, the footer uses published legal pages marked for footer.
-   */
-  footerTermsPage?: (number | null) | Page;
+  footerPrivacyPageId?: number | null;
+  footerTermsPageId?: number | null;
   footerLegalTextOverride?: string | null;
   defaultMetaTitle: string;
   defaultMetaDescription: string;
@@ -1517,104 +1092,10 @@ export interface CompanySettings {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "main-navigation_select".
- */
-export interface MainNavigationSelect<T extends boolean = true> {
-  items?:
-    | T
-    | {
-        label?: T;
-        linkType?: T;
-        page?: T;
-        manualUrl?: T;
-        openInNewTab?: T;
-        isActive?: T;
-        order?: T;
-        children?:
-          | T
-          | {
-              label?: T;
-              linkType?: T;
-              page?: T;
-              manualUrl?: T;
-              openInNewTab?: T;
-              isActive?: T;
-              order?: T;
-              id?: T;
-            };
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "footer-settings_select".
- */
-export interface FooterSettingsSelect<T extends boolean = true> {
-  isEnabled?: T;
-  showLogo?: T;
-  logo?: T;
-  showCompanyName?: T;
-  companyNameOverride?: T;
-  shortDescription?: T;
-  additionalText?: T;
-  columns?:
-    | T
-    | {
-        title?: T;
-        contentType?: T;
-        customText?: T;
-        links?:
-          | T
-          | {
-              label?: T;
-              url?: T;
-              openInNewTab?: T;
-              isActive?: T;
-              order?: T;
-              id?: T;
-            };
-        order?: T;
-        isActive?: T;
-        id?: T;
-      };
-  socialLinks?:
-    | T
-    | {
-        name?: T;
-        type?: T;
-        url?: T;
-        iconName?: T;
-        showInFooter?: T;
-        showInHeader?: T;
-        openInNewTab?: T;
-        isActive?: T;
-        order?: T;
-        id?: T;
-      };
-  useCompanySettings?: T;
-  email?: T;
-  phone?: T;
-  whatsapp?: T;
-  address?: T;
-  businessHours?: T;
-  country?: T;
-  city?: T;
-  copyrightText?: T;
-  privacyPage?: T;
-  termsPage?: T;
-  legalText?: T;
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "company-settings_select".
  */
 export interface CompanySettingsSelect<T extends boolean = true> {
+  siteProfile?: T;
   defaultLanguage?: T;
   commercialName?: T;
   legalName?: T;
@@ -1703,8 +1184,8 @@ export interface CompanySettingsSelect<T extends boolean = true> {
   footerCountry?: T;
   footerCity?: T;
   footerCopyrightText?: T;
-  footerPrivacyPage?: T;
-  footerTermsPage?: T;
+  footerPrivacyPageId?: T;
+  footerTermsPageId?: T;
   footerLegalTextOverride?: T;
   defaultMetaTitle?: T;
   defaultMetaDescription?: T;

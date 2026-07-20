@@ -10,6 +10,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@starter/page-sections": ["../../packages/page-sections/src/index.ts"],
+      "@starter/page-sections/*": ["../../packages/page-sections/src/*"],
       "@payload-config": ["./payload.config.ts"]
     }
   },
@@ -18,7 +20,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.js",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "../../packages/page-sections/src/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

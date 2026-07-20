@@ -9,6 +9,8 @@
     ],
     "paths": {
       "@/*": ["./src/*"],
+      "@starter/page-sections": ["../../packages/page-sections/src/index.ts"],
+      "@starter/page-sections/*": ["../../packages/page-sections/src/*"],
       "@starter/ui": ["../../packages/ui/src/index.ts"],
       "@starter/ui/*": ["../../packages/ui/src/*"]
     }
@@ -18,6 +20,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
+    "../../packages/page-sections/src/**/*.ts",
     "../../packages/ui/src/**/*.ts",
     "../../packages/ui/src/**/*.tsx"
   ],
