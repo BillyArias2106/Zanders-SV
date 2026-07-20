@@ -33,8 +33,9 @@ services:
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U app -d app']
       interval: 5s
-      timeout: 5s
-      retries: 12
+      timeout: 10s
+      retries: 30
+      start_period: 90s
 
   cms:
     image: node:22-bookworm-slim

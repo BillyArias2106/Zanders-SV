@@ -15,12 +15,15 @@ docker compose up
 ```
 
 En una base de datos nueva, Docker ejecuta las migraciones de Payload antes de
-levantar el CMS. Si ya tenias los contenedores corriendo y `/admin` falla con
-`relation "users" does not exist`, reinicia el servicio del CMS para que corra
-las migraciones:
+levantar el CMS, por lo que las tablas empiezan vacias y el primer usuario se
+crea desde el panel de Payload.
+
+Si ya tenias contenedores viejos corriendo y `/admin` falla con
+`relation "users" does not exist`, reinicia el stack para que tome el comando
+actualizado:
 
 ```bash
-docker compose up --force-recreate cms
+docker compose up --force-recreate
 ```
 
 URLs locales:

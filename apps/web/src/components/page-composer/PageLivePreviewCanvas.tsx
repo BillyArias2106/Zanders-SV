@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 
 import { SliceRenderer } from '@/components/content-slices/SliceRenderer'
+import { GlobalTopToolbar } from '@/components/page-composer/GlobalTopToolbar'
 import type { SitePage, SiteProfile } from '@/lib/cms'
 
 type PageLivePreviewCanvasProps = {
@@ -106,5 +107,10 @@ export function PageLivePreviewCanvas({ initialPage, siteProfile }: PageLivePrev
     return () => window.removeEventListener('message', receivePreview)
   }, [])
 
-  return <SliceRenderer isPreview page={page} siteProfile={siteProfile} />
+  return (
+    <>
+      <GlobalTopToolbar />
+      <SliceRenderer isPreview page={page} siteProfile={siteProfile} />
+    </>
+  )
 }
