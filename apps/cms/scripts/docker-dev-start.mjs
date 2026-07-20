@@ -58,7 +58,10 @@ const resetPublicSchema = async () => {
   }
 }
 
-const runMigrations = () => run('pnpm', ['--filter', '@starter/cms', 'migrate'])
+const runMigrations = async () => {
+  console.log('Docker dev startup: running Payload migrations...')
+  await run('pnpm', ['--filter', '@starter/cms', 'migrate'])
+}
 
 const startDevServer = () => {
   const child = spawn('pnpm', ['--filter', '@starter/cms', 'dev'], {
@@ -105,6 +108,7 @@ try {
     throw new Error('public.users still does not exist after resetting and rerunning migrations.')
   }
 
+  console.log('Docker dev startup: public.users verified. Starting CMS...')
   startDevServer()
 } catch (error) {
   console.error(error instanceof Error ? error.message : error)
