@@ -14,6 +14,15 @@ Base monorepo para la plataforma digital de un sitio nuevo.
 docker compose up
 ```
 
+En una base de datos nueva, Docker ejecuta las migraciones de Payload antes de
+levantar el CMS. Si ya tenias los contenedores corriendo y `/admin` falla con
+`relation "users" does not exist`, reinicia el servicio del CMS para que corra
+las migraciones:
+
+```bash
+docker compose up --force-recreate cms
+```
+
 URLs locales:
 
 - Web: `http://localhost:3000`
