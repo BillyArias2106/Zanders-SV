@@ -14,6 +14,9 @@ Base monorepo para la plataforma digital de un sitio nuevo.
 docker compose up
 ```
 
+Docker usa el proyecto `zander-cms-dev`, asi que los contenedores y volumenes
+quedan agrupados con ese prefijo aunque clones el repo en otra carpeta.
+
 La primera vez Docker descarga las imagenes y `pnpm` instala las dependencias.
 Despues, si no cambian los `package.json` o `pnpm-lock.yaml`, Docker reutiliza
 los volumenes y se salta la instalacion para levantar mas rapido.
@@ -32,10 +35,22 @@ actualizado:
 docker compose up --force-recreate
 ```
 
+Si el volumen de Postgres quedo a medias, Docker de desarrollo lo detecta al
+iniciar el CMS: si despues de migrar no existe la tabla `users`, resetea el
+esquema local y vuelve a correr las migraciones.
+
+Docker Desktop muestra varios volumenes porque cada uno guarda un tipo de dato
+distinto: Postgres, cache de pnpm, cache de Corepack, `node_modules` y cache de
+Next. Separarlos evita conflictos entre rutas internas y acelera los siguientes
+arranques. Todos pertenecen al proyecto `zander-cms-dev`.
+
+Para limpiar volumenes viejos de pruebas anteriores, apaga primero esos stacks
+desde Docker Desktop o con `docker compose down` en la carpeta donde los creaste.
+
 URLs locales:
 
 - Web: `http://localhost:3000`
 - CMS: `http://localhost:3001/admin`
-- PostgreSQL: `postgresql://app:app_dev_password@localhost:5432/app`
+- PostgreSQL interno: `postgresql://app:app_dev_password@postgres:5432/app`
 
 Antes de usar en produccion, define un `PAYLOAD_SECRET` fuerte en `.env`.
