@@ -2,8 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import type { ReactNode } from "react";
 
-import { ProgressiveLoader } from "@/components/molecules/progressive-loader";
-import { SmoothScrollProvider } from "@/components/organisms/smooth-scroll-provider";
+import { HeroNavigation } from "@/components/organisms/hero-navigation";
 import { SiteContactSection } from "@/components/organisms/site-contact-section";
 import { SiteFooter } from "@/components/organisms/site-footer";
 import {
@@ -11,10 +10,9 @@ import {
   getCompanyThemeCSS,
   getFooterSettings,
   getMainNavigation,
-  getPublishedLegalPageLinks,
-  getPublishedPageLinks,
 } from "@/lib/cms";
 import { getServerLocale } from "@/lib/server-locale";
+import "@/components/page-composer/page-composer.css";
 import "@/styles/globals.css";
 
 const performanceMeasureGuardScript =
@@ -116,18 +114,10 @@ type RootLayoutProps = {
 
 export default async function RootLayout({ children }: RootLayoutProps) {
   const locale = await getServerLocale();
-  const [
-    companySettings,
-    footerSettings,
-    navigationItems,
-    legalPageLinks,
-    publishedPageLinks,
-  ] = await Promise.all([
+  const [companySettings, footerSettings, navigationItems] = await Promise.all([
     getCompanySettings(locale),
     getFooterSettings(locale),
     getMainNavigation(locale),
-    getPublishedLegalPageLinks(locale),
-    getPublishedPageLinks(locale),
   ]);
   const themeCSS = getCompanyThemeCSS(companySettings);
 
@@ -160,22 +150,23 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         className="bg-deep-950 text-silver-50 antialiased"
         suppressHydrationWarning
       >
-        <SmoothScrollProvider>
-          <ProgressiveLoader />
-          {children}
-          <SiteContactSection
-            companySettings={companySettings}
-            locale={locale}
-          />
-          <SiteFooter
-            companySettings={companySettings}
-            footerSettings={footerSettings}
-            legalPageLinks={legalPageLinks}
-            locale={locale}
-            navigationItems={navigationItems}
-            publishedPageLinks={publishedPageLinks}
-          />
-        </SmoothScrollProvider>
+        <HeroNavigation
+          companySettings={companySettings}
+          locale={locale}
+          navigationItems={navigationItems}
+        />
+        {children}
+        <SiteContactSection
+          companySettings={companySettings}
+          locale={locale}
+        />
+        <SiteFooter
+          companySettings={companySettings}
+          footerSettings={footerSettings}
+          legalPageLinks={[]}
+          locale={locale}
+          navigationItems={navigationItems}
+        />
       </body>
     </html>
   );

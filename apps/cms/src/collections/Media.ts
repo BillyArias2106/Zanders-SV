@@ -18,17 +18,40 @@ type MediaFieldSiblingData = {
   mediaType?: string
 }
 
+type MediaData = {
+  mediaType?: string
+  mimeType?: string
+  usageType?: string
+}
+
 type MediaFieldValidationOptions = {
   siblingData: MediaFieldSiblingData
 }
 
 const validateVideoPoster = (
-  value: unknown,
-  { siblingData }: MediaFieldValidationOptions
-) =>
-  siblingData.mediaType === 'video' && !value
-    ? 'Agrega una imagen de portada para mejorar la carga y el fallback del video.'
-    : true
+  _value: unknown,
+  _options: MediaFieldValidationOptions
+) => true as const
+
+const inferMediaTypeFromMime = (mimeType: unknown) => {
+  if (typeof mimeType !== 'string') {
+    return null
+  }
+
+  if (mimeType.startsWith('image/')) {
+    return 'image'
+  }
+
+  if (mimeType.startsWith('video/')) {
+    return 'video'
+  }
+
+  if (mimeType === 'application/pdf') {
+    return 'document'
+  }
+
+  return 'other'
+}
 
 export const Media: CollectionConfig = {
   slug: 'media',
@@ -45,6 +68,28 @@ export const Media: CollectionConfig = {
     useAsTitle: 'alt'
   },
   labels: adminLabels('Medio', 'Medios', 'Media item', 'Media'),
+  hooks: {
+    beforeValidate: [({ data, req }) => {
+      const media = data as MediaData | undefined
+
+      if (!media) {
+        return data
+      }
+
+      const uploadedMimeType = (req as { file?: { mimetype?: string } }).file?.mimetype
+      const inferredType = inferMediaTypeFromMime(uploadedMimeType ?? media.mimeType)
+
+      if (inferredType) {
+        media.mediaType = inferredType
+
+        if (inferredType === 'video' && (!media.usageType || media.usageType === 'general')) {
+          media.usageType = 'video'
+        }
+      }
+
+      return media
+    }],
+  },
   upload: {
     adminThumbnail: 'thumbnail',
     focalPoint: true,

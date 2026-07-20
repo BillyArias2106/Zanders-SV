@@ -1,0 +1,210 @@
+.app-page-preview {
+  background:
+    linear-gradient(135deg, rgb(141 225 232 / 0.08), transparent 44%),
+    var(--theme-elevation-50);
+  border: 1px solid color-mix(in srgb, var(--theme-elevation-200), #8de1e8 20%);
+  border-radius: 0.45rem;
+  color: var(--theme-text);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-bottom: 1rem;
+  min-height: calc(100vh - var(--doc-controls-height) - 4rem);
+  padding: 0.75rem;
+  position: relative;
+}
+
+.app-page-preview.is-expanded {
+  bottom: 1rem;
+  box-shadow: 0 24px 90px rgb(0 0 0 / 0.55);
+  height: auto;
+  left: 1rem;
+  position: fixed;
+  right: 1rem;
+  top: calc(var(--doc-controls-height) + 1rem);
+  z-index: 80;
+}
+
+.app-page-preview__header {
+  align-items: stretch;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: start;
+}
+
+.app-page-preview__resize-handle {
+  align-items: center;
+  appearance: none;
+  background: transparent;
+  border: 0;
+  bottom: 0;
+  cursor: col-resize;
+  display: flex;
+  justify-content: center;
+  left: calc((var(--sidebar-gutter-h-left, 2rem) * -1) - 0.625rem);
+  padding: 0;
+  position: absolute;
+  top: 0;
+  width: 1.25rem;
+  z-index: 2;
+}
+
+.app-page-preview__resize-handle span {
+  align-items: center;
+  background: color-mix(in srgb, var(--theme-elevation-100), black 8%);
+  border: 1px solid color-mix(in srgb, var(--theme-blue-500), transparent 48%);
+  border-radius: 0.18rem;
+  box-shadow:
+    inset 0 0 0 1px rgb(255 255 255 / 0.04),
+    0 6px 16px rgb(0 0 0 / 0.22);
+  display: flex;
+  height: 2.35rem;
+  justify-content: center;
+  position: relative;
+  transition:
+    background 140ms ease,
+    border-color 140ms ease,
+    transform 140ms ease;
+  width: 0.95rem;
+}
+
+.app-page-preview__resize-handle span::before,
+.app-page-preview__resize-handle span::after {
+  border-block: 0.2rem solid transparent;
+  content: '';
+  height: 0;
+  position: absolute;
+  width: 0;
+}
+
+.app-page-preview__resize-handle span::before {
+  border-right: 0.24rem solid var(--theme-blue-500);
+  left: 0.18rem;
+}
+
+.app-page-preview__resize-handle span::after {
+  border-left: 0.24rem solid var(--theme-blue-500);
+  right: 0.18rem;
+}
+
+.app-page-preview__resize-handle:hover span,
+.app-page-preview__resize-handle:focus-visible span,
+.is-resizing-page-preview .app-page-preview__resize-handle span {
+  background: color-mix(in srgb, var(--theme-blue-500), var(--theme-elevation-100) 78%);
+  border-color: color-mix(in srgb, var(--theme-blue-500), white 10%);
+  transform: scale(1.04);
+}
+
+.app-page-preview__header p {
+  color: var(--theme-blue-500);
+  font-size: 0.69rem;
+  font-weight: 800;
+  letter-spacing: 0.13em;
+  margin: 0 0 0.45rem;
+}
+
+.app-page-preview__header span {
+  color: var(--theme-elevation-650);
+  display: block;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.app-page-preview h2 {
+  font-size: clamp(0.98rem, 2vw, 1.12rem);
+  line-height: 1.2;
+  margin: 0;
+}
+
+.app-page-preview__header > div:last-child {
+  display: grid;
+  gap: 0.35rem;
+  grid-template-columns: repeat(auto-fit, minmax(4.75rem, 1fr));
+  width: 100%;
+}
+
+.app-page-preview button,
+.app-page-preview a {
+  background: transparent;
+  border: 1px solid var(--theme-elevation-300);
+  color: var(--theme-text);
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 750;
+  line-height: 1;
+  min-width: 0;
+  overflow: hidden;
+  padding: 0.58rem 0.5rem;
+  text-align: center;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.app-page-preview .app-page-preview__resize-handle,
+.app-page-preview .app-page-preview__resize-handle:hover,
+.app-page-preview .app-page-preview__resize-handle:focus-visible {
+  background: transparent;
+  border: 0;
+  color: transparent;
+  font-size: 0;
+  line-height: 0;
+  outline: 0;
+  padding: 0;
+}
+
+.app-page-preview button:hover,
+.app-page-preview button.is-active,
+.app-page-preview a:hover {
+  border-color: var(--theme-blue-500);
+}
+
+.app-page-preview button.is-active {
+  background: color-mix(in srgb, var(--theme-blue-500), transparent 82%);
+}
+
+.app-page-preview__frame-wrap {
+  align-items: start;
+  background:
+    radial-gradient(circle at center, rgb(141 225 232 / 0.07), transparent 34%),
+    var(--theme-bg);
+  border: 1px solid var(--theme-elevation-200);
+  border-radius: 0.35rem;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  margin-top: 0.75rem;
+  min-height: 0;
+  overflow: auto;
+}
+
+.app-page-preview__frame {
+  border: 0;
+  display: block;
+  height: 100%;
+  min-width: 0;
+  width: 100%;
+}
+
+.app-page-preview__frame-wrap[data-device='tablet'] .app-page-preview__frame,
+.app-page-preview__frame-wrap[data-device='mobile'] .app-page-preview__frame {
+  border-inline: 1px solid var(--theme-elevation-200);
+}
+
+@media (max-width: 900px) {
+  .app-page-preview {
+    height: 560px;
+    min-height: 560px;
+  }
+
+  .app-page-preview__resize-handle {
+    display: none;
+  }
+
+  .app-page-preview.is-expanded {
+    inset: 0.75rem;
+    height: auto;
+  }
+}

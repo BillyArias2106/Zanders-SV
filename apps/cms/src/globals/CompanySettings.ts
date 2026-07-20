@@ -66,13 +66,7 @@ const imageUploadField = (
 });
 
 type FooterColumnSiblingData = {
-  contentType?:
-    | "contact"
-    | "customText"
-    | "mainNavigation"
-    | "manualLinks"
-    | "publishedPages"
-    | "socialLinks";
+  contentType?: "contact" | "customText" | "manualLinks" | "socialLinks";
 };
 
 const showForFooterColumnType =
@@ -122,8 +116,8 @@ const footerFields: Field[] = [
     defaultValue: true,
     admin: {
       description: adminLabel(
-        "El footer se arma automáticamente con empresa, redes sociales y páginas publicadas.",
-        "The footer is built automatically from company details, social links and published pages.",
+        "El footer se arma desde empresa, redes sociales y enlaces manuales.",
+        "The footer is assembled from company details, social links and manual links.",
       ),
     },
   },
@@ -212,17 +206,6 @@ const footerFields: Field[] = [
         required: true,
         defaultValue: "manualLinks",
         options: [
-          {
-            label: adminLabel(
-              "Páginas publicadas automáticamente",
-              "Published pages automatically",
-            ),
-            value: "publishedPages",
-          },
-          {
-            label: adminLabel("Menú principal", "Main menu"),
-            value: "mainNavigation",
-          },
           {
             label: adminLabel("Enlaces manuales", "Manual links"),
             value: "manualLinks",
@@ -443,49 +426,25 @@ const footerFields: Field[] = [
     },
   },
   {
-    name: "footerPrivacyPage",
-    type: "relationship",
+    name: "footerPrivacyPageId",
+    type: "number",
     label: adminLabel(
-      "Página de políticas de privacidad",
-      "Privacy policy page",
+      "Compatibilidad interna: privacidad",
+      "Internal compatibility: privacy",
     ),
-    relationTo: "pages",
-    filterOptions: {
-      pageType: {
-        equals: "legal",
-      },
-      status: {
-        equals: "published",
-      },
-    },
     admin: {
-      description: adminLabel(
-        "Opcional. Si queda vacío, el footer usará páginas legales publicadas marcadas para footer.",
-        "Optional. If empty, the footer uses published legal pages marked for footer.",
-      ),
+      hidden: true,
     },
   },
   {
-    name: "footerTermsPage",
-    type: "relationship",
+    name: "footerTermsPageId",
+    type: "number",
     label: adminLabel(
-      "Página de términos y condiciones",
-      "Terms and conditions page",
+      "Compatibilidad interna: términos",
+      "Internal compatibility: terms",
     ),
-    relationTo: "pages",
-    filterOptions: {
-      pageType: {
-        equals: "legal",
-      },
-      status: {
-        equals: "published",
-      },
-    },
     admin: {
-      description: adminLabel(
-        "Opcional. Si queda vacío, el footer usará páginas legales publicadas marcadas para footer.",
-        "Optional. If empty, the footer uses published legal pages marked for footer.",
-      ),
+      hidden: true,
     },
   },
   {
@@ -524,6 +483,53 @@ export const CompanySettings: GlobalConfig = {
         {
           label: adminLabel("Información General", "General Information"),
           fields: [
+            {
+              name: "siteProfile",
+              type: "select",
+              label: adminLabel(
+                "Industria / estilo del sitio",
+                "Website industry / style",
+              ),
+              defaultValue: "agency",
+              required: true,
+              options: [
+                {
+                  label: adminLabel(
+                    "Gobierno / informativo",
+                    "Government / informational",
+                  ),
+                  value: "government",
+                },
+                {
+                  label: "SaaS premium",
+                  value: "saas-apple",
+                },
+                {
+                  label: adminLabel(
+                    "Agencia / servicios creativos",
+                    "Agency / creative services",
+                  ),
+                  value: "agency",
+                },
+                {
+                  label: "E-commerce",
+                  value: "ecommerce",
+                },
+                {
+                  label: adminLabel(
+                    "Educación / institucional",
+                    "Education / institutional",
+                  ),
+                  value: "education",
+                },
+              ],
+              admin: {
+                description: adminLabel(
+                  "Define el tono visual global. El frontend lo usa para interpretar los slices sin pedir configuraciones visuales por sección.",
+                  "Defines the global visual tone. The frontend uses it to interpret slices without asking for visual settings per section.",
+                ),
+              },
+            },
             {
               name: "defaultLanguage",
               type: "select",

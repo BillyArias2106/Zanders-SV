@@ -1,0 +1,138 @@
+.app-page-section-guide {
+  border: 1px solid
+    color-mix(in srgb, var(--theme-elevation-200), transparent 14%);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--theme-elevation-100), transparent 4%),
+      color-mix(in srgb, var(--theme-elevation-50), transparent 18%)
+    );
+  display: grid;
+  gap: 1.05rem;
+  grid-column: 1 / -1;
+  margin-bottom: calc(var(--base) * 1.15);
+  overflow: hidden;
+  padding: 1.05rem;
+  position: relative;
+}
+
+.app-page-section-guide::before {
+  background:
+    linear-gradient(
+      90deg,
+      var(--theme-elevation-900),
+      color-mix(in srgb, var(--theme-elevation-900), transparent 54%)
+    );
+  content: "";
+  height: 3px;
+  inset: 0 0 auto;
+  position: absolute;
+}
+
+.app-page-section-guide__header {
+  align-items: start;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+}
+
+.app-page-section-guide__eyebrow {
+  color: var(--theme-elevation-550);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.35rem;
+  text-transform: uppercase;
+}
+
+.app-page-section-guide h2 {
+  font-size: 1.16rem;
+  line-height: 1.2;
+  margin: 0;
+}
+
+.app-page-section-guide p {
+  color: var(--theme-elevation-650);
+  font-size: 0.9rem;
+  line-height: 1.55;
+  margin: 0.45rem 0 0;
+  max-width: 54rem;
+}
+
+.app-page-section-guide__header > span {
+  border: 1px solid color-mix(in srgb, var(--theme-elevation-300), transparent 16%);
+  color: var(--theme-elevation-700);
+  flex: 0 0 auto;
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  margin: 0;
+  padding: 0.5rem 0.6rem;
+  text-transform: uppercase;
+}
+
+.app-page-section-guide__actions {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr));
+}
+
+.app-page-section-guide__action {
+  appearance: none;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--theme-elevation-0), transparent 4%),
+      color-mix(in srgb, var(--theme-elevation-100), transparent 8%)
+    );
+  border: 1px solid color-mix(in srgb, var(--theme-elevation-200), transparent 12%);
+  color: inherit;
+  cursor: pointer;
+  display: grid;
+  font-family: inherit;
+  gap: 0.35rem;
+  min-height: 5.5rem;
+  padding: 0.82rem;
+  text-align: left;
+}
+
+.app-page-section-guide__action:hover,
+.app-page-section-guide__action:focus-visible {
+  border-color: var(--theme-elevation-900);
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--theme-elevation-900), transparent 88%);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.app-page-section-guide__action strong {
+  color: var(--theme-elevation-900);
+  font-size: 0.9rem;
+  line-height: 1.18;
+}
+
+.app-page-section-guide__action em {
+  color: var(--theme-elevation-550);
+  font-size: 0.66rem;
+  font-style: normal;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.app-page-section-guide__action span {
+  color: var(--theme-elevation-650);
+  font-size: 0.78rem;
+  line-height: 1.38;
+}
+
+@media (max-width: 760px) {
+  .app-page-section-guide__header {
+    display: grid;
+  }
+
+  .app-page-section-guide__header > span {
+    width: max-content;
+  }
+}

@@ -18,10 +18,6 @@ type CompanySettingsRow = {
   whatsapp: string | null
 }
 
-type CountRow = {
-  count: string | number
-}
-
 const genericNames = new Set(['new site'])
 
 const normalizeText = (value: unknown) =>
@@ -57,8 +53,7 @@ export async function GET(request: Request) {
     )
   }
 
-  const [companyResult, pagesResult] = await Promise.all([
-    pool.query<CompanySettingsRow>(`
+  const companyResult = await pool.query<CompanySettingsRow>(`
       SELECT
         COUNT(*) OVER() AS row_count,
         cs.commercial_name,
@@ -72,12 +67,9 @@ export async function GET(request: Request) {
         AND csl._locale = 'es'
       ORDER BY cs.id ASC
       LIMIT 1
-    `),
-    pool.query<CountRow>('SELECT COUNT(*) AS count FROM pages')
-  ])
+    `)
 
   const company = companyResult.rows[0]
-  const pageCount = Number(pagesResult.rows[0]?.count ?? 0)
   const missingCompanyFields: string[] = []
   const hasCompanyRow = Number(company?.row_count ?? 0) > 0
 
@@ -102,21 +94,16 @@ export async function GET(request: Request) {
   }
 
   const companyComplete = missingCompanyFields.length === 0
-  const hasPages = pageCount > 0
-  const step = !companyComplete ? 'company' : !hasPages ? 'pages' : 'complete'
+  const step = !companyComplete ? 'company' : 'complete'
 
   return Response.json({
     authenticated: true,
     companyComplete,
-    hasPages,
     missingCompanyFields,
     nextPath:
       step === 'company'
         ? '/admin/globals/company-settings?onboarding=company'
-        : step === 'pages'
-          ? '/admin/collections/pages/create?onboarding=pages'
-          : null,
-    pageCount,
+        : null,
     step
   })
 }

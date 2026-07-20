@@ -7,11 +7,9 @@ import { useEffect, useMemo, useState } from 'react'
 type OnboardingStatus = {
   authenticated: boolean
   companyComplete?: boolean
-  hasPages?: boolean
   missingCompanyFields?: string[]
   nextPath?: null | string
-  pageCount?: number
-  step?: 'company' | 'complete' | 'pages'
+  step?: 'company' | 'complete'
 }
 
 const authPathSegments = [
@@ -24,13 +22,6 @@ const authPathSegments = [
 
 const companyAllowedPaths = [
   '/admin/account',
-  '/admin/collections/users',
-  '/admin/globals/company-settings'
-]
-
-const pagesAllowedPaths = [
-  '/admin/account',
-  '/admin/collections/pages',
   '/admin/collections/users',
   '/admin/globals/company-settings'
 ]
@@ -50,12 +41,6 @@ const getRedirectPath = (pathname: string, status: OnboardingStatus) => {
       ? null
       : (status.nextPath ??
           '/admin/globals/company-settings?onboarding=company')
-  }
-
-  if (status.step === 'pages') {
-    return isAllowedPath(pathname, pagesAllowedPaths)
-      ? null
-      : (status.nextPath ?? '/admin/collections/pages/create?onboarding=pages')
   }
 
   return null
@@ -146,18 +131,5 @@ export function AdminOnboardingGate() {
     )
   }
 
-  return (
-    <div className="app-admin-onboarding-banner">
-      <strong>
-        {language === 'en'
-          ? 'Create your first page'
-          : 'Crea tu primera página'}
-      </strong>
-      <span>
-        {language === 'en'
-          ? 'At least one page is required before opening the rest of the admin.'
-          : 'Se necesita al menos una página antes de abrir el resto del admin.'}
-      </span>
-    </div>
-  )
+  return null
 }
