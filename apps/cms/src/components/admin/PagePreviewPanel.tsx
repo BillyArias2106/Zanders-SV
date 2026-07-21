@@ -30,7 +30,7 @@ const deviceWidths: Record<PreviewDevice, number> = {
 const DEFAULT_PANEL_WIDTH = 520
 const MAX_PANEL_WIDTH = 920
 const MIN_PANEL_WIDTH = 300
-const PANEL_WIDTH_STORAGE_KEY = 'zandersv-page-preview-width'
+const PANEL_WIDTH_STORAGE_KEY = 'cms-profesional-page-preview-width'
 
 const clampPanelWidth = (width: number) =>
   Math.min(MAX_PANEL_WIDTH, Math.max(MIN_PANEL_WIDTH, Math.round(width)))
@@ -112,7 +112,7 @@ export function PagePreviewPanel() {
   }, [])
 
   useEffect(() => {
-    document.documentElement.style.setProperty('--zandersv-page-preview-width', `${panelWidth}px`)
+    document.documentElement.style.setProperty('--cms-profesional-page-preview-width', `${panelWidth}px`)
 
     if (hasLoadedPanelWidth) {
       window.localStorage.setItem(PANEL_WIDTH_STORAGE_KEY, String(panelWidth))

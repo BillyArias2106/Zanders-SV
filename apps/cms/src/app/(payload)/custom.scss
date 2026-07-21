@@ -10,7 +10,7 @@
   --theme-error-500: #ff6b6b;
   --theme-warning-500: #f8d66d;
   --theme-blue-500: #8de1e8;
-  --zandersv-page-preview-width: 520px;
+  --cms-profesional-page-preview-width: 520px;
 }
 
 .template-default {
@@ -24,12 +24,12 @@
 
 .collection-edit--pages:has(.app-page-preview) {
   .document-fields {
-    --main-width: calc(100% - min(var(--zandersv-page-preview-width), 58vw));
+    --main-width: calc(100% - min(var(--cms-profesional-page-preview-width), 58vw));
     --main-border: none;
     --main-field-margin: initial;
     --sidebar-gutter-h-left: calc(var(--base) * 1.25);
     --sidebar-wrap-min-width: 300px;
-    --sidebar-wrap-width: min(var(--zandersv-page-preview-width), 58vw);
+    --sidebar-wrap-width: min(var(--cms-profesional-page-preview-width), 58vw);
   }
 
   .document-fields__edit {

@@ -1,3 +1,5 @@
+name: cms-profesional
+
 services:
   deps:
     image: node:22-bookworm-slim
@@ -34,8 +36,6 @@ services:
       POSTGRES_DB: app
       POSTGRES_USER: app
       POSTGRES_PASSWORD: app_dev_password
-    ports:
-      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:

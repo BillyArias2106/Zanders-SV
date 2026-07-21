@@ -1,15 +1,15 @@
 if (typeof performance !== "undefined") {
   const guardedPerformance = performance as Performance & {
-    __zanderMeasureGuard?: boolean;
+    __cmsProfessionalMeasureGuard?: boolean;
   };
 
   if (
     typeof guardedPerformance.measure === "function" &&
-    !guardedPerformance.__zanderMeasureGuard
+    !guardedPerformance.__cmsProfessionalMeasureGuard
   ) {
     const originalMeasure = guardedPerformance.measure.bind(guardedPerformance);
 
-    Object.defineProperty(guardedPerformance, "__zanderMeasureGuard", {
+    Object.defineProperty(guardedPerformance, "__cmsProfessionalMeasureGuard", {
       configurable: false,
       enumerable: false,
       value: true,
