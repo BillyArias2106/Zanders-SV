@@ -1,9 +1,9 @@
 {
-  "name": "starter-platform",
+  "name": "cms-profesional",
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Monorepo para un sitio nuevo.",
+  "description": "Monorepo para CMS Profesional.",
   "packageManager": "pnpm@10.18.2",
   "engines": {
     "node": ">=20.9.0",

@@ -1,4 +1,4 @@
-name: zander-cms-dev
+name: cms-profesional
 
 services:
   deps:
@@ -51,11 +51,11 @@ services:
     command: >
       sh -lc "corepack enable &&
       corepack prepare pnpm@10.18.2 --activate &&
-      node apps/cms/scripts/docker-dev-start.mjs"
+      pnpm --filter @starter/cms migrate &&
+      pnpm --filter @starter/cms dev"
     environment:
       CI: 'true'
       DATABASE_URL: postgresql://app:app_dev_password@postgres:5432/app
-      DOCKER_DEV_SCHEMA_RESET: ${DOCKER_DEV_SCHEMA_RESET:-true}
       PAYLOAD_DB_PUSH: 'false'
       PAYLOAD_SECRET: ${PAYLOAD_SECRET:-dev-only-change-me}
       PAYLOAD_PUBLIC_SERVER_URL: http://localhost:3001

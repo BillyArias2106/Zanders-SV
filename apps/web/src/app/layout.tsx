@@ -22,14 +22,14 @@ const performanceMeasureGuardScript =
   if (
     typeof performance === "undefined" ||
     typeof performance.measure !== "function" ||
-    performance.__zanderMeasureGuard
+    performance.__cmsProfessionalMeasureGuard
   ) {
     return;
   }
 
   const originalMeasure = performance.measure.bind(performance);
 
-  Object.defineProperty(performance, "__zanderMeasureGuard", {
+  Object.defineProperty(performance, "__cmsProfessionalMeasureGuard", {
     configurable: false,
     enumerable: false,
     value: true,
@@ -141,7 +141,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         {performanceMeasureGuardScript ? (
           <Script
             dangerouslySetInnerHTML={{ __html: performanceMeasureGuardScript }}
-            id="zander-performance-measure-guard"
+            id="cms-profesional-performance-measure-guard"
             strategy="beforeInteractive"
           />
         ) : null}

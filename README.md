@@ -1,6 +1,6 @@
-# Starter Platform
+# CMS Profesional
 
-Base monorepo para la plataforma digital de un sitio nuevo.
+Base monorepo para un CMS profesional con sitio web y panel administrativo.
 
 ## Stack
 
@@ -14,7 +14,7 @@ Base monorepo para la plataforma digital de un sitio nuevo.
 docker compose up
 ```
 
-Docker usa el proyecto `zander-cms-dev`, asi que los contenedores y volumenes
+Docker usa el proyecto `cms-profesional`, asi que los contenedores y volumenes
 quedan agrupados con ese prefijo aunque clones el repo en otra carpeta.
 
 La primera vez Docker descarga las imagenes y `pnpm` instala las dependencias.
@@ -35,14 +35,10 @@ actualizado:
 docker compose up --force-recreate
 ```
 
-Si el volumen de Postgres quedo a medias, Docker de desarrollo lo detecta al
-iniciar el CMS: si despues de migrar no existe la tabla `users`, resetea el
-esquema local y vuelve a correr las migraciones.
-
 Docker Desktop muestra varios volumenes porque cada uno guarda un tipo de dato
 distinto: Postgres, cache de pnpm, cache de Corepack, `node_modules` y cache de
 Next. Separarlos evita conflictos entre rutas internas y acelera los siguientes
-arranques. Todos pertenecen al proyecto `zander-cms-dev`.
+arranques. Todos pertenecen al proyecto `cms-profesional`.
 
 Para limpiar volumenes viejos de pruebas anteriores, apaga primero esos stacks
 desde Docker Desktop o con `docker compose down` en la carpeta donde los creaste.

@@ -479,7 +479,7 @@ export const sectionTemplates: SectionTemplate[] = [
     icon: 'terminal',
     key: 'terminal_demo',
     name: 'Demo tipo terminal',
-    previewData: { code: ['zanders deploy', 'build completado'], title: 'Flujo tecnico' },
+    previewData: { code: ['cms-profesional deploy', 'build completado'], title: 'Flujo tecnico' },
     recommendedFor: ['product', 'service'],
     renderer: 'terminal',
     schema: 'terminal',
